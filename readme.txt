@@ -1,1 +1,3 @@
-ÏîÄ¿Ãû³Æ:x-client-api
+é¡¹ç›®åç§°:x-client-api
+
+é¡¹ç›®åœ°å€:https://github.com/yoshow/x-client-api/
