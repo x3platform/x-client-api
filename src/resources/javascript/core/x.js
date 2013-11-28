@@ -25,12 +25,7 @@ var x = {
 
     author: 'ruanyu@live.com',
 
-    msn: 'ruanyu@live.com',
-
-    debugToken: true,
-
-    hostName: '',
-
+    // 浏览器类别信息
     browser: {
         IE: !!(window.attachEvent && navigator.userAgent.indexOf('Opera') === -1),
         Opera: navigator.userAgent.indexOf('Opera') > -1,
@@ -39,6 +34,7 @@ var x = {
         MobileSafari: !!navigator.userAgent.match(/Apple.*Mobile.*Safari/)
     },
 
+    // 浏览器特性
     browserFeatures: {
         XPath: !!document.evaluate,
         SelectorsAPI: !!document.querySelector,
@@ -135,6 +131,19 @@ var x = {
         return destination;
     },
 
+    /*
+    * 执行对象方法
+    */
+    invoke: function(object, fun)
+    {
+        var args = Array.prototype.slice.call(arguments).slice(2);
+
+        return function()
+        {
+            return fun.apply(object, args.concat(Array.prototype.slice.call(arguments)));
+        }
+    },
+
     /**
     * 查找页面元素
     *
@@ -208,6 +217,8 @@ var x = {
     */
     toJSON: function(text)
     {
+        if (typeof (text) === 'object') { return text; }
+
         if (typeof (text) === 'undefined' || text === '')
         {
             return undefined;
@@ -434,6 +445,7 @@ var x = {
         newWindow: function(name, options)
         {
             var __window__ = {
+
                 name: name,
                 options: options,
 
