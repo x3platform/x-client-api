@@ -1,5 +1,24 @@
 ﻿// -*- ecoding : utf-8 -*-
 
+<<<<<<< HEAD
+=======
+/*#region Copyright & Author*/
+// =============================================================================
+//
+// Copyright (c) 2010 ruanyu@live.com
+//
+// FileName     :x.cookies.js
+//
+// Description  :
+//
+// Author       :Max
+//
+// Date         :2010-01-01
+//
+// =============================================================================
+/*#endregion*/
+
+>>>>>>> 86d619ad16f6d4840df8ba2f3eaae9c8014fd094
 define(['jquery', 'x'], function($, x)
 {
     /**
@@ -49,6 +68,7 @@ define(['jquery', 'x'], function($, x)
         * @memberof x.cookies
         * @param {string} name 名称
         * @param {string} value 值
+<<<<<<< HEAD
         * @param {Date} [expire] 过期时间
         * @param {string} [path] 所属的路径
         * @param {string} [domain] 所属的域
@@ -71,6 +91,11 @@ define(['jquery', 'x'], function($, x)
         * // 名称为 CookieName4, 值为 CookieValue4, 
         * // 过期时间为 2050-1-1 10:30:00, 所属的域为 github.com
         * x.cookie.add('cookieName4', 'cookieValue4', new (2050,1,1,10,30,00), '/', 'github.com');
+=======
+        * @param {Date} expire 名称
+        * @param {string} path 所属的路径
+        * @param {string} domain 所属的域名
+>>>>>>> 86d619ad16f6d4840df8ba2f3eaae9c8014fd094
         */
         add: function(name, value, expire, path, domain)
         {
@@ -84,6 +109,7 @@ define(['jquery', 'x'], function($, x)
         * @method remove
         * @memberof x.cookies
         * @param {string} name 名称
+<<<<<<< HEAD
         * @param {string} [path] 所属的路径
         * @param {string} [domain] 所属的域
         * @example
@@ -92,6 +118,10 @@ define(['jquery', 'x'], function($, x)
         * @example
         * // 移除一条 Cookie 记录, 名称为 CookieName2
         * x.cookie.remove('CookieName2', '/help/');
+=======
+        * @param {string} path 所属的路径
+        * @param {string} domain 所属的域名
+>>>>>>> 86d619ad16f6d4840df8ba2f3eaae9c8014fd094
         */
         remove: function(name, path, domain)
         {

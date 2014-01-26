@@ -1,5 +1,24 @@
 ﻿// -*- ecoding : utf-8 -*-
 
+<<<<<<< HEAD
+=======
+/*#region Copyright & Author*/
+// =============================================================================
+//
+// Copyright (c) 2010 ruanyu@live.com
+//
+// FileName     :x.date.js
+//
+// Description  :
+//
+// Author       :Max
+//
+// Date         :2010-01-01
+//
+// =============================================================================
+/*#endregion*/
+
+>>>>>>> 86d619ad16f6d4840df8ba2f3eaae9c8014fd094
 define(['jquery', 'x'], function($, x)
 {
     /**
@@ -17,12 +36,21 @@ define(['jquery', 'x'], function($, x)
         {
             return new x.date.newTime(timeValue);
         },
+<<<<<<< HEAD
 
         diff: function(begin, end, interval)
         {
             var timeBegin = new x.date.newTime(begin);
             var timeEnd = new x.date.newTime(end);
 
+=======
+
+        diff: function(begin, end, interval)
+        {
+            var timeBegin = new x.date.newTime(begin);
+            var timeEnd = new x.date.newTime(end);
+
+>>>>>>> 86d619ad16f6d4840df8ba2f3eaae9c8014fd094
             switch (String(interval).toLowerCase())
             {
                 case "y":
@@ -317,6 +345,7 @@ define(['jquery', 'x'], function($, x)
                 {
                     var date1 = x.date.create(this.toString('yyyy-MM-01'));
                     var date2 = x.date.create(this.add('month', 1).toString('yyyy-MM-01'));
+<<<<<<< HEAD
 
                     return date1.diff('day', date2);
                 },
@@ -501,10 +530,128 @@ define(['jquery', 'x'], function($, x)
                             break;
                     }
 
+=======
+
+                    return date1.diff('day', date2);
+                },
+
+                /*
+                * 取得当前日期所在季度是一年中的第几季度 
+                */
+                getQuarterOfYear: function()
+                {
+                    return Math.ceil(this.month / 3);
+                },
+
+                /*
+                * 取得当前日期是一年中的第几周  
+                */
+                getWeekOfYear: function()
+                {
+                    var week = 0;
+
+                    day = this.getDayOfYear();
+
+                    // 判断是否为星期日
+                    // 如果一年中的第一天不是星期日, 则减去相差的天数以最近的星期日开始计算
+                    if (x.date.create(this.toString('yyyy-01-01')).weekDay > 0)
+                    {
+                        day = day - (7 - x.date.create(this.toString('yyyy-01-01')).weekDay);
+                    }
+
+                    if (day > 0)
+                    {
+                        week = Math.ceil(day / 7);
+                    }
+
+                    return week;
+                },
+
+                /*
+                * 取得当前日期是一年中的第几天
+                */
+                getDayOfYear: function()
+                {
+                    var date1 = this.toDate();
+                    var date2 = new Date(date1.getFullYear(), 0, 1);
+
+                    return Math.ceil(Number(date1 - date2) / (24 * 60 * 60 * 1000)) + 1;
+                },
+
+                /*
+                * 判断闰年  
+                */
+                isLeapYear: function()
+                {
+                    // 闰年的计算方法：
+                    // 公元纪年的年数可以被四整除，即为闰年；
+                    // 被100整除而不能被400整除为平年；
+                    // 被100整除也可被400整除的为闰年。
+                    // 如2000年是闰年，而1900年不是。
+                    return (this.year % 4 == 0 && ((this.year % 100 != 0) || (this.year % 400 == 0)));
+                },
+
+                /*
+                * 转换为数组格式
+                */
+                toArray: function()
+                {
+                    return [this.year, this.month, this.day, this.hour, this.hour, this.second, this.msecond];
+                },
+
+                /*
+                * 转换为内置 Date 对象
+                */
+                toDate: function()
+                {
+                    return new Date(this.year, this.month, this.day, this.hour, this.hour, this.second);
+                },
+
+                /*
+                * 日期格式化  
+                * 格式 
+                * yyyy/yy 表示年份  
+                * MM 月份  
+                * w 星期  
+                * dd/d 日期  
+                * hh/h 时间  
+                * mm/m 分钟  
+                * ss/s 秒  
+                */
+                toString: function(format)
+                {
+                    var outString = x.isUndefined(format, 'yyyy-MM-dd HH:mm:ss');
+
+                    var weekDays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+
+                    outString = outString.replace(/yyyy|YYYY/, this.year);
+                    outString = outString.replace(/yy|YY/, (this.year2 % 100) > 9 ? (this.year2 % 100).toString() : '0' + (this.year2 % 100));
+
+                    outString = outString.replace(/MM/, (this.month + 1) > 9 ? (this.month + 1).toString() : '0' + (this.month + 1));
+                    outString = outString.replace(/M/g, (this.month + 1));
+
+                    outString = outString.replace(/w|W/g, weekDays[this.weekDay]);
+
+                    outString = outString.replace(/dd|DD/, this.day > 9 ? this.day : '0' + this.day);
+                    outString = outString.replace(/d|D/g, this.day);
+
+                    outString = outString.replace(/hh|HH/, this.hour > 9 ? this.hour : '0' + this.hour);
+                    outString = outString.replace(/h|H/g, this.hour);
+
+                    outString = outString.replace(/mm/, this.minute > 9 ? this.minute : '0' + this.minute);
+                    outString = outString.replace(/m/g, this.minute);
+
+                    outString = outString.replace(/ss|SS/, this.second > 9 ? this.second : '0' + this.second);
+                    outString = outString.replace(/s|S/g, this.second);
+
+                    outString = outString.replace(/fff/g, ((this.msecond > 99) ? this.msecond : (this.msecond > 9) ? '0' + this.msecond : '00' + this.msecond));
+
+>>>>>>> 86d619ad16f6d4840df8ba2f3eaae9c8014fd094
                     return outString;
                 }
             };
 
+<<<<<<< HEAD
             return timeSpan;
         },
 
@@ -635,6 +782,78 @@ define(['jquery', 'x'], function($, x)
             timer.create(options);
 
             return timer;
+=======
+            return time;
+        },
+
+        /**
+        * 时间间隔对象
+        */
+        newTimeSpan: function(timeSpanValue, format)
+        {
+            format = typeof (format) === 'undefined' ? 'second' : format;
+
+            // 小时转化成秒
+            if (format == 'day' || format == 'd')
+            {
+                timeSpanValue = timeSpanValue * 24 * 60 * 60;
+            }
+
+            // 小时转化成秒
+            if (format == 'hour' || format == 'h')
+            {
+                timeSpanValue = timeSpanValue * 60 * 60;
+            }
+
+            // 分钟转化成秒
+            if (format == 'minute' || format == 'm')
+            {
+                timeSpanValue = timeSpanValue * 60;
+            }
+
+            // 秒不需要转化
+            if (format == 'second' || format == 's')
+            {
+                timeSpanValue = timeSpanValue * 1000;
+            }
+
+            var timeSpan = {
+                // 时间间隔(单位:毫秒)
+                timeSpanValue: timeSpanValue,
+                // 天
+                day: timeSpanValue / (24 * 60 * 60 * 1000),
+                // 小时
+                hour: timeSpanValue / (60 * 60 * 1000),
+                // 分钟
+                minute: timeSpanValue / (60 * 1000),
+                // 秒
+                second: timeSpanValue / 1000,
+                // 毫秒
+                millisecond: timeSpanValue % 1000,
+
+                toString: function(format)
+                {
+                    var outString = '';
+
+                    switch (format)
+                    {
+                        case 'MM天dd小时mm分钟ss秒fff毫秒':
+                            outString = (this.day > 9 ? '' : '0') + this.day + "天" + (this.hour > 9 ? '' : '0') + this.hour + "小时" + (this.minute > 9 ? '' : '0') + this.minute + "分钟" + (this.second > 9 ? '' : '0') + this.second + "秒" + (this.millisecond > 99 ? '' : (this.millisecond > 9 ? '0' : '00')) + this.second + "秒";
+                            break;
+                        case 'MM天dd小时mm分钟ss秒':
+                            outString = (this.day > 9 ? '' : '0') + this.day + "天" + (this.hour > 9 ? '' : '0') + this.hour + "小时" + (this.minute > 9 ? '' : '0') + this.minute + "分钟" + (this.second > 9 ? '' : '0') + this.second + "秒";
+                            break;
+                        default:
+                            outString = (this.day > 9 ? '' : '0') + this.day + "天" + (this.hour > 9 ? '' : '0') + this.hour + "小时" + (this.minute > 9 ? '' : '0') + this.minute + "分钟" + (this.second > 9 ? '' : '0') + this.second + "秒";
+                            break;
+                    }
+
+                    return outString;
+                }
+            };
+
+            return timeSpan;
+>>>>>>> 86d619ad16f6d4840df8ba2f3eaae9c8014fd094
         }
     };
 
