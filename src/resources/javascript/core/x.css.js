@@ -15,7 +15,7 @@ define(['jquery', 'x'], function($, x)
         * @method style
         * @memberof x.css
         * @param {HTMLElement} element 元素对象
-        * @returns {CSSStyleDeclaration}
+        * @returns {CSSStyleDeclaration} {@like https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleDeclaration|CSSStyleDeclaration}
         */
         style: function(element)
         {

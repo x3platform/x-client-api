@@ -205,7 +205,6 @@ define(['jquery'], function($)
                 && document.createElement('div')['__proto__'] !== document.createElement('form')['__proto__']
         },
 
-<<<<<<< HEAD
         /**
         * @namespace mask
         * @memberof x.ui
@@ -213,8 +212,6 @@ define(['jquery'], function($)
         */
         ui: {},
 
-=======
->>>>>>> 86d619ad16f6d4840df8ba2f3eaae9c8014fd094
         // 脚本代码片段
         scriptFragment: '<script[^>]*>([\\S\\s]*?)<\/script>',
 
@@ -281,13 +278,8 @@ define(['jquery'], function($)
         * 将原始对象的属性和方法扩展至目标对象
         * @method ext
         * @memberof x
-<<<<<<< HEAD
         * @param destination 目标对象
         * @param source 原始对象
-=======
-        * @destination : 目标对象
-        * @source : 原始对象
->>>>>>> 86d619ad16f6d4840df8ba2f3eaae9c8014fd094
         */
         ext: function(destination, source)
         {
@@ -299,7 +291,7 @@ define(['jquery'], function($)
             return destination;
         },
 
-        /*
+        /**
         * 执行对象方法
         * @method invoke
         * @memberof x
@@ -1095,7 +1087,7 @@ define(['jquery'], function($)
         /*#endregion*/
 
         /**
-        * Gui格式文本
+        * Guid 格式文本
         * @namespace guid
         * @memberof x
         */
@@ -1107,7 +1099,6 @@ define(['jquery'], function($)
             * @memberof x.guid
             * @param {string} [format] 分隔符格式(如果填空白字符串则不显示)
             * @param {bool} [isUpperCase] 是否是大写格式(true|false)
-<<<<<<< HEAD
             * @example
             * // 输出格式 aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa
             * console.log(x.guid.create());
@@ -1117,25 +1108,13 @@ define(['jquery'], function($)
             * @example
             * // 输出格式 AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA
             * console.log(x.guid.create('-', true));
-=======
->>>>>>> 86d619ad16f6d4840df8ba2f3eaae9c8014fd094
             */
             create: function(format, isUpperCase)
             {
                 var text = '';
 
-<<<<<<< HEAD
                 // 格式限制
                 format = x.isUndefined(format, '-').toLowerCase();
-=======
-                // 默认格式
-                if (format)
-                {
-                    format = '-';
-                }
-
-                format = format.toLowerCase();
->>>>>>> 86d619ad16f6d4840df8ba2f3eaae9c8014fd094
 
                 for (var i = 0; i < 8; i++)
                 {
@@ -1169,12 +1148,9 @@ define(['jquery'], function($)
             * @method create
             * @memberof x.randomText
             * @param {int} length 返回的文本长度
-<<<<<<< HEAD
             * @example
             * // 输出格式 00000000
             * console.log(x.randomText.create(8));
-=======
->>>>>>> 86d619ad16f6d4840df8ba2f3eaae9c8014fd094
             */
             create: function(length)
             {
@@ -1471,15 +1447,18 @@ define(['jquery'], function($)
             }
         },
 
+        /*#region 函数:create(length)*/
         /**
-        * 检查对象类型
-        * @method inspect
+        * 克隆对象
+        * @method clone
         * @memberof Object
+        * @returns {object} 克隆的对象
         */
         clone: function(object)
         {
             return x.ext({}, object);
         },
+        /*#endregion*/
 
         /**
         * 检查对象类型
@@ -1557,7 +1536,6 @@ define(['jquery'], function($)
     });
 
     // -------------------------------------------------------
-<<<<<<< HEAD
     // 扩展 Function 对象方法
     // -------------------------------------------------------
 
@@ -1591,8 +1569,6 @@ define(['jquery'], function($)
     };
 
     // -------------------------------------------------------
-=======
->>>>>>> 86d619ad16f6d4840df8ba2f3eaae9c8014fd094
     // 扩展 Array 对象方法
     // -------------------------------------------------------
 
@@ -2032,14 +2008,11 @@ define(['jquery'], function($)
     /*#endregion*/
 
     /*#endregion*/
-<<<<<<< HEAD
 
     if (window)
     {
         window.$x$ = x;
     }
-=======
->>>>>>> 86d619ad16f6d4840df8ba2f3eaae9c8014fd094
 
     return x;
 });

@@ -1,24 +1,5 @@
 ﻿// -*- ecoding : utf-8 -*-
 
-<<<<<<< HEAD
-=======
-/*#region Copyright & Author*/
-// =============================================================================
-//
-// Copyright (c) 2010 ruanyu@live.com
-//
-// FileName     :x.cookies.js
-//
-// Description  :
-//
-// Author       :Max
-//
-// Date         :2010-01-01
-//
-// =============================================================================
-/*#endregion*/
-
->>>>>>> 86d619ad16f6d4840df8ba2f3eaae9c8014fd094
 define(['jquery', 'x'], function($, x)
 {
     /**
