@@ -1,0 +1,29 @@
+{
+  "name": "x-client-api",
+  "version": "1.0.0",
+  "description": "常用的工具类集合",
+  "author":"ruanyu@live.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yoshow/x-client-api.git"
+  },
+  "bugs": {
+    "url" : "http://github.com/yoshow/x-client-api/issues"
+  },
+  "dependencies": {
+    "chalk": "~0.4.0",
+    "mocha": "~1.20.0"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.4",
+    "grunt-contrib-jshint": "~0.10.0",
+    "grunt-contrib-nodeunit": "~0.4.0",
+    "grunt-contrib-concat": "~0.4.0",
+    "grunt-contrib-uglify": "~0.5.0",
+    "grunt-contrib-cssmin": "~0.10.0",
+    "grunt-contrib-copy": "~0.5.0",
+    "grunt-jsdoc": "~0.4.0",
+    "load-grunt-tasks": "0.3.0",
+    "requirejs": "2.1.10"
+  }
+}
