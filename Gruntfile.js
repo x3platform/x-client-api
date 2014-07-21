@@ -14,35 +14,40 @@ module.exports = function(grunt)
         // 合并文件
         concat: {
             options: {
-                separator: ';' //separates scripts
+                separator: '' //separates scripts
             },
             dist: {
                 files: {
                     // 基本功能
                     'dist/<%= pkg.version %>/<%= pkg.name %>-core.zh-cn.js': [
                         'src/resources/javascript/native.js',
+                        'src/resources/javascript/sizzle.js',
                         'src/resources/javascript/i18n/zh-cn/x-client-core.js', // 多语言支持
                         'src/resources/javascript/core/x.js',                   // 核心工具包
                         'src/resources/javascript/core/x.debug.js',
+                        'src/resources/javascript/core/x.encoding.js',
                         'src/resources/javascript/core/x.cookies.js',
                         'src/resources/javascript/core/x.css.js',
                         'src/resources/javascript/core/x.date.js',
-                        'src/resources/javascript/core/x.form.js',
+                        'src/resources/javascript/core/x.expressions.js',
+                        'src/resources/javascript/core/x.dom.js',
+                        'src/resources/javascript/core/x.net.js',
                         'src/resources/javascript/core/x.page.js',
-                        'src/resources/javascript/core/x.util.js',
-                        'src/resources/javascript/core/x.css.js',               // 基础页面工具包
-                        'src/resources/javascript/core/x.page.js',
-                        'src/resources/javascript/core/x.form.js',
-                        'src/resources/javascript/core/x.animation.js',         // 页面动画工具包
-                        'src/resources/javascript/core/x.drag.js'
+                        'src/resources/javascript/core/x.util.js'
+                    ],
+                    // Template
+                    'dist/<%= pkg.version %>/<%= pkg.name %>-template.zh-cn.js': [
+                        'src/resources/javascript/template/x.template.js',
+                        'src/resources/javascript/template/x.template.xml.js',
+                        'src/resources/javascript/template/x.template.compile.js',
+                        'src/resources/javascript/template/x.template.syntax.js'
                     ],
                     // UI
                     'dist/<%= pkg.version %>/<%= pkg.name %>-ui.zh-cn.js': [
-                        'src/resources/javascript/ui/x.ui.calendar.js'
-                    ],
-                    // Workflow Client
-                    'dist/<%= pkg.version %>/<%= pkg.name %>-workflow.zh-cn.js': [
-                        'src/resources/javascript/workflow/x.workflow.js'
+                        'src/resources/javascript/ui/core/x.ui.animation.js',
+                        'src/resources/javascript/ui/core/x.ui.drag.js',
+                        'src/resources/javascript/ui/core/x.ui.mask.js',
+                        'src/resources/javascript/ui/core/x.ui.windows.js'
                     ]
                 }
             }
@@ -50,19 +55,31 @@ module.exports = function(grunt)
 
         // 编译
         build: {
-            all: {
+            'build-core': {
+                // 输出对象
+                exports: 'x',
                 dest: "dist/<%= pkg.version %>/<%= pkg.name %>-core.zh-cn.js"
+            },
+            'build-template': {
+                exports: 'template',
+                browserExports: 'x.template',
+                dest: "dist/<%= pkg.version %>/<%= pkg.name %>-template.zh-cn.js"
             }
         },
 
         // 压缩文件
         uglify: {
             options: {
-                banner: '// -*- ecoding=utf-8 -*-\n// Name\t\t:<%= pkg.name %> \nVersion\t\t:<%= pkg.version %> \nDate\t\t:<%= grunt.template.today("yyyy-mm-dd") %>\n'
+                banner: '// -*- ecoding=utf-8 -*-\n// Name\t\t:<%= pkg.name %> \n// Version\t:<%= pkg.version %> \n// Author\t:<%= pkg.author %> \n// Date\t\t:<%= grunt.template.today("yyyy-mm-dd") %>\n'
             },
             'dist-core': {
                 files: {
                     'dist/<%= pkg.version %>/<%= pkg.name %>-core.zh-cn.min.js': ['dist/<%= pkg.version %>/<%= pkg.name %>-core.zh-cn.js']
+                }
+            },
+            'dist-template': {
+                files: {
+                    'dist/<%= pkg.version %>/<%= pkg.name %>-template.zh-cn.min.js': ['dist/<%= pkg.version %>/<%= pkg.name %>-template.zh-cn.js']
                 }
             },
             'dist-ui': {
@@ -88,6 +105,14 @@ module.exports = function(grunt)
                 {
                     src: 'dist/<%= pkg.version %>/<%= pkg.name %>-core.zh-cn.min.js',
                     dest: 'src/resources/javascript/<%= pkg.name %>-core.zh-cn.min.js'
+                },
+                {
+                    src: 'dist/<%= pkg.version %>/<%= pkg.name %>-template.zh-cn.js',
+                    dest: 'src/resources/javascript/<%= pkg.name %>-template.zh-cn.js'
+                },
+                {
+                    src: 'dist/<%= pkg.version %>/<%= pkg.name %>-template.zh-cn.min.js',
+                    dest: 'src/resources/javascript/<%= pkg.name %>-template.zh-cn.min.js'
                 },
                 {
                     src: 'dist/<%= pkg.version %>/<%= pkg.name %>-ui.zh-cn.js',
@@ -144,6 +169,6 @@ module.exports = function(grunt)
     grunt.registerTask('dist', ['concat:dist', 'uglify:dist']);
 
     // 默认任务
-    grunt.registerTask('default', ['concat:dist', 'uglify:dist-core', 'uglify:dist-ui', 'build', 'copy:dist']);
+    grunt.registerTask('default', ['concat:dist', 'build', 'uglify:dist-core', 'uglify:dist-template', 'uglify:dist-ui', 'copy:dist']);
     // grunt.registerTask('default', ['concat:dist', 'uglify', 'build']);
 };

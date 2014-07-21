@@ -1,4 +1,4 @@
-﻿// -*- ecoding : utf-8 -*-
+﻿// -*- ecoding=utf-8 -*-
 
 /**
 * @namespace cookies
@@ -72,7 +72,10 @@ x.cookies = {
     */
     add: function(name, value, expire, path, domain)
     {
-        document.cookie = name + '=' + escape(value) + ((!expire) ? '' : ('; expires=' + expire.toGMTString())) + '; path=' + ((!path) ? '/' : path) + ((!domain) ? '' : ('; domain=' + domain));
+        document.cookie = name + '=' + escape(value)
+            + ((!expire) ? '' : ('; expires=' + expire.toGMTString()))
+            + '; path=' + ((!path) ? '/' : path) 
+            + ((!domain) ? '' : ('; domain=' + domain));
     },
     /*#endregion*/
 
@@ -95,7 +98,9 @@ x.cookies = {
     {
         if (!!x.cookies.query(name))
         {
-            document.cookie = name + '=' + '; path=' + ((!path) ? '/' : path) + '; expires=' + new Date(0).toGMTString() + ((!domain) ? '' : ('; domain=' + domain)); ;
+            document.cookie = name + '=' + '; path=' + ((!path) ? '/' : path)
+                + '; expires=' + new Date(0).toGMTString() 
+                + ((!domain) ? '' : ('; domain=' + domain)); ;
         }
     }
     /*#endregion*/

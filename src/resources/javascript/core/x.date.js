@@ -1,4 +1,4 @@
-﻿// -*- ecoding : utf-8 -*-
+﻿// -*- ecoding=utf-8 -*-
 
 /**
 * @namespace date
@@ -109,14 +109,14 @@ x.date = {
     {
         var date = new Date();
 
-        if (typeof (timeValue) != 'undefined')
+        if (!x.isUndefined(timeValue))
         {
-            if (typeof (timeValue) === 'object' && !Object.isArray(timeValue))
+            if (x.type (timeValue) === 'object' && !x.isArray(timeValue))
             {
                 // Date 对象
                 date = timeValue;
             }
-            else if (Object.isArray(timeValue))
+            else if (x.isArray(timeValue))
             {
                 // Array 对象
                 var keys = timeValue
@@ -175,7 +175,7 @@ x.date = {
                 }
             },
 
-            /*
+            /**
             * 日期计算  
             */
             add: function(interval, number)

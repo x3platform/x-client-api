@@ -68,16 +68,19 @@ x.css = {
         'text-transform': 'textTransform',
         'vertical-align': 'verticalAlign'
     },
-    /*#region 函数:style(element)*/
+
+    /*#region 函数:style(selector)*/
     /**
     * 获取或设置元素对象的样式信息
     * @method style
     * @memberof x.css
-    * @param {HTMLElement} element 元素对象
+    * @param {string} selector 选择器或者元素对象
     * @returns {CSSStyleDeclaration} {@like https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleDeclaration|CSSStyleDeclaration}
     */
-    style: function(element)
+    style: function(selector)
     {
+        var element = x.query(selector);
+
         if (arguments.length == 1)
         {
             return element.currentStyle || window.getComputedStyle(element, null);
@@ -94,23 +97,24 @@ x.css = {
     },
     /*#endregion*/
 
-    /*#region 函数:check(element, className)*/
+    /*#region 函数:check(selector, className)*/
     /**
     * 检测元素对象的 className 是否存在
     * @method check
     * @memberof x.css
-    * @param {HTMLElement} element 元素对象
+    * @param {string} selector 选择器或者元素对象
     * @param {string} className CSS类名称
     * @returns {bool}
     */
-    check: function(element, className)
+    check: function(selector, className)
     {
+        var element = x.query(selector);
         /*
         var found=false;
-        var temparray=o.className.split(' ');
+        var buffer=o.className.split(' ');
 
-        for(var i=0;i<temparray.length;i++){
-        if(temparray[i]==c1){found=true;}
+        for(var i=0;i<buffer.length;i++){
+        if(buffer[i]==className){found=true;}
         }
         return found;
         */
@@ -121,34 +125,47 @@ x.css = {
     },
     /*#endregion*/
 
-    /*#region 函数:swap(element, classNameA, classNameB)*/
+    /*#region 函数:swap(selector, classNameA, classNameB)*/
     /**
     * 替换元素对象的 className
     * @method swap
     * @memberof x.css
-    * @param {HTMLElement} element 元素对象
+    * @param {string} selector 选择器或者元素对象
     * @param {string} classNameA CSS类名称
     * @param {string} classNameB CSS类名称
     */
-    swap: function(element, classNameA, classNameB)
+    swap: function(selector, classNameA, classNameB)
     {
-        if (this.check(element, classNameA))
+        var element = x.query(selector);
+
+        if (x.css.check(element, classNameA))
         {
-            element.className = element.className.replace(classNameA, classNameB);
+            var buffer = element.className.split(' ');
+
+            for (var i = 0; i < buffer.length; i++)
+            {
+                buffer[i] = buffer[i].trim();
+
+                if (buffer[i] == classNameA) { buffer[i] = classNameB; }
+            }
+            
+            element.className = buffer.join(' ');
         }
     },
     /*#endregion*/
 
-    /*#region 函数:add(element, className)*/
+    /*#region 函数:add(selector, className)*/
     /**
     * 添加元素对象的 className
     * @method add
     * @memberof x.css
-    * @param {HTMLElement} element 元素对象
+    * @param {string} selector 选择器或者元素对象
     * @param {string} className CSS类名称
     */
-    add: function(element, className)
+    add: function(selector, className)
     {
+        var element = x.query(selector);
+
         if (!x.css.check(element, className))
         {
             element.className += ' ' + className;
@@ -157,16 +174,18 @@ x.css = {
     },
     /*#endregion*/
 
-    /*#region 函数:remove(element, className)*/
+    /*#region 函数:remove(selector, className)*/
     /**
     * 移除元素对象的 className
     * @method remove
     * @memberof x.css
-    * @param {HTMLElement} element 元素对象
+    * @param {string} selector 选择器或者元素对象
     * @param {string} className CSS类名称
     */
-    remove: function(element, className)
+    remove: function(selector, className)
     {
+        var element = x.query(selector);
+
         if (x.css.check(element, className))
         {
             var reg = new RegExp('(\\s|^)' + className + '(\\s|$)');

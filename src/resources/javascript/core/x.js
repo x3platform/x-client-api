@@ -5,6 +5,12 @@
 * @description 默认根命名空间
 */
 var x = {
+    defaults: {
+        // 默认消息提示方式
+        msg: function(text) { alert(text); }
+    },
+
+    msg: function(text) { x.defaults.msg(text) },
 
     /*#region 函数:type(object)*/
     /**
@@ -251,17 +257,23 @@ var x = {
     */
     browserFeatures: {
         /**
-        * XPath 特性
-        * @class XPath
-        * @memberof x.browserFeatures
-        */
-        XPath: !!document.evaluate,
-        /**
         * Selector 特性, 支持 querySelector, querySelectorAll
         * @class Selector
         * @memberof x.browserFeatures
         */
         Selector: !!document.querySelector,
+        /**
+        * SuportsTouch 特性, 支持触摸事件
+        * @class SuportsTouch
+        * @memberof x.browserFeatures
+        */
+        SuportsTouch: ("createTouch" in document),
+        /**
+        * XPath 特性
+        * @class XPath
+        * @memberof x.browserFeatures
+        */
+        XPath: !!document.evaluate,
 
         ElementExtensions: !!window.HTMLElement,
         SpecificElementExtensions:
@@ -274,7 +286,12 @@ var x = {
     * @memberof x.ui
     * @description UI 名称空间
     */
-    ui: {},
+    ui: {
+        // 样式名称前缀
+        classNamePrefix: 'x-ui',
+        // 样式表路径前缀
+        stylesheetPathPrefix: '/resources/styles/x-ui/'
+    },
 
     // 脚本代码片段
     scriptFragment: '<script[^>]*>([\\S\\s]*?)<\/script>',
@@ -296,16 +313,100 @@ var x = {
     /**
     * 加载脚本
     */
-    require: function(href, type)
+    require: function(options)
     {
-        switch (type.toLowerCase())
-        {
-            case "text/css":
-                return jQuery('<link type="text/css" rel="stylesheet" href="' + href + '"/>').appendTo('head');
+        var context = x.ext({
+            id: '',
+            path: '',
+            onScriptLoad: function(event)
+            {
+                var node = x.event.getTarget(event);
 
-            case "text/javascript":
-            default:
-                return jQuery('<script type="text/javascript" src="' + href + '"></script>').appendTo('head');
+                if (event.type === 'load' || /^(complete|loaded)$/.test(node.readyState))
+                {
+                    node.ready = true;
+
+                    // x.debug.log('load');
+                    // console.log(context);
+                    context.callback(context);
+                }
+            }
+        }, options || {});
+
+        var head = document.getElementsByTagName('head')[0];
+
+        var node = document.getElementById(context.id);
+
+        if (node == null)
+        {
+            if (context.fileType == 'css')
+            {
+                var node = document.createElement("link");
+
+                node.id = context.id;
+                node.type = "text/css";
+                node.rel = "stylesheet";
+                node.href = context.path;
+            }
+            else
+            {
+                var node = document.createElement("script");
+
+                node.id = context.id;
+                node.type = "text/javascript";
+                node.async = true;
+                node.src = context.path;
+            }
+
+            if (x.isFunction(context.callback))
+            {
+                if (node.attachEvent &&
+                    !(node.attachEvent.toString && node.attachEvent.toString().indexOf('[native code') < 0) &&
+                    !isOpera)
+                {
+                    //Check if node.attachEvent is artificially added by custom script or
+                    //natively supported by browser
+                    //read https://github.com/jrburke/requirejs/issues/187
+                    //if we can NOT find [native code] then it must NOT natively supported.
+                    //in IE8, node.attachEvent does not have toString()
+                    //Note the test for "[native code" with no closing brace, see:
+                    //https://github.com/jrburke/requirejs/issues/273
+
+                    x.event.add(node, 'readystatechange', context.onScriptLoad);
+                }
+                else
+                {
+                    x.event.add(node, 'load', context.onScriptLoad);
+                }
+            }
+
+            head.appendChild(node);
+        }
+        else
+        {
+            if (x.isFunction(context.callback))
+            {
+                if (node.ready)
+                {
+                    // x.debug.log('callbak');
+                    // x.debug.log(context);
+
+                    context.callback(context);
+                }
+                else
+                {
+                    if (node.attachEvent &&
+                        !(node.attachEvent.toString && node.attachEvent.toString().indexOf('[native code') < 0) &&
+                        !isOpera)
+                    {
+                        x.event.add(node, 'readystatechange', context.onScriptLoad);
+                    }
+                    else
+                    {
+                        x.event.add(node, 'load', context.onScriptLoad);
+                    }
+                }
+            }
         }
     },
 
@@ -402,24 +503,72 @@ var x = {
     },
     /*#endregion*/
 
-    each: function(object, callback)
+    /*#region 函数:query(selector)*/
+    /**
+    * 精确查询单个表单元素。
+    * @method query
+    * @memberof x.form
+    * @param {string} selector 选择表达式
+    */
+    query: function(selector)
     {
-        var name, i = 0, length = object.length;
+        if (x.type(selector).indexOf('html') == 0)
+        {
+            // Html元素类型 直接返回
+            return selector;
+        }
+        else if (x.type(selector) == 'string')
+        {
+            /*
+            // 由 Sizzle 引擎替代以下功能
+            var element = document.getElementById(selector);
+
+            // 支持 querySelector 方法查找元素
+            if (element == null && x.browserFeatures.Selector &&
+            (selector.indexOf('#') > -1 || selector.indexOf('.') > -1 || selector.indexOf(' ') > -1))
+            {
+            element = document.querySelector(selector);
+            }
+
+            return element;
+            */
+
+            var results = Sizzle.apply(window, Array.prototype.slice.call(arguments, 0));
+
+            return (results.length == 0) ? null : results[0];
+        }
+    },
+    /*#endregion*/
+
+    /*#region 函数:each(data, callback)*/
+    /**
+    * 遍历元素对象, 如果需要退出返回 false
+    * @method query
+    * @memberof x
+    * @param {Object} data 对象
+    * @param {Function} callback 回调函数
+    */
+    each: function(data, callback)
+    {
+        var name, i = 0, length = data.length;
 
         if (length === undefined)
         {
-            for (name in object)
+            // 默认对象
+            for (name in data)
             {
-                if (callback.call(object[name], name, object[name]) === false) { break; }
+                if (callback.call(data[name], name, data[name]) === false) { break; }
             }
         }
         else
         {
-            for (var value = object[0]; i < length && callback.call(value, i, value) != false; value = object[++i]) { }
+            // 数组对象
+            for (var value = data[0]; i < length && callback.call(value, i, value) != false; value = data[++i]) { }
         }
 
-        return object;
+        return data;
     },
+    /*#endregion*/
 
     /*#region 函数:toJSON(text)*/
     /**
@@ -540,174 +689,11 @@ var x = {
     */
     getFriendlyName: function(name)
     {
-        return name.replace(/[\.\/-]/g, '$').replace(/\$\$/g, '$');
+        return 'x' + name.replace(/[\.\/-]/g, '$').replace(/\$\$/g, '$');
     },
     /*#endregion*/
 
-    /*#region 函数:getEventObject(event)*/
-    /*
-    * 获取事件对象, 非IE浏览器的获取事件对象需要在调用方法中传递一个参数 event
-    * @method getEventObject
-    * @memberof x
-    * @param {event} event 事件对象
-    */
-    getEventObject: function(event)
-    {
-        return window.event ? window.event : event;
-    },
-    /*#endregion*/
-
-    /*#region 函数:getEventTarget(event)*/
-    /**
-    * 获取事件的目标对象
-    * @method getEventTarget
-    * @memberof x
-    * @param {event} event 事件对象
-    */
-    getEventTarget: function(event)
-    {
-        return window.event ? window.event.srcElement : event ? event.target : null;
-    },
-    /*#endregion*/
-
-    /*#region 函数:getEventPosition(event)*/
-    /**
-    * 获取事件的光标坐标
-    * @method getEventPosition
-    * @memberof x
-    * @param {event} event 事件对象
-    */
-    getEventPosition: function(event)
-    {
-        var docElement = document.documentElement;
-
-        var body = document.body || { scrollLeft: 0, scrollTop: 0 };
-
-        return {
-            x: event.pageX || (event.clientX + (docElement.scrollLeft || body.scrollLeft) - (docElement.clientLeft || 0)),
-            y: event.pageY || (event.clientY + (docElement.scrollTop || body.scrollTop) - (docElement.clientTop || 0))
-        };
-    },
-    /*#endregion*/
-
-    /*#region 函数:getEventPositionX(event)*/
-    /**
-    * 获取事件的光标X坐标
-    * @method getEventPositionX
-    * @memberof x
-    * @param {event} event 事件对象
-    */
-    getEventPositionX: function(event)
-    {
-        return x.getEventPosition(event).x;
-    },
-    /*#endregion*/
-
-    /*#region 函数:getEventPositionY(event)*/
-    /**
-    * 获取事件的光标Y坐标
-    * @method getEventPositionY
-    * @memberof x
-    * @param {event} event 事件对象
-    */
-    getEventPositionY: function(event)
-    {
-        return x.getEventPosition(event).y;
-    },
-    /*#endregion*/
-
-    /*#region 函数:stopEventPropagation(event)*/
-    /**
-    * 停止事件传播
-    * @method stopEventPropagation
-    * @memberof x
-    * @param {event} event 事件对象
-    */
-    stopEventPropagation: function(event)
-    {
-        // 判定是否支持触摸
-        suportsTouch = ("createTouch" in document);
-
-        var touch = suportsTouch ? event.touches[0] : event;
-
-        if (suportsTouch)
-        {
-            touch.preventDefault();
-        }
-        else
-        {
-            if (window.event)
-            {
-                // IE
-                window.event.cancelBubble = true;
-                window.event.returnValue = false;
-                return;
-            }
-
-            if (event)
-            {
-                event.stopPropagation();
-                event.preventDefault();
-            }
-        }
-    },
-    /*#endregion*/
-
-    /*#region 函数:addEventListener(target, type, listener, useCapture)*/
-    /**
-    * 添加事件监听器
-    * @method addEventListener
-    * @memberof x
-    * @param {string} target 监听对象
-    * @param {string} type 监听事件
-    * @param {string} listener 处理函数
-    * @param {string} [useCapture] 监听顺序方式
-    */
-    addEventListener: function(target, type, listener, useCapture)
-    {
-        if (target.addEventListener)
-        {
-            target.addEventListener(type, listener, useCapture);
-        }
-        else if (target.attachEvent)
-        {
-            target.attachEvent('on' + type, listener);
-        }
-        else
-        {
-            target['on' + type] = listener;
-        }
-    },
-    /*#endregion*/
-
-    /*#region 函数:removeEventListener(target, type, listener, useCapture)*/
-    /**
-    * 移除事件监听器
-    * @method removeEventListener
-    * @memberof x
-    * @param {string} target 监听对象
-    * @param {string} type 监听事件
-    * @param {string} listener 处理函数
-    * @param {string} [useCapture] 监听顺序方式
-    */
-    removeEventListener: function(target, type, listener, useCapture)
-    {
-        if (target.removeEventListener)
-        {
-            target.removeEventListener(type, listener, useCapture);
-        }
-        else if (target.detachEvent)
-        {
-            target.detachEvent('on' + type, listener);
-        }
-        else
-        {
-            target['on' + type] = null;
-        }
-    },
-    /*#endregion*/
-
-    /*#region 函数:newHashTable()*/
+    /*#region 类:newHashTable()*/
     /**
     * 哈希表
     * @class HashTable 哈希表
@@ -1162,6 +1148,172 @@ var x = {
     },
     /*#endregion*/
 
+    event: {
+        /*#region 函数:getEvent(event)*/
+        /*
+        * 获取事件对象, 非IE浏览器的获取事件对象需要在调用方法中传递一个参数 event
+        * @method getEvent
+        * @memberof x
+        * @param {event} event 事件对象
+        */
+        getEvent: function(event)
+        {
+            return window.event ? window.event : event;
+        },
+        /*#endregion*/
+
+        /*#region 函数:getTarget(event)*/
+        /**
+        * 获取事件的目标对象
+        * @method getTarget
+        * @memberof x
+        * @param {event} event 事件对象
+        */
+        getTarget: function(event)
+        {
+            return window.event ? window.event.srcElement : (event ? event.target : null);
+        },
+        /*#endregion*/
+
+        /*#region 函数:getPosition(event)*/
+        /**
+        * 获取事件的光标坐标
+        * @method getPosition
+        * @memberof x
+        * @param {event} event 事件对象
+        */
+        getPosition: function(event)
+        {
+            var docElement = document.documentElement;
+
+            var body = document.body || { scrollLeft: 0, scrollTop: 0 };
+
+            return {
+                x: event.pageX || (event.clientX + (docElement.scrollLeft || body.scrollLeft) - (docElement.clientLeft || 0)),
+                y: event.pageY || (event.clientY + (docElement.scrollTop || body.scrollTop) - (docElement.clientTop || 0))
+            };
+        },
+        /*#endregion*/
+
+        /*#region 函数:getPositionX(event)*/
+        /**
+        * 获取事件的光标X坐标
+        * @method getEventPositionX
+        * @memberof x
+        * @param {event} event 事件对象
+        */
+        getPositionX: function(event)
+        {
+            return x.getPosition(event).x;
+        },
+        /*#endregion*/
+
+        /*#region 函数:getPositionY(event)*/
+        /**
+        * 获取事件的光标Y坐标
+        * @method getPositionY
+        * @memberof x
+        * @param {event} event 事件对象
+        */
+        getPositionY: function(event)
+        {
+            return x.getPosition(event).y;
+        },
+        /*#endregion*/
+
+        /*#region 函数:stopPropagation(event)*/
+        /**
+        * 停止事件传播
+        * @method stopPropagation
+        * @memberof x
+        * @param {event} event 事件对象
+        */
+        stopPropagation: function(event)
+        {
+            // 判定是否支持触摸
+            suportsTouch = ("createTouch" in document);
+
+            var touch = suportsTouch ? event.touches[0] : event;
+
+            if (suportsTouch)
+            {
+                touch.stopPropagation();
+                touch.preventDefault();
+            }
+            else
+            {
+                if (window.event)
+                {
+                    // IE
+                    window.event.cancelBubble = true;
+                    window.event.returnValue = false;
+                    return;
+                }
+
+                if (event)
+                {
+                    event.stopPropagation();
+                    event.preventDefault();
+                }
+            }
+        },
+        /*#endregion*/
+
+        /*#region 函数:add(target, type, listener, useCapture)*/
+        /**
+        * 添加事件监听器
+        * @method add
+        * @memberof x
+        * @param {string} target 监听对象
+        * @param {string} type 监听事件
+        * @param {string} listener 处理函数
+        * @param {string} [useCapture] 监听顺序方式
+        */
+        add: function(target, type, listener, useCapture)
+        {
+            if (target.addEventListener)
+            {
+                target.addEventListener(type, listener, useCapture);
+            }
+            else if (target.attachEvent)
+            {
+                target.attachEvent('on' + type, listener);
+            }
+            else
+            {
+                target['on' + type] = listener;
+            }
+        },
+        /*#endregion*/
+
+        /*#region 函数:remove(target, type, listener, useCapture)*/
+        /**
+        * 移除事件监听器
+        * @method remove
+        * @memberof x
+        * @param {string} target 监听对象
+        * @param {string} type 监听事件
+        * @param {string} listener 处理函数
+        * @param {string} [useCapture] 监听顺序方式
+        */
+        remove: function(target, type, listener, useCapture)
+        {
+            if (target.removeEventListener)
+            {
+                target.removeEventListener(type, listener, useCapture);
+            }
+            else if (target.detachEvent)
+            {
+                target.detachEvent('on' + type, listener);
+            }
+            else
+            {
+                target['on' + type] = null;
+            }
+        }
+        /*#endregion*/
+    },
+
     /**
     * Guid 格式文本
     * @namespace guid
@@ -1250,6 +1402,30 @@ var x = {
     * @memberof x
     */
     string: {
+
+        stringify: function(value)
+        {
+            var type = x.type(value);
+
+            if (type !== 'string')
+            {
+                if (type === 'number')
+                {
+                    value += '';
+                }
+                else if (type === 'function')
+                {
+                    value = x.string.stringify(value.call(value));
+                }
+                else
+                {
+                    value = '';
+                }
+            }
+
+            return value;
+        },
+
         /*#region 函数:trim(text, trimText)*/
         /**
         * 去除字符串两端空白或其他文本信息.
@@ -1261,7 +1437,7 @@ var x = {
         */
         trim: function(text, trimText)
         {
-            if (x.type(trimText) == 'undefined')
+            if (x.isUndefined(trimText))
             {
                 return text.replace(/(^\s*)|(\s*$)/g, '');
             }
@@ -1282,7 +1458,7 @@ var x = {
         */
         ltrim: function(text, trimText)
         {
-            if (x.type(trimText) == 'undefined')
+            if (x.isUndefined(trimText))
             {
                 return text.replace(/(^\s*)/g, '');
             }
@@ -1303,7 +1479,7 @@ var x = {
         */
         rtrim: function(text, trimText)
         {
-            if (x.type(trimText) == 'undefined')
+            if (x.isUndefined(trimText))
             {
                 return text.replace(/(\s*$)/g, '');
             }
@@ -1311,6 +1487,30 @@ var x = {
             {
                 return (text.substr(text.length - trimText.length, trimText.length) === trimText) ? text.substr(0, text.length - trimText.length) : text;
             }
+        },
+        /*#endregion*/
+
+        /*#region 函数:format(text, args)*/
+        /**
+        * 去除字符串右侧空白.
+        * @method rtrim
+        * @memberof x.string
+        * @param {string} text 文本信息.
+        * @param {int} [trimText] 需要去除的文本信息(默认为空白).
+        */
+        format: function()
+        {
+            if (arguments.length == 0) { return null; }
+
+            var text = arguments[0];
+
+            for (var i = 1; i < arguments.length; i++)
+            {
+                var re = new RegExp('\\{' + (i - 1) + '\\}', 'gm');
+                text = text.replace(re, arguments[i]);
+            }
+
+            return text;
         },
         /*#endregion*/
 
@@ -1340,201 +1540,135 @@ var x = {
     },
 
     /**
-    * 窗口
-    * @namespace windows
-    * @memberof x
+    * 颜色编码处理
     */
-    windows: {
-        /*#region 函数:newWindow(name, options)*/
-        newWindow: function(name, options)
+    color: {
+
+        // 正则规则
+        // reg: /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/,
+
+        hex: function(colorRgbCode)
         {
-            var internalWindow = {
-                // 名称
-                name: name,
-                // 选项
-                options: options,
-
-                /*#region 函数:open()*/
-                open: function()
+            if (/^(rgb|RGB)/.test(colorRgbCode))
+            {
+                var colorBuffer = colorRgbCode.replace(/(?:\(|\)|rgb|RGB)*/g, "").split(",");
+                var strHex = "#";
+                for (var i = 0; i < colorBuffer.length; i++)
                 {
-                    document.getElementById(name).style.display = '';
-                },
-                /*#endregion*/
+                    var hex = Number(colorBuffer[i]).toString(16);
 
-                /*#region 函数:close()*/
-                close: function()
-                {
-                    document.getElementById(name).style.display = 'none';
-                },
-                /*#endregion*/
-
-                /*#region 函数:create()*/
-                create: function()
-                {
-                    var outString = '';
-
-                    var opts = this.options;
-
-                    outString = '<div id="' + this.name + '" style="';
-                    outString += 'position: fixed; display:none;'
-                    outString += 'z-index: ' + opts.zIndex + ';'
-                    outString += 'border: ' + opts.border + ';'
-                    outString += 'width: ' + opts.width + ';'
-                    outString += 'height: ' + opts.height + ';'
-                    outString += 'top: ' + opts.top + ';'
-                    outString += 'right:' + opts.right + ';'
-                    outString += 'bottom: ' + opts.bottom + ';'
-                    outString += 'left: ' + opts.left + ';'
-                    outString += '" ></div>';
-
-                    return outString;
-                },
-                /*#endregion*/
-
-                /*#region 函数:bindOptions(options)*/
-                bindOptions: function(options)
-                {
-                    // 设置默认选项参数
-                    this.options = x.ext({
-                        zIndex: 999,                    // Z轴坐标
-                        height: '100px',                // 高度
-                        width: '100px',                 // 宽度
-                        top: 'auto',                    // 上
-                        right: 'auto',                  // 右
-                        bottom: 'auto',                 // 下
-                        left: 'auto'                    // 左
-                    }, options || {});
-                },
-                /*#endregion*/
-
-                load: function(options)
-                {
-                    // 验证并绑定选项信息
-                    this.bindOptions(options);
-
-                    // 设置重写后的创建函数
-                    if (!x.isUndefined(options.create))
+                    if (hex === "0")
                     {
-                        this.create = options.create;
+                        hex += hex;
                     }
 
-                    // 加载遮罩和页面内容
-                    $(document.body).append(this.create());
-
-                    x.form.features.bind();
+                    strHex += hex;
                 }
-            };
 
-            return internalWindow;
+                if (strHex.length !== 7)
+                {
+                    strHex = colorRgbCode;
+                }
+
+                return strHex;
+            }
+            else if (/^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/.test(colorRgbCode))
+            {
+                var colorBuffer = colorRgbCode.replace(/#/, "").split("");
+
+                if (colorBuffer.length === 6)
+                {
+                    return colorRgbCode;
+                }
+                else if (colorBuffer.length === 3)
+                {
+                    var numHex = "#";
+
+                    for (var i = 0; i < colorBuffer.length; i += 1)
+                    {
+                        numHex += (colorBuffer[i] + colorBuffer[i]);
+                    }
+
+                    return numHex;
+                }
+            }
+            else
+            {
+                return colorRgbCode;
+            }
         },
-        /*#endregion*/
 
-        /*#region 函数:getWindow(name, options)*/
         /**
-        * 获取窗口对象
+        * 十六进制颜色转为RGB格式
         */
-        getWindow: function(name, options)
+        rgb: function(colorHexCode)
         {
-            var name = x.getFriendlyName(location.pathname + '$window$' + name);
+            var color = colorHexCode.toLowerCase();
 
-            var internalWindow = x.windows.newWindow(name, options);
-
-            // 加载界面、数据、事件
-            internalWindow.load(options);
-
-            // 绑定到Window对象
-            window[name] = internalWindow;
-
-            return internalWindow;
-        },
-        /*#endregion*/
-
-        /*#region 函数:getDialog(url, width, height, style)*/
-        /**
-        * 打开对话新窗口, 该窗口在屏幕居中.
-        */
-        getDialog: function(url, width, height, style)
-        {
-            // 样式参数
-            // resizable        调整大小
-            // location         地址栏
-
-            if (typeof (style) === 'undefined')
+            if (color && /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/.test(color))
             {
-                style = 'resizable=1,directories=0,location=0,menubar=1,scrollbars=1,status=0,titlebar=0,toolbar=0';
-                //
-                //style = 'resizable=1,directories=1,location=1,menubar=1,scrollbars=1,status=1,titlebar=1,toolbar=1';
-                //
-                //style = 'resizable=1,directories=0,location=0,menubar=0,scrollbars=1,status=0,titlebar=0,toolbar=0';
-            }
+                // 处理简写的颜色
+                if (color.length === 4)
+                {
+                    var originalColor = "#";
 
-            if (typeof (width) === 'undefined')
-            {
-                style = "width=" + screen.availWidth + "," + style;
-                var left = Math.round((screen.availWidth - width) / 2);
-                style = "left=" + left + "," + style;
+                    for (var i = 1; i < 4; i += 1)
+                    {
+                        originalColor += color.slice(i, i + 1).concat(color.slice(i, i + 1));
+                    }
+
+                    color = originalColor;
+                }
+
+                // 处理六位的颜色值
+                var colorBuffer = [];
+
+                for (var i = 1; i < 7; i += 2)
+                {
+                    colorBuffer.push(parseInt("0x" + color.slice(i, i + 2)));
+                }
+                return 'rgb(' + colorBuffer.join(', ') + ')';
             }
             else
             {
-                style = "width=" + width + "," + style;
-                var left = Math.round((screen.availWidth - width) / 2);
-                style = "left=" + left + "," + style;
+                return color;
             }
-
-            if (typeof (height) === 'undefined')
-            {
-                style = "height=" + screen.availHeight + "," + style;
-                var top = Math.round((screen.availHeight - height) / 2);
-                style = "top=" + top + "," + style;
-            }
-            else
-            {
-                style = "height=" + height + "," + style;
-                var top = Math.round((screen.availHeight - height) / 2);
-                style = "top=" + top + "," + style;
-            }
-
-            return window.open(url, '', style);
-        },
-        /*#endregion*/
-
-        /*#region 函数:getModalDialog(url, width, height, style)*/
-        /**
-        * 打开模态窗口, 该窗口在屏幕居中.
-        */
-        getModalDialog: function(url, width, height, style)
-        {
-            if (typeof (style) === 'undefined')
-            {
-                style = 'toolbar=no; location=no; directories=no; status=no; menubar=no; center=yes; help=0; resizable=yes; status=0;';
-            }
-
-            if (typeof (width) === 'undefined')
-            {
-                var left = Math.round((screen.availWidth - width) / 2);
-                style = 'dialogWidth=' + width + 'px,left=' + left + ',' + style;
-            }
-            else
-            {
-                style = "dialogWidth=" + width + "px," + style;
-                var left = Math.round((screen.availWidth - width) / 2);
-                style = "left=" + left + "," + style;
-            }
-
-            if (typeof (height) === 'undefined')
-            {
-                var top = Math.round((screen.availHeight - height) / 2);
-                style = 'dialogHeight=' + height + 'px,top=' + top + ',' + style;
-            }
-            else
-            {
-                style = "dialogHeight=" + height + "px," + style;
-                var top = Math.round((screen.availHeight - height) / 2);
-                style = "top=" + top + "," + style;
-            }
-
-            return window.showModalDialog(url, window, style);
         }
-        /*#endregion*/
     }
 };
+
+var scriptFilePath = '';
+
+x.file = function()
+{
+    return scriptFilePath;
+}
+
+x.dir = function()
+{
+    if (scriptFilePath.length > 0)
+    {
+        return scriptFilePath.substring(0, scriptFilePath.lastIndexOf("/") + 1);
+    }
+    else
+    {
+        return '';
+    }
+}
+
+if (document)
+{
+    try
+    {
+        // 判断文件路径的 javascript 代码一般都直接放在 javascript 文件中而不是函数中，
+        // 所以当加载该 javascript 文件时会立即执行其中的语句，而执行此语句时所获取到的文件数目正好是scripts.length-1，
+        // 因为页面后面的 javascript 文件还没有加载，所以该处的js文件获取的数目并不是页面所有的js文件的数目。
+        var scripts = document.scripts;
+
+        scriptFilePath = scripts[scripts.length - 1].src;
+    }
+    catch (ex)
+    {
+        scriptFilePath = '';
+    }
+}
