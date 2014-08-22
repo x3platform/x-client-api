@@ -1,0 +1,15 @@
+    // 输出对象
+        
+    if (typeof define === "function" && define.amd ) {
+	    // RequireJS && SeaJS
+        define(function() { return @EXPORTS; });
+    } else if (typeof module !== "undefined" && module.exports ) {
+	    // Common-JS && NodeJS
+        module.exports = @EXPORTS;
+    } else {
+        // Browser
+        window.@BROWSER_EXPORTS = @EXPORTS;
+    }
+
+    return @EXPORTS;
+}));
