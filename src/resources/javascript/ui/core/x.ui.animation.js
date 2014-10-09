@@ -2,12 +2,17 @@
 
 /**
 * @namespace animation
-* @memberof x
+* @memberof x.ui
 * @description 动画
 */
 x.ui.animation = {
     /**
-    * 动画剪辑对象
+    * 动画剪辑
+    * @description 动画剪辑
+    * @class Clip
+    * @constructor newClip
+    * @memberof x.ui.animation
+    * @param {object} options 选项
     */
     newClip: function(options)
     {
@@ -41,7 +46,7 @@ x.ui.animation = {
                     cpause: 2000,                           // 停顿时间(auto为true时有效)
                     onStart: function() { },                // 开始转换时执行
                     onFinish: function() { },               // 完成转换时执行
-                    tween: x.animation.tween.quart.easeOut  // tween 算法
+                    tween: x.ui.animation.tween.quart.easeOut  // tween 算法
                 };
 
                 x.ext(this.options, options || {});
@@ -82,27 +87,47 @@ x.ui.animation = {
                 }
             },
 
-            // 移动到
+            /*#region 函数:moveTo()*/
+            /**
+            * 移动到
+            * @method moveTo
+            * @memberof x.ui.animation.newClip#
+            */
             moveTo: function(i)
             {
                 this.slider.style[this._css] = i + "px";
             },
+            /*#endregion*/
 
-            // 上一个
+            /*#region 函数:previous()*/
+            /**
+            * 上一个
+            * @method previous
+            * @memberof x.ui.animation.newClip#
+            */
             previous: function()
             {
                 this.run(--this.index);
             },
+            /*#endregion*/
 
-            // 下一个
+            /*#region 函数:next()*/
+            /**
+            * 下一个
+            * @method next
+            * @memberof x.ui.animation.newClip#
+            */
             next: function()
             {
                 this.run(++this.index);
             },
+            /*#endregion*/
 
             /*#region 函数:stop()*/
             /**
             * 停止
+            * @method stop
+            * @memberof x.ui.animation.newClip#
             */
             stop: function()
             {
@@ -231,13 +256,13 @@ x.ui.animation = {
 
                 // 样式设置
                 var position = x.css.style(this.container).position;
+                
                 position == "relative" || position == "absolute" || (this.container.style.position = "relative");
 
                 this.container.style.overflow = "hidden";
                 this.slider.style.position = "absolute";
 
                 this.change = this.options.change ? this.options.change : this.slider[bvertical ? "offsetHeight" : "offsetWidth"] / this.count;
-
             }
         };
 
@@ -247,23 +272,51 @@ x.ui.animation = {
     },
 
     /** 
-    * 补间动画效果
-    * t: timestamp，指缓动效果开始执行到当前帧开始执行时经过的时间段，单位ms
-    * b: beginning position，起始位置
-    * c: change，要移动的距离，就是终点位置减去起始位置
-    * d: duration ，缓和效果持续的时间
+    * 补间动画
+    * @namespace tween
+    * @memberof x.ui.animation
     */
     tween: {
+        /** 
+        * 线性的
+        * @method linear
+        * @memberof x.ui.animation.tween
+        * @param {number} t: timestamp，指缓动效果开始执行到当前帧开始执行时经过的时间段，单位ms
+        * @param {number} b: beginning position，起始位置
+        * @param {number} c: change，要移动的距离，就是终点位置减去起始位置
+        * @param {number} d: duration ，缓和效果持续的时间
+        */
         linear: function(t, b, c, d)
         {
             return c * t / d + b;
         },
-
+        /**
+        * @namespace quart
+        * @memberof x.ui.animation.tween
+        */
         quart: {
+            /** 
+            * 缓慢进入
+            * @method easeIn
+            * @memberof x.ui.animation.tween.quart
+            * @param {number} t: timestamp，指缓动效果开始执行到当前帧开始执行时经过的时间段，单位ms
+            * @param {number} b: beginning position，起始位置
+            * @param {number} c: change，要移动的距离，就是终点位置减去起始位置
+            * @param {number} d: duration ，缓和效果持续的时间
+            */
             easeIn: function(t, b, c, d)
             {
                 return c * (t /= d) * t * t * t + b;
             },
+            /** 
+            * 缓慢退出
+            * @method easeIn
+            * @memberof x.ui.animation.tween.quart
+            * @param {number} [t]imestamp 指缓动效果开始执行到当前帧开始执行时经过的时间段，单位ms
+            * @param {number} [b]eginning position，起始位置
+            * @param {number} [c]hange 要移动的距离，就是终点位置减去起始位置
+            * @param {number} [d]uration 缓和效果持续的时间
+            */
             easeOut: function(t, b, c, d)
             {
                 return -c * ((t = t / d - 1) * t * t * t - 1) + b;
@@ -274,6 +327,10 @@ x.ui.animation = {
                 return -c / 2 * ((t -= 2) * t * t * t - 2) + b;
             }
         },
+        /**
+        * @namespace quad
+        * @memberof x.ui.animation.tween
+        */
         quad: {
             easeIn: function(t, b, c, d)
             {
@@ -289,6 +346,10 @@ x.ui.animation = {
                 return -c / 2 * ((--t) * (t - 2) - 1) + b;
             }
         },
+        /**
+        * @namespace cubic
+        * @memberof x.ui.animation.tween
+        */
         cubic: {
             easeIn: function(t, b, c, d)
             {
@@ -304,6 +365,10 @@ x.ui.animation = {
                 return c / 2 * ((t -= 2) * t * t + 2) + b;
             }
         },
+        /**
+        * @namespace quint
+        * @memberof x.ui.animation.tween
+        */
         quint: {
             easeIn: function(t, b, c, d)
             {
@@ -319,6 +384,10 @@ x.ui.animation = {
                 return c / 2 * ((t -= 2) * t * t * t * t + 2) + b;
             }
         },
+        /**
+        * @namespace sine
+        * @memberof x.ui.animation.tween
+        */
         sine: {
             easeIn: function(t, b, c, d)
             {
@@ -333,6 +402,10 @@ x.ui.animation = {
                 return -c / 2 * (Math.cos(Math.PI * t / d) - 1) + b;
             }
         },
+        /**
+        * @namespace expo
+        * @memberof x.ui.animation.tween
+        */
         expo: {
             easeIn: function(t, b, c, d)
             {
@@ -350,6 +423,10 @@ x.ui.animation = {
                 return c / 2 * (-Math.pow(2, -10 * --t) + 2) + b;
             }
         },
+        /**
+        * @namespace circ
+        * @memberof x.ui.animation.tween
+        */
         circ: {
             easeIn: function(t, b, c, d)
             {
@@ -365,6 +442,10 @@ x.ui.animation = {
                 return c / 2 * (Math.sqrt(1 - (t -= 2) * t) + 1) + b;
             }
         },
+        /**
+        * @namespace elastic
+        * @memberof x.ui.animation.tween
+        */
         elastic: {
             easeIn: function(t, b, c, d, a, p)
             {
@@ -389,6 +470,10 @@ x.ui.animation = {
                 return a * Math.pow(2, -10 * (t -= 1)) * Math.sin((t * d - s) * (2 * Math.PI) / p) * .5 + c + b;
             }
         },
+        /**
+        * @namespace back
+        * @memberof x.ui.animation.tween
+        */
         back: {
             easeIn: function(t, b, c, d, s)
             {
@@ -407,6 +492,10 @@ x.ui.animation = {
                 return c / 2 * ((t -= 2) * t * (((s *= (1.525)) + 1) * t + s) + 2) + b;
             }
         },
+        /**
+        * @namespace bounce
+        * @memberof x.ui.animation.tween
+        */
         bounce: {
             easeIn: function(t, b, c, d)
             {

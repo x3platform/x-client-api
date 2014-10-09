@@ -1,9 +1,9 @@
-﻿// -*- ecoding : utf-8 -*-
+﻿// -*- ecoding=utf-8 -*-
 
 /**
-* 拖拽区块
-*
-* require	: x.js
+* @namespace drag
+* @memberof x.ui
+* @description 拖拽
 */
 x.ui.drag = {
     /**

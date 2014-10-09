@@ -1,0 +1,25 @@
+dd {
+   margin : 0 0 0 0; 
+}
+
+.param-options {
+     border-collapse: collapse; border-spacing: 0;
+}
+
+h5, .container-overview .subsection-title {
+    margin-left: 16px;
+}
+.description {
+    margin-left: 16px;
+}
+.prettyprint
+{
+    margin-left: 16px;
+}
+.params, .props {
+    margin-top: 10px;
+    margin-left: 16px;
+}
+.params thead tr, .props thead tr, .param-options thead tr{
+    background-color: #f5f5f5;
+}

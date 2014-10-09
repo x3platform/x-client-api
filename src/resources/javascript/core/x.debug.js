@@ -6,10 +6,6 @@
 * @description 基于 Console 对象的调试跟踪工具
 */
 x.debug = {
-    /**
-    * 显示时间戳
-    */
-    enableTimestamp: false,
 
     // 相关链接
     // http://getfirebug.com/wiki/index.php/Console_API
@@ -117,11 +113,13 @@ x.debug = {
     },
     /*#endregion*/
 
-    /*#region 函数:getTimestamp()*/
-    /***
-    * 私有函数, 获取当前调试信息的时间戳.
+    /*#region 函数:timestamp()*/
+    /**
+    * 获取当前时间信息
+    * @method timestamp
+    * @memberof x.debug
     */
-    getTimestamp: function()
+    timestamp: function()
     {
         // 显示时间格式
         var format = '{yyyy-MM-dd HH:mm:ss.fff}';

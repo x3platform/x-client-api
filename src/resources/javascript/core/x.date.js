@@ -8,91 +8,89 @@
 */
 x.date = {
     /**
+    * 当前时间对象
+    * @method now
+    * @memberof x.date
+    */
+    now: function()
+    {
+        return x.date.create();
+    },
+
+    /**
     * 创建时间对象
-    *
-    * @param {object} timeValue 符合时间规则的值
+    * @method create
+    * @memberof x.date
+    * @param {object} timeValue 符合时间规则的日期, 数组, 字符串
     */
     create: function(timeValue)
     {
         return new x.date.newTime(timeValue);
     },
 
+    /**
+    * 时间间隔简写表
+    * @method shortIntervals
+    * @memberof x.date
+    * @private
+    */
+    shortIntervals:
+    {
+        'y': 'year',
+        'q': 'quarter',
+        'M': 'month',
+        'w': 'week',
+        'd': 'day',
+        'h': 'hour',
+        'm': 'minute',
+        's': 'second',
+        'ms': 'msecond'
+    },
+
+    /**
+    * 格式化时间间隔参数
+    * @method formatInterval
+    * @memberof x.date
+    * @private
+    */
+    formatInterval: function(interval)
+    {
+        return x.date.shortIntervals[interval] || interval;
+    },
+
+    /**
+    * 比较两个时间差异
+    * @method diff
+    * @memberof x.date
+    */
     diff: function(begin, end, interval)
     {
         var timeBegin = new x.date.newTime(begin);
         var timeEnd = new x.date.newTime(end);
 
-        switch (String(interval).toLowerCase())
-        {
-            case "y":
-            case "year":
-                result = timeBegin.diff('year', timeEnd);
-            case "M":
-            case "month":
-                result = timeBegin.diff('month', timeEnd);
-            case "w":
-            case "week":
-                result = timeBegin.diff('week', timeEnd);
-            case "d":
-            case "day":
-                result = timeBegin.diff('day', timeEnd);
-            case "h":
-            case "hour":
-                result = timeBegin.diff('hour', timeEnd);
-            case "m":
-            case "minute":
-                return timeBegin.diff('minute', timeEnd);
-            case "s":
-            case "second":
-                return timeBegin.diff('second', timeEnd);
-            case "ms":
-            case "msecond":
-            default:
-                return timeBegin.diff('msecond', timeEnd);
-        }
+        return timeBegin.diff(x.date.formatInterval(interval), timeEnd);
     },
 
+    /**
+    * 比较两个时间差异
+    * @method add
+    * @memberof x.date
+    */
     add: function(timeValue, interval, number)
     {
         var time = new x.date.newTime(timeValue);
 
-        switch (String(interval).toLowerCase())
-        {
-            case "y":
-            case "year":
-                return time.add('year', number);
-            case "q":
-            case "quarter":
-                return time.add('quarter', number);
-            case "M":
-            case "month":
-                return time.add('month', number);
-            case "w":
-            case "week":
-                return time.add('day', number * 7);
-            case "d":
-            case "day":
-                return time.add('day', number);
-            case "h":
-            case "hour":
-                return time.add('hour', number);
-            case "m":
-            case "minute":
-                return time.add('minute', number);
-            case "s":
-            case "second":
-                return time.add('second', number);
-            case "ms":
-            case "msecond":
-            default:
-                return time.add('msecond', number);
-        }
-
-        return time;
+        return time.add(x.date.formatInterval(interval), number);
     },
 
     /**
-    * 日期格式化
+    * 时间格式化
+    * @method format
+    * @memberof x.date
+    * @param {object} timeValue 符合时间规则的日期, 数组, 字符串
+    * @param {string} formatValue 时间格式
+    * @example
+    * x.date.format('2000-01-01 00:00:00', 'yyyy/MM/dd hh:mm:ss');
     */
     format: function(timeValue, formatValue)
     {
@@ -102,8 +100,55 @@ x.date = {
     },
 
     /**
+    * 显示某个时间之前的格式
+    * @method format
+    * @memberof x.date
+    * @param {object} timeValue 符合时间规则的日期, 数组, 字符串
+    * @param {object} suffix 后缀配置
+    * @example
+    * x.date.ago('2000-01-01 00:00:00');
+    * @example
+    * x.date.ago('2000-01-01 00:00:00',{y});
+    */
+    ago: function(timeValue, suffix)
+    {
+        suffix = x.ext({
+            minute: '分钟前',
+            hour: '小时前',
+            day: '天前'
+        }, suffix);
+
+        var time = x.date.create(timeValue);
+        var now = x.date.create();
+
+        if (time.diff('m', now) < 1)
+        {
+            return '1' + suffix.minute;
+        }
+        else if (time.diff('m', now) < 60)
+        {
+            return time.diff('m', now) + suffix.minute;
+        }
+        else if (time.diff('h', now) < 24)
+        {
+            return time.diff('h', now) + suffix.hour;
+        }
+        else if (time.diff('d', now) < 4)
+        {
+            return time.diff('d', now) + suffix.day;
+        }
+        else
+        {
+            return time.toString("yyyy-MM-dd HH:mm:ss");
+        }
+    },
+
+    /**
     * 时间对象
-    * @timeValue 符合时间规则的值(允许Date对象|数组对象|字符串对象)
+    * @class Time 时间对象
+    * @constructor newTime
+    * @memberof x.date
+    * @param {Date} timeValue 符合时间规则的Date对象, 数组对象, 字符串对象
     */
     newTime: function(timeValue)
     {
@@ -111,7 +156,7 @@ x.date = {
 
         if (!x.isUndefined(timeValue))
         {
-            if (x.type (timeValue) === 'object' && !x.isArray(timeValue))
+            if (x.type(timeValue) === 'date')
             {
                 // Date 对象
                 date = timeValue;
@@ -131,7 +176,7 @@ x.date = {
             else
             {
                 // 其他情况
-                var keys = timeValue.replace(/[-|:|\/| ]/g, ',').split(',');
+                var keys = timeValue.replace(/[-|:|\/| |年|月|日]/g, ',').split(',');
 
                 for (var i = 0; i < 6; i++)
                 {
@@ -153,30 +198,40 @@ x.date = {
             msecond: date.getMilliseconds(),
             weekDay: date.getDay(),
 
-            //+---------------------------------------------------  
-            //| 比较日期差 dtEnd 格式为日期型或者 有效日期格式字符串  
-            //+---------------------------------------------------  
+            /**
+            * 比较与另一个时间对象的时间差
+            * @method diff
+            * @memberof x.date.newTime#
+            * @param {string} interval 时间间隔
+            * @param {Time} time 时间对象
+            */
             diff: function(interval, time)
             {
                 var timeBegin = Number(this.toDate());
                 var timeEnd = Number(time.toDate());
+
+                interval = x.date.formatInterval(interval);
 
                 switch (interval)
                 {
                     case 'year': return time.year - this.year;
                     case 'quarter': return Math.ceil((((time.year - this.year) * 12) + (time.month - this.month)) / 3);
                     case 'month': return ((time.year - this.year) * 12) + (time.month - this.month);
-                    case 'week': return Number((timeEnd - timeBegin) / (86400000 * 7));
-                    case 'day': return Number((timeEnd - timeBegin) / 86400000);
-                    case 'hour': return Number((timeEnd - timeBegin) / 3600000);
-                    case 'minute': return Number((timeEnd - timeBegin) / 60000);
-                    case 'second': return Number((timeEnd - timeBegin) / 1000);
-                    case 'msecond': return Number((timeEnd - timeBegin));
+                    case 'week': return parseInt((timeEnd - timeBegin) / (86400000 * 7));
+                    case 'day': return parseInt((timeEnd - timeBegin) / 86400000);
+                    case 'hour': return parseInt((timeEnd - timeBegin) / 3600000);
+                    case 'minute': return parseInt((timeEnd - timeBegin) / 60000);
+                    case 'second': return parseInt((timeEnd - timeBegin) / 1000);
+                    case 'msecond': return parseInt((timeEnd - timeBegin));
                 }
             },
 
             /**
-            * 日期计算  
+            * 时间对象的属性相加
+            * @method add
+            * @memberof x.date.newTime#
+            * @param {string} interval 时间间隔
+            * @param {number} number 数字
             */
             add: function(interval, number)
             {
@@ -186,6 +241,8 @@ x.date = {
                 var ms = 0;
 
                 var monthMaxDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+                interval = x.date.formatInterval(interval);
 
                 switch (interval)
                 {
@@ -275,33 +332,27 @@ x.date = {
             {
                 var weekDays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
 
+                interval = x.date.formatInterval(interval);
+
                 switch (interval)
                 {
-                    case 'y':
                     case 'year':
                         return this.year;
-                    case 'q':
                     case 'quarter':
                         return this.getQuarterOfYear();
-                    case 'M':
                     case 'month':
                         return this.month;
-                    case 'd':
                     case 'day':
                         return this.day;
-                    case 'w':
                     case 'week':
                         return weekDays[this.weekDay];
                     case 'W':
                     case 'weekOfYear':
                         return this.getWeekOfYear();
-                    case 'h':
                     case 'hour':
                         return this.hour;
-                    case 'm':
                     case 'minute':
                         return this.minute;
-                    case 's':
                     case 'second':
                         return this.second;
                     default:
@@ -309,8 +360,10 @@ x.date = {
                 }
             },
 
-            /*
-            /* 取得当前日期所在月的最大天数  
+            /**
+            * 取得当前日期所在月的最大天数  
+            * @method getMaxDayOfMonth
+            * @memberof x.date.newTime#
             */
             getMaxDayOfMonth: function()
             {
@@ -320,8 +373,10 @@ x.date = {
                 return date1.diff('day', date2);
             },
 
-            /*
+            /**
             * 取得当前日期所在季度是一年中的第几季度 
+            * @method getQuarterOfYear
+            * @memberof x.date.newTime#
             */
             getQuarterOfYear: function()
             {
@@ -376,23 +431,29 @@ x.date = {
                 return (this.year % 4 == 0 && ((this.year % 100 != 0) || (this.year % 400 == 0)));
             },
 
-            /*
+            /**
             * 转换为数组格式
+            * @method toArray
+            * @memberof x.date.newTime#
+            * @returns {Array}
             */
             toArray: function()
             {
-                return [this.year, this.month, this.day, this.hour, this.hour, this.second, this.msecond];
+                return [this.year, this.month, this.day, this.hour, this.minute, this.second, this.msecond];
             },
 
-            /*
+            /**
             * 转换为内置 Date 对象
+            * @method toDate
+            * @memberof x.date.newTime#
+            * @returns {Date}
             */
             toDate: function()
             {
-                return new Date(this.year, this.month, this.day, this.hour, this.hour, this.second);
+                return new Date(this.year, this.month, this.day, this.hour, this.minute, this.second);
             },
 
-            /*
+            /**
             * 日期格式化  
             * 格式 
             * yyyy/yy 表示年份  
@@ -402,6 +463,10 @@ x.date = {
             * hh/h 时间  
             * mm/m 分钟  
             * ss/s 秒  
+            * @method toString
+            * @memberof x.date.newTime#
+            * @param {string} format 时间格式 
+            * @returns {string}
             */
             toString: function(format)
             {
@@ -409,29 +474,26 @@ x.date = {
 
                 var weekDays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
 
-                outString = outString.replace(/yyyy|YYYY/, this.year);
-                outString = outString.replace(/yy|YY/, (this.year2 % 100) > 9 ? (this.year2 % 100).toString() : '0' + (this.year2 % 100));
+                return outString.replace(/yyyy|YYYY/g, this.year)
+                            .replace(/yy|YY/g, x.paddingZero((this.year2 % 100), 2))
+                            .replace(/MM/g, x.paddingZero((this.month + 1), 2))
+                            .replace(/M/g, (this.month + 1))
 
-                outString = outString.replace(/MM/, (this.month + 1) > 9 ? (this.month + 1).toString() : '0' + (this.month + 1));
-                outString = outString.replace(/M/g, (this.month + 1));
+                            .replace(/w|W/g, weekDays[this.weekDay])
 
-                outString = outString.replace(/w|W/g, weekDays[this.weekDay]);
+                            .replace(/dd|DD/g, x.paddingZero(this.day, 2))
+                            .replace(/d|D/g, this.day)
 
-                outString = outString.replace(/dd|DD/, this.day > 9 ? this.day : '0' + this.day);
-                outString = outString.replace(/d|D/g, this.day);
+                            .replace(/hh|HH/g, x.paddingZero(this.hour, 2))
+                            .replace(/h|H/g, this.hour)
 
-                outString = outString.replace(/hh|HH/, this.hour > 9 ? this.hour : '0' + this.hour);
-                outString = outString.replace(/h|H/g, this.hour);
+                            .replace(/mm/g, x.paddingZero(this.minute, 2))
+                            .replace(/m/g, this.minute)
 
-                outString = outString.replace(/mm/, this.minute > 9 ? this.minute : '0' + this.minute);
-                outString = outString.replace(/m/g, this.minute);
+                            .replace(/ss|SS/g, x.paddingZero(this.second, 2))
+                            .replace(/s|S/g, this.second)
 
-                outString = outString.replace(/ss|SS/, this.second > 9 ? this.second : '0' + this.second);
-                outString = outString.replace(/s|S/g, this.second);
-
-                outString = outString.replace(/fff/g, ((this.msecond > 99) ? this.msecond : (this.msecond > 9) ? '0' + this.msecond : '00' + this.msecond));
-
-                return outString;
+                            .replace(/fff/g, x.paddingZero(this.msecond, 3));
             }
         };
 
@@ -440,6 +502,10 @@ x.date = {
 
     /**
     * 时间间隔对象
+    * @class TimeSpan
+    * @constructor newTimeSpan
+    * @memberof x.date
+    * @param {number} timeSpanValue 符合时间规则的值(允许Date对象|数组对象|字符串对象)
     */
     newTimeSpan: function(timeSpanValue, format)
     {
@@ -490,13 +556,13 @@ x.date = {
                 switch (format)
                 {
                     case 'MM天dd小时mm分钟ss秒fff毫秒':
-                        outString = (this.day > 9 ? '' : '0') + this.day + "天" + (this.hour > 9 ? '' : '0') + this.hour + "小时" + (this.minute > 9 ? '' : '0') + this.minute + "分钟" + (this.second > 9 ? '' : '0') + this.second + "秒" + (this.millisecond > 99 ? '' : (this.millisecond > 9 ? '0' : '00')) + this.second + "秒";
+                        outString = x.paddingZero(this.day, 2) + "天" + x.paddingZero(this.hour, 2) + "小时" + x.paddingZero(this.minute, 2) + "分钟" + x.paddingZero(this.second, 2) + "秒" + x.paddingZero(this.millisecond, 3) + "毫秒";
                         break;
                     case 'MM天dd小时mm分钟ss秒':
-                        outString = (this.day > 9 ? '' : '0') + this.day + "天" + (this.hour > 9 ? '' : '0') + this.hour + "小时" + (this.minute > 9 ? '' : '0') + this.minute + "分钟" + (this.second > 9 ? '' : '0') + this.second + "秒";
+                        outString = x.paddingZero(this.day, 2) + "天" + x.paddingZero(this.hour, 2) + "小时" + x.paddingZero(this.minute, 2) + "分钟" + x.paddingZero(this.second, 2) + "秒";
                         break;
                     default:
-                        outString = (this.day > 9 ? '' : '0') + this.day + "天" + (this.hour > 9 ? '' : '0') + this.hour + "小时" + (this.minute > 9 ? '' : '0') + this.minute + "分钟" + (this.second > 9 ? '' : '0') + this.second + "秒";
+                        outString = x.paddingZero(this.day, 2) + "天" + x.paddingZero(this.hour, 2) + "小时" + x.paddingZero(this.minute, 2) + "分钟" + x.paddingZero(this.second, 2) + "秒";
                         break;
                 }
 

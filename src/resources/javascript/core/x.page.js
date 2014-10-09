@@ -7,30 +7,22 @@
 */
 x.page = {
 
-    /*region 函数:back()*/
+    /*#region 函数:back()*/
     /**
-    * 返回上一个页面.
+    * 返回上一个页面. window.history.back() 函数的别名
     * @method back
     * @memberof x.page
     */
     back: function()
     {
-        window.history.back();
-
-        // if (document.referrer)
-        // {
-        //    location.href = document.referrer;
-        // }
-        // else
-        // {
-        //    window.history.back();
-        // }
+        window.history.back(arguments);
     },
-    /*endregion*/
+    /*#endregion*/
 
-    /*region 函数:close()*/
+    /*#region 函数:close()*/
     /**
-    * 关闭窗口
+    * 关闭窗口<br />
+    * 注: 由于浏览器安全限制, 此方法只支持关闭以 _blank 方式打开的窗口.
     * @method close
     * @memberof x.page
     */
@@ -47,11 +39,11 @@ x.page = {
             window.close();
         }
     },
-    /*endregion*/
+    /*#endregion*/
 
-    /*region 函数:refreshParentWindow()*/
+    /*#region 函数:refreshParentWindow()*/
     /**
-    * 刷新父级窗口.
+    * 刷新父级窗口
     * @method refreshParentWindow
     * @memberof x.page
     */
@@ -72,7 +64,7 @@ x.page = {
             x.debug.log('父级窗口未定义 window$refresh$callback() 函数。');
         }
     },
-    /*endregion*/
+    /*#endregion*/
 
     /**
     * 获取页面范围信息
@@ -520,7 +512,7 @@ x.page = {
     /*
     * 创建分页对象
     */
-    newPagesHelper: function(pageSize)
+    newPagingHelper: function(pageSize)
     {
         if (pageSize === undefined || pageSize === '') { pageSize = 10; }
 
@@ -544,32 +536,28 @@ x.page = {
 
             lastPage: 0,
 
-            whereClause: '',
-
-            orderBy: '',
+            query: {
+                table: '', fields: '', where: {}, orders: ''
+            },
 
             /*
             * 加载对象信息
             */
-            load: function(pages)
+            load: function(paging)
             {
-                if (typeof (pages.pageSize) != 'undefined') { this.pageSize = Number(pages.pageSize); }
+                if (!x.isUndefined(paging.pageSize)) { this.pagingize = Number(paging.pageSize); }
 
-                if (typeof (pages.rowCount) != 'undefined') { this.rowCount = Number(pages.rowCount); }
+                if (!x.isUndefined(paging.rowCount)) { this.rowCount = Number(paging.rowCount); }
 
-                if (typeof (pages.rowIndex) != 'undefined') { this.rowIndex = Number(pages.rowIndex); }
+                if (!x.isUndefined(paging.rowIndex)) { this.rowIndex = Number(paging.rowIndex); }
 
-                if (typeof (pages.firstPage) != 'undefined') { this.firstPage = Number(pages.firstPage); }
+                if (!x.isUndefined(paging.firstPage)) { this.firstPage = Number(paging.firstPage); }
 
-                if (typeof (pages.previousPage) != 'undefined') { this.previousPage = Number(pages.previousPage); }
+                if (!x.isUndefined(paging.previousPage)) { this.previousPage = Number(paging.previousPage); }
 
-                if (typeof (pages.nextPage) != 'undefined') { this.nextPage = Number(pages.nextPage); }
+                if (!x.isUndefined(paging.nextPage)) { this.nextPage = Number(paging.nextPage); }
 
-                if (typeof (pages.lastPage) != 'undefined') { this.lastPage = Number(pages.lastPage); }
-
-                if (typeof (pages.whereClause) != 'undefined') { this.whereClause = pages.whereClause; }
-
-                if (typeof (pages.orderBy) != 'undefined') { this.orderBy = pages.orderBy; }
+                if (!x.isUndefined(paging.lastPage)) { this.lastPage = Number(paging.lastPage); }
             },
 
             /*
@@ -687,11 +675,38 @@ x.page = {
                 return outString;
             },
 
+            // 序列化查询信息
+            toQueryXml: function()
+            {
+                var outString = '';
+
+                outString += '<query>';
+
+                if (this.query.table.length > 0) outString += '<table><![CDATA[' + this.query.table + ']]></table>';
+                if (this.query.fields.length > 0) outString += '<fields><![CDATA[' + this.query.fields + ']]></fields>';
+
+                var where = '<where>';
+                x.each(this.query.where, function(name, value)
+                {
+                    where += '<key name="' + name + '" ><![CDATA[' + value + ']]></key>';
+                });
+                where += '</where>';
+                if (where != '<where></where>') outString += where;
+
+                if (this.query.orders.length > 0) outString += '<orders><![CDATA[' + this.query.orders + ']]></orders>';
+
+                outString += '</query>';
+
+                if (outString == '<query></query>') outString += '';
+                
+                return outString;
+            },
+
             toXml: function()
             {
                 var outString = '';
 
-                outString += '<pages>';
+                outString += '<paging>';
                 outString += '<rowIndex>' + this.rowIndex + '</rowIndex>';
                 outString += '<pageSize>' + this.pageSize + '</pageSize>';
                 outString += '<rowCount>' + this.rowCount + '</rowCount>';
@@ -701,10 +716,10 @@ x.page = {
                 outString += '<previousPage>' + this.previousPage + '</previousPage>';
                 outString += '<nextPage>' + this.nextPage + '</nextPage>';
                 outString += '<lastPage>' + this.lastPage + '</lastPage>';
-                outString += '<whereClause><![CDATA[' + this.whereClause + ']]></whereClause>';
-                outString += '<orderBy><![CDATA[' + this.orderBy + ']]></orderBy>';
-                outString += '</pages>';
-
+                outString += '<lastPage>' + this.lastPage + '</lastPage>';
+                outString += '</paging>';
+                outString += this.toQueryXml();
+                
                 return outString;
             }
         };

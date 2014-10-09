@@ -12,7 +12,7 @@ x.dom.features.touchDate = {
     {
         x.require({
             files: [
-                { fileType: 'css', id: 'x-ui-pkg-touches-date-css', path: x.ui.stylesheetPathPrefix + 'x.ui.pkg.touches.date.css' },
+                { fileType: 'css', id: 'x-ui-pkg-touches-date-css', path: x.ui.styles.dir() + 'x.ui.pkg.touches.date.css' },
                 { fileType: 'script', id: 'x-ui-pkg-date-script', path: x.ui.pkg.dir() + 'x.ui.pkg.touches.date.js' }
             ],
             data: { inputName: inputName },

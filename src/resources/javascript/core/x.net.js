@@ -33,7 +33,7 @@ x.net = {
         getClientSecret: function()
         {
             // 根据页面存放的 session-clientSecret 元素，获取签名信息
-            var element = x.query('session-clientSecret');
+            var element = x.query('#session-clientSecret');
 
             // 根据页面存放的 session-clientSecret 元素，获取签名信息, 如果页面不存在 session-clientSecret 元素，则返回空值。
             return element == null ? '' : x.isUndefined(element.value, '');
@@ -71,18 +71,18 @@ x.net = {
                         /*#region 函数:create(text)*/
                         create: function(text)
                         {
-                            if (document.getElementById(this.name + '$text') == null)
+                            if (document.getElementById(this.name + '-text') == null)
                             {
-                                $(document.body).append('<div id="' + this.name + '$container" class="x-ui-dialog-waiting-mini-window-container" ><div id="' + this.name + '$text" class="x-ui-dialog-waiting-mini-window-text" >' + text + '</div></div>');
+                                $(document.body).append('<div id="' + this.name + '-container" class="x-ui-dialog-waiting-mini-window-container" ><div id="' + this.name + '-text" class="x-ui-dialog-waiting-mini-window-text" >' + text + '</div></div>');
                             }
                             else
                             {
-                                x.query('[id="' + this.name + '$text"]').innerHTML = text;
+                                x.query('[id="' + this.name + '-text"]').innerHTML = text;
                             }
 
                             if (this.container === null)
                             {
-                                this.container = document.getElementById(this.name + '$container');
+                                this.container = document.getElementById(this.name + '-container');
                             }
                         },
                         /*#endregion*/
@@ -118,12 +118,14 @@ x.net = {
                         {
                             if (this.container != null)
                             {
+                                x.css.style(this.container, { display: 'none' });
+
                                 // this.container.style.display = 'none';
-                                $(this.container).css({ display: '', opacity: this.maxOpacity });
-                                $(this.container).fadeOut((this.maxDuration * 2000), function()
-                                {
-                                    $(this.container).css({ display: 'none' });
-                                });
+                                // $(this.container).css({ display: '', opacity: this.maxOpacity });
+                                // (this.container).fadeOut((this.maxDuration * 2000), function()
+                                // {
+                                //    $(this.container).css({ display: 'none' });
+                                // });
                             }
                         }
                         /*#endregion*/
@@ -316,6 +318,7 @@ x.net = {
             return window[name];
         },
         /*#endregion*/
+
         // 捕获异常
         catchException: function(response, outputType)
         {
@@ -323,7 +326,7 @@ x.net = {
             {
                 var result = x.toJSON(response);
 
-                if (typeof (result) != 'undefined' && typeof (result.message) != 'undefined' && typeof (result.message.category) != 'undefined' && result.message.category === 'exception')
+                if (!x.isUndefined(result) && !x.isUndefined(result.message) && !x.isUndefined(result.message.category) && result.message.category === 'exception')
                 {
                     if (outputType == 'console')
                     {
@@ -345,6 +348,21 @@ x.net = {
 
     /**
     * 发起网络请求
+    * @method xhr
+    * @memberof x.net
+    * @param {object} [options] 选项<br /> 
+    * 可选值范围: 
+    * <table class="param-options" >
+    * <thead>
+    * <tr><th>名称</th><th>类型</th><th class="last" >描述</th></tr>
+    * </thead>
+    * <tbody>
+    * <tr><td class="name" >type</td><td>string</td><td>HTTP请求类型(GET|POST)</td></tr>
+    * <tr><td class="name" >url</td><td>string</td><td>地址</td></tr>
+    * <tr><td class="name" >data</td><td>object</td><td>数据</td></tr>
+    * <tr><td class="name" >async</td><td>boolean</td><td>是否是异步请求</td></tr>
+    * </tbody>
+    * </table>
     */
     xhr: function()
     {
@@ -371,6 +389,14 @@ x.net = {
 
             url = arguments[0];
             options = {};
+            xhrDataValue = arguments[1];
+        }
+        else if (arguments.length == 3 && x.type(arguments[1]) === 'string' && x.isFunction(arguments[2]))
+        {
+            // 支持没有回调函数，只有地址和Xml数据的调用。
+
+            url = arguments[0];
+            options = { callback: arguments[2] };
             xhrDataValue = arguments[1];
         }
         else
@@ -400,7 +426,27 @@ x.net = {
         // 设置 data 值
         var data = x.ext({}, options.data || {});
 
-        if (xhrDataValue != '') { data[options.xhrDataKey] = xhrDataValue; }
+        var xml = x.toXML(xhrDataValue, 1);
+
+        if (xhrDataValue != '' && xml)
+        {
+            data[options.xhrDataKey] = xhrDataValue;
+        }
+        else if (!xml && xhrDataValue.indexOf('=') > 0)
+        {
+            // 非Xml字符格式, 普通的POST数据
+            var list = xhrDataValue.split('&');
+
+            x.each(list, function(index, node)
+            {
+                var items = node.split('=');
+
+                if (items.length == 2)
+                {
+                    data[items[0]] = decodeURIComponent(items[1]);
+                }
+            });
+        }
 
         if (x.isFunction(options.getClientSignature) && options.getClientSignature() != '')
         {
@@ -417,7 +463,8 @@ x.net = {
             }
         }
 
-        $.ajax({
+        // $.ajax 
+        x.net.ajax({
             type: type,
             url: url,
             data: data,
@@ -446,10 +493,7 @@ x.net = {
                                 x.msg(result.value);
                             }
 
-                            if (!x.isUndefined(options.callback))
-                            {
-                                options.callback(response);
-                            }
+                            x.call(options.callback, response);
                             break;
 
                         case -1:
@@ -465,10 +509,7 @@ x.net = {
                 }
                 else
                 {
-                    if (x.isFunction(options.callback))
-                    {
-                        options.callback(response);
-                    }
+                    x.call(options.callback, response);
                 }
             },
             error: function(XMLHttpRequest, textStatus, errorThrown)
@@ -503,20 +544,212 @@ x.net = {
     },
     /*#endregion*/
 
-    getXHR: function()
+    // 已加载的文件标识
+    requireLoaded: {},
+
+    /**
+    * 通过Ajax方式加载样式和脚本
+    */
+    require: function(options)
+    {
+        options = x.ext({
+            fileType: 'script',
+            id: '',
+            path: '',
+            type: 'GET',
+            async: true
+        }, options || {});
+
+        if (options.id != '' && x.net.requireLoaded[options.id])
+        {
+            x.debug.log('require file {"id":"{0}", path:"{1}"} exist. [ajax]'.format(options.id, options.path));
+
+            x.call(options.callback);
+
+            return true;
+        }
+
+        x.debug.log('require file {"id":"{0}", path:"{1}"} loading. [ajax]'.format(options.id, options.path));
+
+        x.net.ajax(
+        {
+            type: options.type,
+            url: options.path,
+            async: options.async,
+            success: function(responseText)
+            {
+                x.debug.log('require file {"id":"{0}", path:"{1}"} finished. [ajax]'.format(options.id, options.path));
+
+                var head = document.getElementsByTagName("HEAD").item(0);
+
+                if (options.fileType == 'template')
+                {
+                    var node = document.createElement("script");
+                    node.type = "text/template";
+                    node.src = options.path;
+                }
+                else if (options.fileType == 'css')
+                {
+                    var node = document.createElement("style");
+                    node.type = "text/css";
+                    node.href = options.path;
+                }
+                else
+                {
+                    var node = document.createElement("script");
+
+                    node.language = "javascript";
+                    node.type = "text/javascript";
+                    node.src = options.path;
+                }
+
+                try
+                {
+                    // IE8以及以下不支持这种方式，需要通过text属性来设置
+                    node.appendChild(document.createTextNode(responseText));
+                }
+                catch (ex)
+                {
+                    node.text = responseText;
+                }
+
+                if (options.id != '')
+                {
+                    node.id = options.id;
+                    x.net.requireLoaded[options.id] = true;
+                }
+
+                head.appendChild(node);
+
+                x.call(options.callback);
+            }
+        });
+    },
+
+    ajax: function(options)
+    {
+        var request = x.net.newHttpRequest(options);
+
+        request.send();
+    },
+    /*#endregion*/
+
+    newHttpRequest: function(options)
+    {
+        var request = {
+            xhr: null,
+            // 数据
+            data: null,
+            // 超时设置
+            timeout: 90,
+            // 是否已完成
+            done: false,
+
+            // 发送
+            send: function()
+            {
+                if (this.xhr == null)
+                {
+                    this.xhr = x.net.newXmlHttpRequest();
+
+                    if (!this.xhr)
+                    {
+                        x.debug.error('create xhr failed'); return false;
+                    }
+                }
+
+                this.xhr.open(this.type, this.url, this.async);
+
+                var me = this;
+
+                x.event.add(this.xhr, "readystatechange", function()
+                {
+                    var xhr = me.xhr;
+
+                    // 监听状态
+                    // x.debug.log('{0} readyState:{1} status:{2} done:{3}'.format(x.debug.timestamp(), xhr.readyState, xhr.status, me.done));
+
+                    // 保持等待，直到数据完全加载，并保证请求未超时  
+                    if (xhr.readyState == 4 && !me.done)
+                    {
+                        // 0 为访问的本地，200 到 300 代表访问服务器成功，304 代表没做修改访问的是缓存
+                        if (xhr.status == 0 || (xhr.status >= 200 && xhr.status < 300) || xhr.status == 304)
+                        {
+                            // 成功则调用回调函数，并传入xhr对象  
+                            x.call(me.success, xhr.responseText);
+                        }
+                        else
+                        {
+                            // 失败则调用error回调函数  
+                            x.call(me.error, xhr, xhr.status);
+                        }
+
+                        // 避免内存泄漏，清理文档  
+                        xhr = null;
+                    }
+                });
+
+                // 如果请求超过 timeout 设置的时间没有响应, 则取消请求（如果尚未完成的话）  
+                setTimeout(function() { me.done = true; }, me.timeout * 1000);
+
+                if (this.type == 'POST')
+                {
+                    this.xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                    this.xhr.send(x.serialize(this.data));
+                }
+                else
+                {
+                    // 发送同步请求，如果浏览器为Chrome或Opera，必须发布后才能运行，不然会报错
+                    this.xhr.send(null);
+                }
+            },
+
+            create: function(options)
+            {
+                options = x.ext({
+                    type: 'GET',
+                    url: '',
+                    data: {},
+                    async: true,
+                    timeout: 90
+                }, options || {});
+
+                this.type = options.type;
+                this.url = options.url;
+                this.data = options.data;
+                this.async = options.async;
+                this.timeout = options.timeout;
+
+                this.success = options.success;
+                this.error = options.error;
+            }
+        };
+
+        // 初始化对象
+        request.create(options);
+
+        return request;
+    },
+
+    /*#region 函数:newXmlHttpRequest()*/
+    /**
+    * 创建 XMLHttpRequest 对象
+    * @private
+    */
+    newXmlHttpRequest: function()
     {
         var xhr = null;
 
-        if (window.ActiveXObject) //IE
+        if (window.ActiveXObject) // IE
         {
             try
             {
-                //IE6以及以后版本中可以使用
+                // IE6 以及以后版本中可以使用
                 xhr = new ActiveXObject("Msxml2.XMLHTTP");
             }
             catch (ex)
             {
-                //IE5.5以及以后版本可以使用
+                //IE5.5 以及以后版本可以使用
                 xhr = new ActiveXObject("Microsoft.XMLHTTP");
             }
         }
@@ -528,101 +761,11 @@ x.net = {
 
         return xhr;
     },
-
-    requireLoaded: {},
-
-    require: function(options)
-    {
-        options = x.ext({
-            fileType: 'script',
-            id: '',
-            url: '',
-            type: 'GET',
-            async: false
-        }, options || {});
-
-        if (options.id != '' && x.net.requireLoaded[options.id])
-        {
-            if (x.isFunction(options.callback))
-            {
-                options.callback();
-            }
-
-            return true;
-        }
-
-        var xhr = x.net.getXHR();
-
-        xhr.open(options.type, options.url, options.async);
-
-        // 发送同步请求，如果浏览器为Chrome或Opera，必须发布后才能运行，不然会报错
-        xhr.send(null);
-
-        //4代表数据发送完毕
-        if (xhr.readyState == 4)
-        {
-            // 0 为访问的本地，200 到 300 代表访问服务器成功，304 代表没做修改访问的是缓存
-            if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 0 || xhr.status == 304)
-            {
-                var head = document.getElementsByTagName("HEAD").item(0);
-
-                if (options.fileType == 'template')
-                {
-                    var node = document.createElement("script");
-                    node.type = "text/template";
-                }
-                else if (options.fileType == 'css')
-                {
-                    var node = document.createElement("style");
-                    node.type = "text/css";
-                }
-                else
-                {
-                    var node = document.createElement("script");
-
-                    node.language = "javascript";
-                    node.type = "text/javascript";
-                }
-
-                try
-                {
-                    // IE8以及以下不支持这种方式，需要通过text属性来设置
-                    node.appendChild(document.createTextNode(xhr.responseText));
-                }
-                catch (ex)
-                {
-                    node.text = xhr.responseText;
-                }
-
-                if (options.id != '')
-                {
-                    node.id = options.id;
-                    x.net.requireLoaded[options.id] = true;
-                }
-
-                head.appendChild(node);
-
-                if (x.isFunction(options.callback))
-                {
-                    options.callback();
-                }
-
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        else
-        {
-            return false;
-        }
-    },
+    /*#endregion*/
 
     /**
     * 请求信息
-    * @class request
+    * @namespace request
     * @memberof x.net
     */
     request: {
@@ -714,6 +857,7 @@ x.net = {
 /*#region 私有函数:request_callback(response)*/
 /**
 * 网络请求的默认回调函数
+* @private
 */
 x.net.request_callback = function(response)
 {

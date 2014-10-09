@@ -2,39 +2,27 @@
 
 /**
 * @namespace util
-* @memberof x
+* @memberof x.ui
 * @description 常用工具类库
 */
-x.util = {
+x.ui.util = {
     /**
-    * 设置元素的位置
-    *
-    * @element	: 元素
-    * @pointX   : 坐标x.
-    * @pointY	: Y坐标
+    * 设置 Flash 元素
+    * @method setFlash
+    * @memberof x.ui.util
+    * @param {string} selector 选择器或者元素对象
+    * @param {string} url Falsh 的地址
+    * @param {number} widht Falsh 的宽度
+    * @param {number} height Falsh 的高度
+    * @param {string} [summary] Falsh 内容概述
     */
-    setLocation: function(element, pointX, pointY)
-    {
-        $(element).css({
-            'position': 'fixed',
-            'left': pointX + 'px',
-            'top': pointY + 'px'
-        });
-    },
-
-    /**
-    * 设置Flash元素
-    *
-    * @element	    : 元素
-    * @url			: Falsh的地址.
-    * @widht		: Falsh的宽度.
-    * @height		: Falsh的高度.
-    */
-    setFlash: function(element, url, width, height, summary)
+    setFlash: function(selector, url, width, height, summary)
     {
         var outString = '';
 
-        if (typeof (summary) === 'undefined') { summary = ''; }
+        var element = x.query(selector);
+
+        summary = x.isUndefined(summary, '');
 
         outString += '<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" '
 			+ 'codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=11" '
@@ -52,14 +40,17 @@ x.util = {
 
     /**
     * 在页面上打开QQ链接
-    *
-    * @element 元素
-    * @param qq QQ 号码
-    * @param site 来源的站点信息
+    * @method setQQ
+    * @memberof x.ui.util
+    * @param {string} selector 选择器或者元素对象
+    * @param {number} qq QQ 号码
+    * @param {string} site 来源的站点信息
     */
-    setQQ: function(element, qq, site)
+    setQQ: function(selector, qq, site)
     {
         var outString = '';
+
+        var element = x.query(selector);
 
         if (!(qq === '' || qq === '0'))
         {
@@ -68,6 +59,6 @@ x.util = {
             outString += '&menu=yes" alt="QQ:' + qq + '" >' + qq + "</a>";
         }
 
-        $(element).html(outString);
+        element.innerHTML = outString;
     }
 };

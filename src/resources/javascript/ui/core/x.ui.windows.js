@@ -1,35 +1,54 @@
 // -*- ecoding=utf-8 -*-
 
 /**
-* ´°¿Ú
+* çª—å£
 * @namespace windows
-* @memberof x
+* @memberof x.ui
 */
 x.ui.windows = {
-    /*#region º¯Êı:newWindow(name, options)*/
+    /*#region å‡½æ•°:newWindow(name, options)*/
+    /**
+    * çª—å£
+    * @class Window
+    * @constructor newWindow
+    * @memberof x.ui.windows
+    * @param {string} name åç§°
+    * @param {object} [options] é€‰é¡¹<br />
+    * å¯é€‰é”®å€¼èŒƒå›´: 
+    * <table class="param-options" >
+    * <thead>
+    * <tr><th>åç§°</th><th>ç±»å‹</th><th class="last" >æè¿°</th></tr>
+    * </thead>
+    * <tbody>
+    * <tr><td class="name" >content</td><td>string</td><td>çª—å£å†…å®¹</td></tr>
+    * <tr><td class="name" >domain</td><td>string</td><td>æ‰€å±çš„åŸŸ</td></tr>
+    * </tbody>
+    * </table>
+    
+    */
     newWindow: function(name, options)
     {
         var internalWindow = {
-            // Ãû³Æ
+            // åç§°
             name: name,
-            // Ñ¡Ïî
+            // é€‰é¡¹
             options: options,
 
-            /*#region º¯Êı:open()*/
+            /*#region å‡½æ•°:open()*/
             open: function()
             {
                 document.getElementById(name).style.display = '';
             },
             /*#endregion*/
 
-            /*#region º¯Êı:close()*/
+            /*#region å‡½æ•°:close()*/
             close: function()
             {
                 document.getElementById(name).style.display = 'none';
             },
             /*#endregion*/
 
-            /*#region º¯Êı:create()*/
+            /*#region å‡½æ•°:create()*/
             create: function()
             {
                 var outString = '';
@@ -52,9 +71,9 @@ x.ui.windows = {
             },
             /*#endregion*/
 
-            /*#region º¯Êı:destroy()*/
+            /*#region å‡½æ•°:destroy()*/
             /**
-            * Ïú»Ù¶ÔÏó
+            * é”€æ¯å¯¹è±¡
             */
             destroy: function()
             {
@@ -62,34 +81,34 @@ x.ui.windows = {
             },
             /*#endregion*/
 
-            /*#region º¯Êı:bindOptions(options)*/
+            /*#region å‡½æ•°:bindOptions(options)*/
             bindOptions: function(options)
             {
-                // ÉèÖÃÄ¬ÈÏÑ¡Ïî²ÎÊı
+                // è®¾ç½®é»˜è®¤é€‰é¡¹å‚æ•°
                 this.options = x.ext({
-                    zIndex: 999,                    // ZÖá×ø±ê
-                    height: '100px',                // ¸ß¶È
-                    width: '100px',                 // ¿í¶È
-                    top: 'auto',                    // ÉÏ
-                    right: 'auto',                  // ÓÒ
-                    bottom: 'auto',                 // ÏÂ
-                    left: 'auto'                    // ×ó
+                    zIndex: 999,                    // Zè½´åæ ‡
+                    height: '100px',                // é«˜åº¦
+                    width: '100px',                 // å®½åº¦
+                    top: 'auto',                    // ä¸Š
+                    right: 'auto',                  // å³
+                    bottom: 'auto',                 // ä¸‹
+                    left: 'auto'                    // å·¦
                 }, options || {});
             },
             /*#endregion*/
 
             load: function(options)
             {
-                // ÑéÖ¤²¢°ó¶¨Ñ¡ÏîĞÅÏ¢
+                // éªŒè¯å¹¶ç»‘å®šé€‰é¡¹ä¿¡æ¯
                 this.bindOptions(options);
 
-                // ÉèÖÃÖØĞ´ºóµÄ´´½¨º¯Êı
+                // è®¾ç½®é‡å†™åçš„åˆ›å»ºå‡½æ•°
                 if (!x.isUndefined(options.create))
                 {
                     this.create = options.create;
                 }
 
-                // ¼ÓÔØÕÚÕÖºÍÒ³ÃæÄÚÈİ
+                // åŠ è½½é®ç½©å’Œé¡µé¢å†…å®¹
                 $(document.body).append(this.create());
 
                 if (this.options.bindingFeature)
@@ -103,9 +122,9 @@ x.ui.windows = {
     },
     /*#endregion*/
 
-    /*#region º¯Êı:getWindow(name, options)*/
+    /*#region å‡½æ•°:getWindow(name, options)*/
     /**
-    * »ñÈ¡´°¿Ú¶ÔÏó
+    * è·å–çª—å£å¯¹è±¡
     */
     getWindow: function(name, options)
     {
@@ -113,25 +132,25 @@ x.ui.windows = {
 
         var internalWindow = x.windows.newWindow(name, options);
 
-        // ¼ÓÔØ½çÃæ¡¢Êı¾İ¡¢ÊÂ¼ş
+        // åŠ è½½ç•Œé¢ã€æ•°æ®ã€äº‹ä»¶
         internalWindow.load(options);
 
-        // °ó¶¨µ½Window¶ÔÏó
+        // ç»‘å®šåˆ°Windowå¯¹è±¡
         window[name] = internalWindow;
 
         return internalWindow;
     },
     /*#endregion*/
 
-    /*#region º¯Êı:getDialog(url, width, height, style)*/
+    /*#region å‡½æ•°:getDialog(url, width, height, style)*/
     /**
-    * ´ò¿ª¶Ô»°ĞÂ´°¿Ú, ¸Ã´°¿ÚÔÚÆÁÄ»¾ÓÖĞ.
+    * æ‰“å¼€å¯¹è¯æ–°çª—å£, è¯¥çª—å£åœ¨å±å¹•å±…ä¸­.
     */
     getDialog: function(url, width, height, style)
     {
-        // ÑùÊ½²ÎÊı
-        // resizable        µ÷Õû´óĞ¡
-        // location         µØÖ·À¸
+        // æ ·å¼å‚æ•°
+        // resizable        è°ƒæ•´å¤§å°
+        // location         åœ°å€æ 
 
         if (typeof (style) === 'undefined')
         {
@@ -172,9 +191,9 @@ x.ui.windows = {
     },
     /*#endregion*/
 
-    /*#region º¯Êı:getModalDialog(url, width, height, style)*/
+    /*#region å‡½æ•°:getModalDialog(url, width, height, style)*/
     /**
-    * ´ò¿ªÄ£Ì¬´°¿Ú, ¸Ã´°¿ÚÔÚÆÁÄ»¾ÓÖĞ.
+    * æ‰“å¼€æ¨¡æ€çª—å£, è¯¥çª—å£åœ¨å±å¹•å±…ä¸­.
     */
     getModalDialog: function(url, width, height, style)
     {

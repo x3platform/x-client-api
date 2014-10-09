@@ -6,7 +6,11 @@
 * @description 编码
 */
 x.encoding = {
-
+    /**
+    * @namespace html
+    * @memberof x.encoding
+    * @description html 编码管理
+    */
     html: {
         // http://www.w3.org/MarkUp/html-spec/html-spec_13.html
         dict: {
@@ -24,6 +28,9 @@ x.encoding = {
         * @method encode
         * @memberof x.encoding.html
         * @param {string} text 文本信息
+        * @example
+        * // 输出格式 &#60;p&#62;hello&#60;/p&#62;
+        * console.log(x.encoding.html.encode('<p>hello</p>'));
         */
         encode: function(text)
         {
@@ -78,16 +85,28 @@ x.encoding = {
         /*#endregion*/
     },
 
-    // html 的 unicode 编码格式是&#8888;, javascript 的 unicode 编码格式\u000000
+    /**
+    * @namespace unicode
+    * @memberof x.encoding
+    * @description unicode 编码管理
+    */
     unicode: {
+
+        // 注意
+        // html 的 unicode 编码格式是&#888888;, javascript 的 unicode 编码格式\u000000
 
         /*#region 函数:encode(text)*/
         /**
         * unicode 编码
+        * @method encode
+        * @memberof x.encoding.unicode
+        * @param {string} text 文本信息
         */
-        encode: function(text)
+        encode: function(text, prefix)
         {
             if (text.length === 0) { return ''; }
+
+            prefix = x.isUndefined(prefix) ? '\\u' : prefix;
 
             text = x.string.stringify(text);
 
@@ -106,9 +125,9 @@ x.encoding = {
                 }
 
                 // temp = '\\u' + temp.slice(2, 4).concat(temp.slice(0, 2));
-                temp = '\\u' + temp;
+                // temp = '\\u' + temp;
 
-                outString = outString.concat('\\u' + temp);
+                outString = outString.concat(prefix + temp);
             }
 
             return outString.toLowerCase();
@@ -118,10 +137,15 @@ x.encoding = {
         /*#region 函数:decode(text)*/
         /**
         * unicode 解码
+        * @method decode
+        * @memberof x.encoding.unicode
+        * @param {string} text 文本信息
         */
-        decode: function(text)
+        decode: function(text, prefix)
         {
             if (text.length === 0) { return ''; }
+
+            prefix = x.isUndefined(prefix) ? '\\u' : prefix;
 
             text = x.string.stringify(text);
 
@@ -133,7 +157,7 @@ x.encoding = {
             {
                 list.each(function(node, index)
                 {
-                    if (node.indexOf('\\u') == 0)
+                    if (node.indexOf(prefix) == 0)
                     {
                         outString += String.fromCharCode(parseInt(node.slice(2, 6), 16));
                     }

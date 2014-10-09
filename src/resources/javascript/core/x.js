@@ -5,12 +5,19 @@
 * @description 默认根命名空间
 */
 var x = {
+
+    // 默认设置
     defaults: {
         // 默认消息提示方式
-        msg: function(text) { alert(text); }
+        msg: function(text) { if (alert) { alert(text); } else { console.log(text); } }
     },
 
-    msg: function(text) { x.defaults.msg(text) },
+    // 缓存
+    cache: {},
+
+    /*#region 函数:msg(text)*/
+    msg: function(text) { x.defaults.msg(text); },
+    /*#endregion*/
 
     /*#region 函数:type(object)*/
     /**
@@ -85,12 +92,18 @@ var x = {
     /*#endregion*/
 
     /*#region 函数:isUndefined(value, replacementValue)*/
-    /*
-    * 判断是否是 undefined 类型, 如果 undefined 则使用替换的值
+    /**
+    * 判断是否是 undefined 类型, 如果设置了替换的值, 则当第一个参数为 undefined, 则使用替换的值
     * @method isUndefined
     * @memberof x
     * @param {object} value 值
-    * @param {string} replacementValue 替换的值
+    * @param {string} [replacementValue] 替换的值
+    * @example
+    * // return true
+    * x.isUndefined(undefinedValue);    
+    * @example
+    * // return ''
+    * x.isUndefined(undefinedValue, '');    
     */
     isUndefined: function(object, replacementValue)
     {
@@ -106,193 +119,6 @@ var x = {
     },
     /*#endregion*/
 
-    /**
-    * 浏览器
-    * @class browser
-    * @memberof x
-    */
-    browser: {
-        /** 
-        * 判断是否是 Internet Explorer 浏览器
-        * @member {bool} ie 
-        * @memberof x.browser
-        * @example
-        * // returns true or false
-        * x.browser.ie;
-        */
-        ie: !!(window.attachEvent && navigator.userAgent.indexOf('Opera') === -1),
-        /** 
-        * 判断是否是 Webkit 浏览器
-        * @member {bool} webkit 
-        * @memberof x.browser
-        * @example
-        * // returns true or false
-        * x.browser.webkit;
-        */
-        webkit: navigator.userAgent.indexOf('AppleWebKit/') > -1,
-        /** 
-        * 判断是否是 Gecko 浏览器
-        * @member {bool} gecko 
-        * @memberof x.browser
-        * @example
-        * // returns true or false
-        * x.browser.gecko;
-        */
-        gecko: navigator.userAgent.indexOf('Gecko') > -1 && navigator.userAgent.indexOf('KHTML') === -1,
-        /** 
-        * 判断是否是 Opera 浏览器
-        * @member {bool} opera 
-        * @memberof x.browser
-        * @example
-        * // returns true or false
-        * x.browser.opera;
-        */
-        opera: navigator.userAgent.indexOf('Opera') > -1,
-        /** 
-        * 判断是否是 Mobile Safari 浏览器
-        * @member {bool} mobilesafari 
-        * @memberof x.browser
-        * @example
-        * // returns true or false
-        * x.browser.mobilesafari;
-        */
-        mobilesafari: !!navigator.userAgent.match(/Apple.*Mobile.*Safari/),
-
-        /*#region 函数:current()*/
-        /** 
-        * 获取当前浏览器的名称和版本
-        * @method getVersion 
-        * @memberof x.browser
-        * @example
-        * x.browser.current();
-        */
-        current: function()
-        {
-            return { name: x.browser.getName(), version: x.browser.getVersion() };
-        },
-        /*#endregion*/
-
-        /*#region 函数:getName()*/
-        /** 
-        * 获取当前浏览器的名称
-        * @method getName 
-        * @memberof x.browser
-        * @example
-        * x.browser.getName();
-        */
-        getName: function()
-        {
-            if (navigator.userAgent.indexOf("MSIE") > 0)
-                return "Internet Explorer";
-            if (navigator.userAgent.indexOf("Chrome") >= 0)
-                return "Chrome";
-            if (navigator.userAgent.indexOf("Firefox") >= 0)
-                return "Firefox";
-            if (navigator.userAgent.indexOf("Opera") >= 0)
-                return "Opera";
-            if (navigator.userAgent.indexOf("Safari") > 0)
-                return "Safari";
-            if (navigator.userAgent.indexOf("Camino") > 0)
-                return "Camino";
-            if (navigator.userAgent.indexOf("Gecko") > 0)
-                return "Gecko";
-
-            return "unknown";
-        },
-        /*#endregion*/
-
-        /*#region 函数:getVersion()*/
-        /** 
-        * 获取当前浏览器的版本
-        * @method getVersion 
-        * @memberof x.browser
-        * @example
-        * x.browser.getVersion();
-        */
-        getVersion: function()
-        {
-            var browserName = x.browser.getName();
-
-            var version = navigator.userAgent;
-
-            var startValue;
-            var lengthValue;
-
-            switch (browserName)
-            {
-                case "Internet Explorer":
-                    startValue = version.indexOf("MSIE") + 5;
-                    lengthValue = 3;
-                    version = version.substr(startValue, lengthValue);
-                    break;
-                case "Firefox":
-                    startValue = version.indexOf("Firefox") + 8;
-                    lengthValue = 3;
-                    version = version.substr(startValue, lengthValue);
-                    break;
-                case "Opera":
-                    startValue = version.indexOf("Opera") + 6;
-                    lengthValue = 3;
-                    version = version.substr(startValue, lengthValue);
-                    break;
-                case "Safari":
-                    break;
-                case "Camino":
-                    break;
-                case "Gecko":
-                    break;
-                default:
-                    break;
-            }
-
-            return version;
-        }
-        /*#endregion*/
-    },
-
-    /**
-    * 浏览器特性
-    * @class browserFeatures
-    * @memberof x
-    */
-    browserFeatures: {
-        /**
-        * Selector 特性, 支持 querySelector, querySelectorAll
-        * @class Selector
-        * @memberof x.browserFeatures
-        */
-        Selector: !!document.querySelector,
-        /**
-        * SuportsTouch 特性, 支持触摸事件
-        * @class SuportsTouch
-        * @memberof x.browserFeatures
-        */
-        SuportsTouch: ("createTouch" in document),
-        /**
-        * XPath 特性
-        * @class XPath
-        * @memberof x.browserFeatures
-        */
-        XPath: !!document.evaluate,
-
-        ElementExtensions: !!window.HTMLElement,
-        SpecificElementExtensions:
-		        document.createElement('div')['__proto__']
-                && document.createElement('div')['__proto__'] !== document.createElement('form')['__proto__']
-    },
-
-    /**
-    * @namespace mask
-    * @memberof x.ui
-    * @description UI 名称空间
-    */
-    ui: {
-        // 样式名称前缀
-        classNamePrefix: 'x-ui',
-        // 样式表路径前缀
-        stylesheetPathPrefix: '/resources/styles/x-ui/'
-    },
-
     // 脚本代码片段
     scriptFragment: '<script[^>]*>([\\S\\s]*?)<\/script>',
 
@@ -305,115 +131,18 @@ var x = {
     // Is it a simple selector
     isSimple: /^.[^:#\[\.,]*$/,
 
+    /*#region 函数:noop()*/
     /**
     * 空操作
     */
     noop: function() { },
+    /*#endregion*/
 
-    /**
-    * 加载脚本
-    */
-    require: function(options)
-    {
-        var context = x.ext({
-            id: '',
-            path: '',
-            onScriptLoad: function(event)
-            {
-                var node = x.event.getTarget(event);
-
-                if (event.type === 'load' || /^(complete|loaded)$/.test(node.readyState))
-                {
-                    node.ready = true;
-
-                    // x.debug.log('load');
-                    // console.log(context);
-                    context.callback(context);
-                }
-            }
-        }, options || {});
-
-        var head = document.getElementsByTagName('head')[0];
-
-        var node = document.getElementById(context.id);
-
-        if (node == null)
-        {
-            if (context.fileType == 'css')
-            {
-                var node = document.createElement("link");
-
-                node.id = context.id;
-                node.type = "text/css";
-                node.rel = "stylesheet";
-                node.href = context.path;
-            }
-            else
-            {
-                var node = document.createElement("script");
-
-                node.id = context.id;
-                node.type = "text/javascript";
-                node.async = true;
-                node.src = context.path;
-            }
-
-            if (x.isFunction(context.callback))
-            {
-                if (node.attachEvent &&
-                    !(node.attachEvent.toString && node.attachEvent.toString().indexOf('[native code') < 0) &&
-                    !isOpera)
-                {
-                    //Check if node.attachEvent is artificially added by custom script or
-                    //natively supported by browser
-                    //read https://github.com/jrburke/requirejs/issues/187
-                    //if we can NOT find [native code] then it must NOT natively supported.
-                    //in IE8, node.attachEvent does not have toString()
-                    //Note the test for "[native code" with no closing brace, see:
-                    //https://github.com/jrburke/requirejs/issues/273
-
-                    x.event.add(node, 'readystatechange', context.onScriptLoad);
-                }
-                else
-                {
-                    x.event.add(node, 'load', context.onScriptLoad);
-                }
-            }
-
-            head.appendChild(node);
-        }
-        else
-        {
-            if (x.isFunction(context.callback))
-            {
-                if (node.ready)
-                {
-                    // x.debug.log('callbak');
-                    // x.debug.log(context);
-
-                    context.callback(context);
-                }
-                else
-                {
-                    if (node.attachEvent &&
-                        !(node.attachEvent.toString && node.attachEvent.toString().indexOf('[native code') < 0) &&
-                        !isOpera)
-                    {
-                        x.event.add(node, 'readystatechange', context.onScriptLoad);
-                    }
-                    else
-                    {
-                        x.event.add(node, 'load', context.onScriptLoad);
-                    }
-                }
-            }
-        }
-    },
-
+    /*#region 函数:register(value)*/
     /**
     * 注册对象信息
     * @method register
-    * @memberof x
+    * @memberof x3platform
     */
     register: function(value)
     {
@@ -423,7 +152,7 @@ var x = {
 
         for (var i = 0; i < parts.length; i++)
         {
-            if (typeof root[parts[i]] === "undefined")
+            if (x.isUndefined(root[parts[i]]))
             {
                 root[parts[i]] = {};
             }
@@ -433,6 +162,7 @@ var x = {
 
         return root;
     },
+    /*#endregion*/
 
     /*#region 函数:ext(destination, source)*/
     /**
@@ -444,12 +174,29 @@ var x = {
     */
     ext: function(destination, source)
     {
+        /*
         for (var property in source)
         {
-            destination[property] = source[property];
+        destination[property] = source[property];
         }
 
         return destination;
+        */
+
+        var result = arguments[0] || {};
+
+        if (arguments.length > 1)
+        {
+            for (var i = 1; i < arguments.length; i++)
+            {
+                for (var property in arguments[i])
+                {
+                    result[property] = arguments[i][property];
+                }
+            }
+        }
+
+        return result;
     },
     /*#endregion*/
 
@@ -466,18 +213,18 @@ var x = {
     },
     /*#endregion*/
 
-    /*#region 函数:invoke(object, fun)*/
+    /*#region 函数:invoke(object, fn)*/
     /**
     * 执行对象方法
     * @method invoke
     * @memberof x
     */
-    invoke: function(object, fun)
+    invoke: function(object, fn)
     {
         // 注:数组的 slice(start, end) 方法可从已有的数组中返回选定的元素。
         var args = Array.prototype.slice.call(arguments).slice(2);
 
-        return fun.apply(object, args);
+        return fn.apply(object, args);
     },
     /*#endregion*/
 
@@ -491,13 +238,22 @@ var x = {
     {
         if (!x.isUndefined(anything))
         {
-            if (x.type(anything) === 'function')
+            try
             {
-                return anything();
+                if (x.isFunction(anything))
+                {
+                    var args = Array.prototype.slice.call(arguments).slice(1);
+
+                    return anything.apply(this, args);
+                }
+                else if (x.type(anything) === 'string')
+                {
+                    if (anything !== '') { return eval(anything); }
+                }
             }
-            else if (x.type(anything) === 'string')
+            catch (ex)
             {
-                if (anything !== '') { return eval(anything); }
+                x.debug.error(ex);
             }
         }
     },
@@ -507,36 +263,77 @@ var x = {
     /**
     * 精确查询单个表单元素。
     * @method query
-    * @memberof x.form
+    * @memberof x
     * @param {string} selector 选择表达式
     */
     query: function(selector)
     {
         if (x.type(selector).indexOf('html') == 0)
         {
-            // Html元素类型 直接返回
+            // Html 元素类型 直接返回
             return selector;
         }
         else if (x.type(selector) == 'string')
         {
-            /*
-            // 由 Sizzle 引擎替代以下功能
-            var element = document.getElementById(selector);
-
-            // 支持 querySelector 方法查找元素
-            if (element == null && x.browserFeatures.Selector &&
-            (selector.indexOf('#') > -1 || selector.indexOf('.') > -1 || selector.indexOf(' ') > -1))
-            {
-            element = document.querySelector(selector);
-            }
-
-            return element;
-            */
-
             var results = Sizzle.apply(window, Array.prototype.slice.call(arguments, 0));
 
             return (results.length == 0) ? null : results[0];
         }
+    },
+    /*#endregion*/
+
+    /*#region 函数:queryAll(selector)*/
+    /**
+    * 精确查询单个表单元素。
+    * @method query
+    * @memberof x
+    * @param {string} selector 选择表达式
+    */
+    queryAll: function(selector)
+    {
+        if (x.type(selector).indexOf('html') == 0)
+        {
+            // Html 元素类型 直接返回
+            var results = [];
+            results.push(selector);
+
+            return results;
+        }
+        else if (x.type(selector) == 'string')
+        {
+            return Sizzle.apply(window, Array.prototype.slice.call(arguments, 0));
+        }
+    },
+    /*#endregion*/
+
+    /*#region 函数:serialize(data)*/
+    /**
+    * 返回数据串行化后的字符串  
+    * @method serialize
+    * @memberof x
+    * @param {object} data 表单输入元素的数组或键/值对的散列表
+    */
+    serialize: function(data)
+    {
+        var buffer = [], length = data.length;
+
+        if (x.isArray(data))
+        {
+            // 数组对象
+            for (var i = 0; i < length; i++)
+            {
+                buffer.push(data[i].name + '=' + encodeURIComponent(data[i].value));
+            }
+        }
+        else
+        {
+            for (var name in data)
+            {
+                buffer.push(name + '=' + encodeURIComponent(data[name]));
+            }
+        }
+
+        return buffer.join('&');
     },
     /*#endregion*/
 
@@ -552,21 +349,71 @@ var x = {
     {
         var name, i = 0, length = data.length;
 
-        if (length === undefined)
+        if (x.isArray(data))
         {
-            // 默认对象
+            // 数组对象
+            for (var value = data[0]; i < length && callback.call(value, i, value) != false; value = data[++i]) { }
+        }
+        else
+        {
+            // 键/值对的散列表
             for (name in data)
             {
                 if (callback.call(data[name], name, data[name]) === false) { break; }
             }
         }
-        else
-        {
-            // 数组对象
-            for (var value = data[0]; i < length && callback.call(value, i, value) != false; value = data[++i]) { }
-        }
 
         return data;
+    },
+    /*#endregion*/
+
+    /*#region 函数:toXML(text)*/
+    /**
+    * 将字符串转换为XML对象
+    * @method toXML
+    * @memberof x
+    * @param {string} text XML对象的文本格式
+    */
+    toXML: function(text)
+    {
+        if (x.type(text) === 'xmldocument') { return text; }
+
+        // 类型为 undefined 时或者字符串内容为空时, 返回 undefined 值.
+        if (x.isUndefined(text) || text === '') { return undefined; }
+
+        var hideError = !!arguments[1];
+
+        var doc;
+
+        // Firefox, Mozilla, Opera, etc.
+        try
+        {
+            if (window.DOMParser)
+            {
+                var parser = new DOMParser();
+                doc = parser.parseFromString(text, "text/xml");
+            }
+            else if (window.ActiveXObject)
+            {
+                doc = new ActiveXObject("Microsoft.XMLDOM");
+                doc.async = "false";
+                doc.loadXML(text);
+            }
+        }
+        catch (ex)
+        {
+            doc = undefined;
+
+            if (!hideError) x.debug.error('{"method":"x.toXML(text)", "arguments":{"text":"' + text + '"}');
+        }
+
+        if (!doc || doc.getElementsByTagName("parsererror").length)
+        {
+            doc = undefined;
+            if (!hideError) x.debug.error('{"method":"x.toXML(text)", "arguments":{"text":"' + text + '"}');
+        }
+
+        return doc;
     },
     /*#endregion*/
 
@@ -584,7 +431,25 @@ var x = {
         // 类型为 undefined 时或者字符串内容为空时, 返回 undefined 值.
         if (x.isUndefined(text) || text === '') { return undefined; }
 
-        return eval('(' + text + ')');
+        var hideError = arguments[1];
+
+        try
+        {
+            // eval('(' + text + ')')
+            return (JSON) ? JSON.parse(text) : (Function("return " + text))();
+        }
+        catch (ex)
+        {
+            try
+            {
+                return (Function("return " + text))();
+            }
+            catch (ex1)
+            {
+                if (!hideError) x.debug.error('{"method":"x.toJSON(text)", "arguments":{"text":"' + text + '"}');
+                return undefined;
+            }
+        }
     },
     /*#endregion*/
 
@@ -651,6 +516,56 @@ var x = {
     },
     /*#endregion*/
 
+    /*#region 函数:cdata(text)*/
+    /**
+    * 将普通文本信息转为为Xml不解析的文本信息
+    * @method cdata
+    * @memberof x
+    * @param {string} text 文本信息
+    */
+    cdata: function(text)
+    {
+        return '<![CDATA[' + text + ']]>';
+    },
+    /*#endregion*/
+
+    /*#region 函数:camelCase(text)*/
+    /**
+    * 将短划线文字转换至驼峰格式
+    * @method camelCase
+    * @memberof x
+    * @param {string} text 文本信息
+    */
+    camelCase: function(text)
+    {
+        // jQuery: Microsoft forgot to hump their vendor prefix (#9572)
+
+        // 匹配短划线文字转换至驼峰格式
+        // Matches dashed string for camelizing
+        var rmsPrefix = /^-ms-/, rdashAlpha = /-([\da-z])/gi;
+
+        // camelCase 替换字符串时的回调函数
+        return text.replace(rmsPrefix, "ms-").replace(rdashAlpha, function(all, letter)
+        {
+            return letter.toUpperCase();
+        });
+    },
+    /*#endregion*/
+
+    /*#region 函数:paddingZero(number, length)*/
+    /**
+    * 数字补零
+    * @method paddingZero
+    * @memberof x
+    * @param {number} number 数字
+    * @param {number} length 需要补零的位数
+    */
+    paddingZero: function(number, length)
+    {
+        return (Array(length).join('0') + number).slice(-length);
+    },
+    /*#endregion*/
+
     /*#region 函数:formatNature(text)*/
     /**
     * 将字符串统一转换为本地标识标识
@@ -684,12 +599,12 @@ var x = {
     * @memberof x
     * @param {string} name 名称
     * @example
-    * // 将路径中的[.-/]符号替换为[$]符号
+    * // 将路径中的[$./\]符号替换为[-]符号
     * console.log(x.getFriendlyName(location.pathname));
     */
     getFriendlyName: function(name)
     {
-        return 'x' + name.replace(/[\.\/-]/g, '$').replace(/\$\$/g, '$');
+        return x.camelCase(('x-' + name).replace(/[\#\$\.\/\\]/g, '-').replace(/[-]+/g, '-'));
     },
     /*#endregion*/
 
@@ -826,8 +741,8 @@ var x = {
     /*#region 类:newQueue()*/
     /**
     * 队列
-    * @description 创建 Queue 对象
-    * @class Queue
+    * @description Queue 对象
+    * @class Queue 队列
     * @constructor newQueue
     * @memberof x
     */
@@ -1078,10 +993,10 @@ var x = {
     /*#region 类:newTimer(interval, callback)*/
     /**
     * 计时器
-    * @class Timer
+    * @class Timer 计时器
     * @constructor newTimer
     * @memberof x
-    * @param {int} interval 时间间隔(单位:秒)
+    * @param {number} interval 时间间隔(单位:秒)
     * @param {function} callback 回调函数
     * @example
     * // 初始化一个计时器
@@ -1148,12 +1063,17 @@ var x = {
     },
     /*#endregion*/
 
+    /**
+    * 事件
+    * @namespace event
+    * @memberof x
+    */
     event: {
         /*#region 函数:getEvent(event)*/
-        /*
-        * 获取事件对象, 非IE浏览器的获取事件对象需要在调用方法中传递一个参数 event
+        /**
+        * 获取事件对象
         * @method getEvent
-        * @memberof x
+        * @memberof x.event
         * @param {event} event 事件对象
         */
         getEvent: function(event)
@@ -1166,7 +1086,7 @@ var x = {
         /**
         * 获取事件的目标对象
         * @method getTarget
-        * @memberof x
+        * @memberof x.event
         * @param {event} event 事件对象
         */
         getTarget: function(event)
@@ -1179,7 +1099,7 @@ var x = {
         /**
         * 获取事件的光标坐标
         * @method getPosition
-        * @memberof x
+        * @memberof x.event
         * @param {event} event 事件对象
         */
         getPosition: function(event)
@@ -1195,29 +1115,26 @@ var x = {
         },
         /*#endregion*/
 
-        /*#region 函数:getPositionX(event)*/
+        /*#region 函数:preventDefault(event)*/
         /**
-        * 获取事件的光标X坐标
-        * @method getEventPositionX
-        * @memberof x
+        * 停止事件传播
+        * @method preventDefault
+        * @memberof x.event
         * @param {event} event 事件对象
         */
-        getPositionX: function(event)
+        preventDefault: function(event)
         {
-            return x.getPosition(event).x;
-        },
-        /*#endregion*/
-
-        /*#region 函数:getPositionY(event)*/
-        /**
-        * 获取事件的光标Y坐标
-        * @method getPositionY
-        * @memberof x
-        * @param {event} event 事件对象
-        */
-        getPositionY: function(event)
-        {
-            return x.getPosition(event).y;
+            // 如果提供了事件对象，则这是一个非IE浏览器 
+            if (event && event.preventDefault)
+            {
+                //阻止默认浏览器动作(W3C) 
+                event.preventDefault();
+            }
+            else
+            {
+                //IE中阻止函数器默认动作的方式   
+                window.event.returnValue = false;
+            }
         },
         /*#endregion*/
 
@@ -1225,37 +1142,36 @@ var x = {
         /**
         * 停止事件传播
         * @method stopPropagation
-        * @memberof x
+        * @memberof x.event
         * @param {event} event 事件对象
         */
         stopPropagation: function(event)
         {
             // 判定是否支持触摸
-            suportsTouch = ("createTouch" in document);
+            //            suportsTouch = ("createTouch" in document);
 
-            var touch = suportsTouch ? event.touches[0] : event;
+            //            var touch = suportsTouch ? event.touches[0] : event;
 
-            if (suportsTouch)
+            //            if (suportsTouch)
+            //            {
+            //                touch.stopPropagation();
+            //                touch.preventDefault();
+            //            }
+            //            else
+            //            {
+
+            //如果提供了事件对象，则这是一个非IE浏览器  
+            if (event && event.stopPropagation)
             {
-                touch.stopPropagation();
-                touch.preventDefault();
+                //因此它支持W3C的stopPropagation()方法  
+                event.stopPropagation();
             }
             else
             {
-                if (window.event)
-                {
-                    // IE
-                    window.event.cancelBubble = true;
-                    window.event.returnValue = false;
-                    return;
-                }
-
-                if (event)
-                {
-                    event.stopPropagation();
-                    event.preventDefault();
-                }
+                //否则，我们需要使用IE的方式来取消事件冒泡   
+                window.event.cancelBubble = true;
             }
+            return false;
         },
         /*#endregion*/
 
@@ -1263,7 +1179,7 @@ var x = {
         /**
         * 添加事件监听器
         * @method add
-        * @memberof x
+        * @memberof x.event
         * @param {string} target 监听对象
         * @param {string} type 监听事件
         * @param {string} listener 处理函数
@@ -1271,6 +1187,8 @@ var x = {
         */
         add: function(target, type, listener, useCapture)
         {
+            if (target == null) return;
+
             if (target.addEventListener)
             {
                 target.addEventListener(type, listener, useCapture);
@@ -1290,7 +1208,7 @@ var x = {
         /**
         * 移除事件监听器
         * @method remove
-        * @memberof x
+        * @memberof x.event
         * @param {string} target 监听对象
         * @param {string} type 监听事件
         * @param {string} listener 处理函数
@@ -1298,6 +1216,8 @@ var x = {
         */
         remove: function(target, type, listener, useCapture)
         {
+            if (target == null) return;
+
             if (target.removeEventListener)
             {
                 target.removeEventListener(type, listener, useCapture);
@@ -1375,7 +1295,7 @@ var x = {
         * 创建随机文本信息
         * @method create
         * @memberof x.randomText
-        * @param {int} length 返回的文本长度
+        * @param {number} length 返回的文本长度
         * @example
         * // 输出格式 00000000
         * console.log(x.randomText.create(8));
@@ -1403,6 +1323,13 @@ var x = {
     */
     string: {
 
+        /*#region 函数:stringify(value)*/
+        /**
+        * 将其他类型的值转换成字符串
+        * @method stringify
+        * @memberof x.string
+        * @param {anything} value 值
+        */
         stringify: function(value)
         {
             var type = x.type(value);
@@ -1425,21 +1352,21 @@ var x = {
 
             return value;
         },
+        /*#endregion*/
 
         /*#region 函数:trim(text, trimText)*/
         /**
-        * 去除字符串两端空白或其他文本信息.
-        *
+        * 去除字符串两端空白或其他文本信息
         * @method trim
         * @memberof x.string
         * @param {string} text 文本信息.
-        * @param {int} [trimText] 需要去除的文本信息(默认为空白).
+        * @param {number} [trimText] 需要去除的文本信息(默认为空白).
         */
         trim: function(text, trimText)
         {
             if (x.isUndefined(trimText))
             {
-                return text.replace(/(^\s*)|(\s*$)/g, '');
+                return text.replace(x.expressions.rules['trim'], '');
             }
             else
             {
@@ -1454,17 +1381,17 @@ var x = {
         * @method ltrim
         * @memberof x.string
         * @param {string} text 文本信息.
-        * @param {int} [trimText] 需要去除的文本信息(默认为空白).
+        * @param {number} [trimText] 需要去除的文本信息(默认为空白).
         */
         ltrim: function(text, trimText)
         {
             if (x.isUndefined(trimText))
             {
-                return text.replace(/(^\s*)/g, '');
+                return text.replace(/(^[\s\uFEFF\xA0]+)/g, '');
             }
             else
             {
-                return (text.substr(0, trimText.length) === trimText) ? text.substr(trimText.length, text.length) : text;
+                return text.replace(RegExp('(^' + trimText + ')', 'gi'), '');
             }
         },
         /*#endregion*/
@@ -1475,17 +1402,18 @@ var x = {
         * @method rtrim
         * @memberof x.string
         * @param {string} text 文本信息.
-        * @param {int} [trimText] 需要去除的文本信息(默认为空白).
+        * @param {number} [trimText] 需要去除的文本信息(默认为空白).
         */
         rtrim: function(text, trimText)
         {
             if (x.isUndefined(trimText))
             {
-                return text.replace(/(\s*$)/g, '');
+                return text.replace(/([\s\uFEFF\xA0]+$)/g, '');
             }
             else
             {
-                return (text.substr(text.length - trimText.length, trimText.length) === trimText) ? text.substr(0, text.length - trimText.length) : text;
+                return text.replace(RegExp('(' + trimText + '$)', 'gi'), '');
+                // return (text.substr(text.length - trimText.length, trimText.length) === trimText) ? text.substr(0, text.length - trimText.length) : text;
             }
         },
         /*#endregion*/
@@ -1496,7 +1424,7 @@ var x = {
         * @method rtrim
         * @memberof x.string
         * @param {string} text 文本信息.
-        * @param {int} [trimText] 需要去除的文本信息(默认为空白).
+        * @param {number} [trimText] 需要去除的文本信息(默认为空白).
         */
         format: function()
         {
@@ -1516,12 +1444,18 @@ var x = {
 
         /*#region 函数:left(text, length, hasEllipsis)*/
         /**
-        * 字符串长度超长时, 截取左侧字符.
+        * 字符串长度超长时, 截取左侧字符
         * @method left
         * @memberof x.string
-        * @param {string} text	: 需要处理的字符串.
-        * @param {int} length	: 长度范围.
-        * @param {bool} hasEllipsis	: 是否显示'...'.
+        * @param {string} text 需要处理的字符串
+        * @param {number} length 长度范围
+        * @param {bool} [hasEllipsis] 是否显示...
+        * @example
+        * // 返回 'java...'
+        * x.string.left('javascript', 4);
+        * @example
+        * // 返回 'java'
+        * x.string.left('javascript', 4, false);
         */
         left: function(text, length, hasEllipsis)
         {
@@ -1540,13 +1474,18 @@ var x = {
     },
 
     /**
-    * 颜色编码处理
+    * 颜色编码
+    * @namespace color
+    * @memberof x
     */
     color: {
 
         // 正则规则
         // reg: /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/,
 
+        /**
+        * RGB 颜色转为十六进制格式
+        */
         hex: function(colorRgbCode)
         {
             if (/^(rgb|RGB)/.test(colorRgbCode))
@@ -1599,7 +1538,7 @@ var x = {
         },
 
         /**
-        * 十六进制颜色转为RGB格式
+        * 十六进制颜色转为 RGB 格式
         */
         rgb: function(colorHexCode)
         {
@@ -1637,12 +1576,13 @@ var x = {
     }
 };
 
+// 获取脚本文件位置
 var scriptFilePath = '';
 
 x.file = function()
 {
     return scriptFilePath;
-}
+};
 
 x.dir = function()
 {
@@ -1654,7 +1594,7 @@ x.dir = function()
     {
         return '';
     }
-}
+};
 
 if (document)
 {
@@ -1665,10 +1605,438 @@ if (document)
         // 因为页面后面的 javascript 文件还没有加载，所以该处的js文件获取的数目并不是页面所有的js文件的数目。
         var scripts = document.scripts;
 
-        scriptFilePath = scripts[scripts.length - 1].src;
+        scriptFilePath = scripts[scripts.length - 1].src.replace(location.origin, '');
     }
     catch (ex)
     {
         scriptFilePath = '';
     }
 }
+
+/**
+* 加载脚本
+* @method require
+* @memberof x
+* @param {object} options 选项,    
+*/
+var require = x.require = function(options)
+{
+    if (x.isArray(options.files))
+    {
+        var file, files = options.files;
+
+        if (files.length > 0)
+        {
+            file = files.shift();
+
+            if (files.length == 0)
+            {
+                require.newRequire({
+                    fileType: file.fileType,
+                    id: file.id,
+                    path: file.path,
+                    data: options.data,
+                    callback: options.callback
+                });
+            }
+            else if (files.length > 0)
+            {
+                require.newRequire({
+                    fileType: file.fileType,
+                    id: file.id,
+                    path: file.path,
+                    data: options.data,
+                    next: { files: files, callback: options.callback },
+                    callback: function(context)
+                    {
+                        require({
+                            files: context.next.files,
+                            data: context.data,
+                            callback: context.next.callback
+                        });
+                    }
+                });
+            }
+        }
+    }
+    else
+    {
+        require.newRequire({
+            fileType: options.fileType,
+            id: options.id,
+            path: options.path,
+            data: options.data,
+            callback: options.callback
+        });
+    }
+};
+
+require.newRequire = function(options)
+{
+    var context = x.ext({
+        fileType: 'script',
+        id: '',
+        path: ''
+    }, options || {});
+
+    if (context.fileType == 'template')
+    {
+        if (context.next)
+        {
+            x.net.require({
+                fileType: context.fileType,
+                id: context.id,
+                path: context.path,
+                async: false,
+                callback: function()
+                {
+                    require({
+                        files: context.next.files,
+                        data: context.data,
+                        callback: context.next.callback
+                    });
+                }
+            });
+        }
+        else
+        {
+            x.net.require({
+                fileType: context.fileType,
+                id: context.id,
+                path: context.path,
+                async: false,
+                callback: context.callback
+            });
+        }
+        return;
+    }
+
+    var load = function(node, fn)
+    {
+        //Check if node.attachEvent is artificially added by custom script or
+        //natively supported by browser
+        //read https://github.com/jrburke/requirejs/issues/187
+        //if we can NOT find [native code] then it must NOT natively supported.
+        //in IE8, node.attachEvent does not have toString()
+        //Note the test for "[native code" with no closing brace, see:
+        //https://github.com/jrburke/requirejs/issues/273
+
+        if (node.attachEvent
+                && !(node.attachEvent.toString && node.attachEvent.toString().indexOf('[native code') < 0)
+                && !x.browser.opera)
+        {
+            x.event.add(node, 'readystatechange', fn);
+        }
+        else
+        {
+            x.event.add(node, 'load', fn);
+        }
+    };
+
+    var onScriptLoad = function(event)
+    {
+        x.debug.log('require file {"id":"{0}", path:"{1}"} finished.'.format(context.id, context.path));
+
+        var node = x.event.getTarget(event);
+
+        if (event.type === 'load' || /^(complete|loaded)$/.test(node.readyState))
+        {
+            node.ready = true;
+
+            if (x.isFunction(context.callback))
+            {
+                context.callback(context);
+            }
+        }
+    };
+
+    var head = document.getElementsByTagName('head')[0];
+
+    var node = document.getElementById(context.id);
+
+    if (node == null)
+    {
+        // 未找到相关依赖资源文件
+        if (context.fileType == 'css')
+        {
+            var node = document.createElement("link");
+
+            node.id = context.id;
+            node.type = "text/css";
+            node.rel = "stylesheet";
+            node.href = context.path;
+        }
+        else
+        {
+            var node = document.createElement("script");
+
+            node.id = context.id;
+            node.type = "text/javascript";
+            node.async = true;
+            node.src = context.path;
+        }
+
+        load(node, onScriptLoad);
+
+        head.appendChild(node);
+
+        x.debug.log('require file {"id":"{0}", path:"{1}"} loading.'.format(context.id, context.path));
+    }
+    else
+    {
+        // 存在相关依赖文件
+        if (node.ready && x.isFunction(context.callback))
+        {
+            context.callback(context);
+        }
+        else
+        {
+            load(node, onScriptLoad);
+        }
+
+        x.debug.log('require file {"id":"{0}", path:"{1}"} exist.'.format(options.id, options.path));
+    }
+
+    return context;
+};
+
+/**
+* 浏览器
+* @namespace browser
+* @memberof x
+*/
+x.browser = {
+
+    /** 
+    * 判断是否是 Internet Explorer 浏览器
+    * @member {bool} ie 
+    * @memberof x.browser
+    * @example
+    * // returns true or false
+    * x.browser.ie;
+    */
+    ie: !!(window.attachEvent && navigator.userAgent.indexOf('Opera') === -1),
+    /** 
+    * 判断是否是 Internet Explorer 6 浏览器
+    * @member {bool} ie6 
+    * @memberof x.browser
+    * @example
+    * // returns true or false
+    * x.browser.ie6;
+    */
+    ie6: ! -[1, ] && !window.XMLHttpRequest,
+    /** 
+    * 判断是否是 Webkit 浏览器
+    * @member {bool} webkit 
+    * @memberof x.browser
+    * @example
+    * // returns true or false
+    * x.browser.webkit;
+    */
+    webkit: navigator.userAgent.indexOf('AppleWebKit/') > -1,
+    /** 
+    * 判断是否是 Gecko 浏览器
+    * @member {bool} gecko 
+    * @memberof x.browser
+    * @example
+    * // returns true or false
+    * x.browser.gecko;
+    */
+    gecko: navigator.userAgent.indexOf('Gecko') > -1 && navigator.userAgent.indexOf('KHTML') === -1,
+    /** 
+    * 判断是否是 Opera 浏览器
+    * @member {bool} opera 
+    * @memberof x.browser
+    * @example
+    * // returns true or false
+    * x.browser.opera;
+    */
+    opera: typeof opera !== 'undefined' && opera.toString() === '[object Opera]',
+    /** 
+    * 判断是否是 Mobile Safari 浏览器
+    * @member {bool} mobilesafari 
+    * @memberof x.browser
+    * @example
+    * // returns true or false
+    * x.browser.mobilesafari;
+    */
+    mobilesafari: !!navigator.userAgent.match(/Apple.*Mobile.*Safari/),
+
+    /*#region 函数:current()*/
+    /** 
+    * 获取当前浏览器的名称和版本
+    * @method current 
+    * @memberof x.browser
+    * @example
+    * x.browser.current();
+    */
+    current: function()
+    {
+        return { name: x.browser.getName(), version: x.browser.getVersion() };
+    },
+    /*#endregion*/
+
+    /*#region 函数:getName()*/
+    /** 
+    * 获取当前浏览器的名称
+    * @method getName 
+    * @memberof x.browser
+    * @example
+    * x.browser.getName();
+    */
+    getName: function()
+    {
+        if (navigator.userAgent.indexOf("MSIE") > 0)
+            return "Internet Explorer";
+        if (navigator.userAgent.indexOf("Chrome") >= 0)
+            return "Chrome";
+        if (navigator.userAgent.indexOf("Firefox") >= 0)
+            return "Firefox";
+        if (navigator.userAgent.indexOf("Opera") >= 0)
+            return "Opera";
+        if (navigator.userAgent.indexOf("Safari") > 0)
+            return "Safari";
+        if (navigator.userAgent.indexOf("Camino") > 0)
+            return "Camino";
+        if (navigator.userAgent.indexOf("Gecko") > 0)
+            return "Gecko";
+
+        return "unknown";
+    },
+    /*#endregion*/
+
+    /*#region 函数:getVersion()*/
+    /** 
+    * 获取当前浏览器的版本
+    * @method getVersion 
+    * @memberof x.browser
+    * @example
+    * x.browser.getVersion();
+    */
+    getVersion: function()
+    {
+        var browserName = x.browser.getName();
+
+        var version = navigator.userAgent;
+
+        var startValue;
+        var lengthValue;
+
+        switch (browserName)
+        {
+            case "Internet Explorer":
+                startValue = version.indexOf("MSIE") + 5;
+                lengthValue = 3;
+                version = version.substr(startValue, lengthValue);
+                break;
+            case "Firefox":
+                startValue = version.indexOf("Firefox") + 8;
+                lengthValue = 3;
+                version = version.substr(startValue, lengthValue);
+                break;
+            case "Opera":
+                startValue = version.indexOf("Opera") + 6;
+                lengthValue = 3;
+                version = version.substr(startValue, lengthValue);
+                break;
+            case "Safari":
+                break;
+            case "Camino":
+                break;
+            case "Gecko":
+                break;
+            default:
+                break;
+        }
+
+        return version;
+    },
+    /*#endregion*/
+
+    /**
+    * 浏览器特性
+    * @namespace features
+    * @memberof x.browser
+    */
+    features: {
+        /**
+        * Selector 特性, 支持 querySelector, querySelectorAll
+        * @member selector
+        * @memberof x.browser.features
+        */
+        selector: !!document.querySelector,
+        /**
+        * SuportTouch 特性, 支持触摸事件
+        * @member suportTouch
+        * @memberof x.browser.features
+        */
+        suportTouch: ("createTouch" in document),
+        /**
+        * XPath 特性
+        * @member xpath
+        * @memberof x.browser.features
+        */
+        xpath: !!document.evaluate,
+
+        // 元素特性
+        elementExtensions: !!window.HTMLElement,
+        specificElementExtensions:
+		        document.createElement('div')['__proto__']
+                && document.createElement('div')['__proto__'] !== document.createElement('form')['__proto__']
+    }
+};
+
+/**
+* @namespace ui
+* @memberof x
+* @description UI 名称空间
+*/
+x.ui = {
+
+    /**
+    * 样式名称默认前缀
+    * @member {string} classNamePrefix 样式名称默认前缀
+    * @memberof x.ui
+    */
+    classNamePrefix: 'x-ui',
+
+    /**
+    * 样式表路径默认前缀
+    * @member {string} stylesheetPathPrefix
+    * @memberof x.ui
+    */
+    stylesheetPathPrefix: '/resources/styles/x-ui/',
+
+    packagesPathPrefix: null,
+
+    /**
+    * 通用 组件包默认名称空间
+    * @namespace pkg
+    * @memberof x.ui
+    */
+    pkg: {
+
+        /**
+        * 触摸组件包默认名称空间
+        * @namespace touches
+        * @memberof x.ui.pkg
+        */
+        touches: {},
+
+        /**
+        * 组件包根目录
+        * @method dir
+        * @memberof x.ui.pkg
+        */
+        dir: function() { return x.dir() + 'ui/pkg/'; }
+    },
+
+    /**
+    * 样式名称空间
+    * @namespace pkg
+    * @memberof x.ui
+    */
+    styles: {
+        dir: function() { return x.ui.stylesheetPathPrefix; }
+    }
+};

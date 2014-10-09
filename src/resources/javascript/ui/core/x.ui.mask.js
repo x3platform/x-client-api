@@ -1,5 +1,10 @@
-﻿// -*- ecoding : utf-8 -*-
+﻿// -*- ecoding=utf-8 -*-
 
+/**
+* @namespace mask
+* @memberof x.ui
+* @description 遮罩
+*/
 x.ui.mask = {
 
     zIndex: 800,
@@ -23,14 +28,14 @@ x.ui.mask = {
     /**
     * 获取默认遮罩窗口实例
     * @method getWindow
-    * @memberof x
-    * @param {string} html 窗口中的Html代码
+    * @memberof x.ui.mask
+    * @param {object} options 选项
     * @param {object} [instance] 当前遮罩实例
-    * @return {object} 这张对象
+    * @returns {x.ui.mask.newMaskWapper} 遮罩对象
     */
     getWindow: function(options, instance)
     {
-        if (typeof (instance) === 'undefined')
+        if (x.isUndefined(instance))
         {
             // 获得默认遮罩实例
             if (this.defaultInstance === null)
@@ -53,6 +58,11 @@ x.ui.mask = {
         return instance;
     },
 
+    /**
+    * 清空当前遮罩对象
+    * @method clear
+    * @memberof x.ui.mask
+    */
     clear: function()
     {
         var mask = x.ui.mask.getMaskStack().peek();
@@ -64,7 +74,8 @@ x.ui.mask = {
     },
 
     /**
-    * @class MaskWrapper 页面的遮罩封装器
+    * 遮罩封装器
+    * @class MaskWrapper 
     * @constructor newMaskWrapper
     * @memberof x.ui.mask
     */
@@ -77,9 +88,9 @@ x.ui.mask = {
             popupWindowName: 'maskPopupWindow',
             // 配置信息
             options: null,
-            // 最大
+            // 最大透明度
             maxOpacity: 0.4,
-            //
+            // 动画周期
             maxDuration: 0.2,
             // 自动隐藏
             autoHide: 1,
@@ -87,27 +98,29 @@ x.ui.mask = {
             create: function(name, options)
             {
                 // 初始化选项信息
-                this.options = x.ext(options || {}, {
+                this.options = x.ext({
                     height: '100%',
                     width: '100%',
                     left: '0',
                     top: '0'
-                });
+                }, options || {});
 
                 this.name = name;
                 this.popupWindowName = name + '$maskPopupWindow';
 
-                if (options.url)
+                if (this.options.url)
                 {
-                    options.content = '<div >'
+                    this.options.content = '<div >'
                             + '<iframe border="0" frameborder="0" marginheight="0" marginwidth="0" border="0" scrolling="no" '
-                            + 'style="border:none; width:' + options.width + '; height:' + options.height + ';" src="' + options.url + '"></iframe>'
+                            + 'style="border:none; width:' + this.options.width + '; height:' + this.options.height + ';" src="' + this.options.url + '"></iframe>'
                             + '</div>';
                 }
             },
 
             /**
-            * 显示遮罩
+            * 显示
+            * @method show
+            * @memberof x.ui.mask.newMaskWrapper#
             */
             show: function()
             {
@@ -175,8 +188,10 @@ x.ui.mask = {
                 }
             },
 
-            /*
+            /**
             * 隐藏
+            * @method hide
+            * @memberof x.ui.mask.newMaskWrapper#
             */
             hide: function()
             {
@@ -217,7 +232,9 @@ x.ui.mask = {
             },
 
             /**
-            * 打开弹出窗口
+            * 打开
+            * @method open
+            * @memberof x.ui.mask.newMaskWrapper#
             */
             open: function()
             {
@@ -283,6 +300,8 @@ x.ui.mask = {
 
             /**
             * 重置大小
+            * @method resize
+            * @memberof x.ui.mask.newMaskWrapper#
             */
             resize: function()
             {
@@ -306,7 +325,8 @@ x.ui.mask = {
 
                 pointX = (x.page.getRange().width - width) / 2;
 
-                x.util.setLocation(element, pointX, pointY);
+                // 设置窗口位置
+                x.dom.fixed(element, pointX, pointY);
 
                 // 设置窗口可拖拽
                 x.drag.getDraggableWindow({
@@ -319,8 +339,10 @@ x.ui.mask = {
 
             closeEvent: null,
 
-            /*
-            * 关闭弹出窗口
+            /**
+            * 关闭
+            * @method close
+            * @memberof x.ui.mask.newMaskWrapper#
             */
             close: function()
             {

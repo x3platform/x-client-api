@@ -1,4 +1,5 @@
 {
+    // 大括号包裹
     "boss": true,
     "curly": true,
     "eqeqeq": true,
@@ -12,5 +13,6 @@
     "trailing": true,
     "undef": true,
     "unused": true,
+    // 指定运行环境为node.js
     "node": true
 }

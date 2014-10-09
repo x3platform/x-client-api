@@ -5,69 +5,12 @@
 * @memberof x
 * @description CSS
 */
-x.css = {
-    map: {
-        'border': 'border',
-        'border-bottom': 'borderBottom',
-        'border-bottom-color': 'borderBottomColor',
-        'border-bottom-style': 'borderBottomStyle',
-        'border-bottom-style': 'borderBottomWidth',
-        'border-color': 'borderColor',
-        'border-left': 'borderLeft',
-        'border-left-color': 'borderLeftColor',
-        'border-left-style': 'borderLeftStyle',
-        'border-left-width': 'borderLeftWidth',
-        'border-right': 'borderRight',
-        'border-right-color': 'borderRightColor',
-        'border-right-style': 'borderRightStyle',
-        'border-right-width': 'borderRightWidth',
-        'border-style': 'borderStyle',
-        'border-top': 'borderTop',
-        'border-top-color': 'borderTopColor',
-        'border-top-style': 'borderTopStyle',
-        'border-top-width': 'borderTopWidth',
-        'border-width': 'borderWidth',
-        'clear': 'clear',
-        'float': 'floatStyle',
-        'margin': 'margin',
-        'margin-bottom': 'marginBottom',
-        'margin-left': 'marginLeft',
-        'margin-right': 'marginRight',
-        'margin-top': 'marginTop',
-        'padding': 'padding',
-        'padding-bottom': 'paddingBottom',
-        'padding-left': 'paddingLeft',
-        'padding-right': 'paddingRight',
-        'padding-top': 'paddingTop',
-        'background': 'background',
-        'background-attachment': 'backgroundAttachment',
-        'background-color': 'backgroundColor',
-        'background-image': 'backgroundImage',
-        'background-position': 'backgroundPosition',
-        'background-repeat': 'backgroundRepeat',
-        'color': 'color',
-        'display': 'display',
-        'list-style-type': 'listStyleType',
-        'list-style-image': 'listStyleImage',
-        'list-style-position': 'listStylePosition',
-        'list-style': 'listStyle',
-        'white-space': 'whiteSpace',
-        'font': 'font',
-        'font-family': 'fontFamily',
-        'font-size': 'fontSize',
-        'font-style': 'fontStyle',
-        'font-variant': 'fontVariant',
-        'font-weight': 'fontWeight',
-        'letter-spacing': 'letterSpacing',
-        'line-break': 'lineBreak',
-        'line-height': 'lineHeight',
-        'text-align': 'textAlign',
-        'text-decoration': 'textDecoration',
-        'text-indent': 'textIndent',
-        'text-justify': 'textJustify',
-        'text-transform': 'textTransform',
-        'vertical-align': 'verticalAlign'
-    },
+var css = x.css = {
+    /**
+    * 特殊关键字映射关系字典
+    * @private
+    */
+    dict: {},
 
     /*#region 函数:style(selector)*/
     /**
@@ -87,11 +30,21 @@ x.css = {
         }
         else if (arguments.length == 2)
         {
-            var options = arguments[1];
-
-            for (var property in options)
+            if (x.type(arguments[1]) == 'object')
             {
-                element.style[property] = options[property];
+                var options = arguments[1];
+
+                x.each(options, function(key, value)
+                {
+                    element.style[x.camelCase(key)] = options[key];
+                });
+            }
+        }
+        else if (arguments.length == 3)
+        {
+            if (x.type(arguments[1]) == 'string')
+            {
+                element.style[arguments[1]] = arguments[2];
             }
         }
     },
@@ -109,6 +62,9 @@ x.css = {
     check: function(selector, className)
     {
         var element = x.query(selector);
+
+        if (element == null) return;
+
         /*
         var found=false;
         var buffer=o.className.split(' ');
@@ -138,7 +94,7 @@ x.css = {
     {
         var element = x.query(selector);
 
-        if (x.css.check(element, classNameA))
+        if (css.check(element, classNameA))
         {
             var buffer = element.className.split(' ');
 
@@ -148,7 +104,7 @@ x.css = {
 
                 if (buffer[i] == classNameA) { buffer[i] = classNameB; }
             }
-            
+
             element.className = buffer.join(' ');
         }
     },
@@ -166,7 +122,9 @@ x.css = {
     {
         var element = x.query(selector);
 
-        if (!x.css.check(element, className))
+        if (element == null) return;
+
+        if (!css.check(element, className))
         {
             element.className += ' ' + className;
             element.className = element.className.trim();
@@ -185,8 +143,10 @@ x.css = {
     remove: function(selector, className)
     {
         var element = x.query(selector);
+        
+        if (element == null) return;
 
-        if (x.css.check(element, className))
+        if (css.check(element, className))
         {
             var reg = new RegExp('(\\s|^)' + className + '(\\s|$)');
 
