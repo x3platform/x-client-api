@@ -2,7 +2,7 @@
 // Name     : x-client-api 
 // Version  : 1.0.0 
 // Author   : ruanyu@live.com
-// Date     : 2014-10-06
+// Date     : 2014-10-11
 (function(global, factory) 
 {
     if (typeof module === "object" && typeof module.exports === "object") 
@@ -4017,7 +4017,7 @@
         else
         {
             // 存在相关依赖文件
-            if (node.ready && x.isFunction(context.callback))
+            if (x.isFunction(context.callback))
             {
                 context.callback(context);
             }

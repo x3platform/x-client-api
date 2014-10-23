@@ -1785,7 +1785,7 @@ require.newRequire = function(options)
     else
     {
         // 存在相关依赖文件
-        if (node.ready && x.isFunction(context.callback))
+        if (x.isFunction(context.callback))
         {
             context.callback(context);
         }

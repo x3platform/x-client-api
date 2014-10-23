@@ -173,6 +173,11 @@ x.date = {
 
                 date = new Date(keys[0], Number(keys[1]) - 1, keys[2], keys[3], keys[4], keys[5]);
             }
+            else if (/\/Date\((-?\d+)\)\//.test(timeValue))
+            {
+                // .NET 日期对象
+                date = new Date(parseInt(timeValue.replace(/\/Date\((-?\d+)\)\//, '$1')));
+            }
             else
             {
                 // 其他情况
@@ -324,9 +329,9 @@ x.date = {
             },
 
             /*
-            * 取得日期数据信息  
-            * 参数 interval 表示数据类型  
-            * y 年 M月 d日 w星期 ww周 h时 n分 s秒  
+            * 取得日期数据信息
+            * 参数 interval 表示数据类型
+            * y 年 M月 d日 w星期 ww周 h时 n分 s秒
             */
             getDatePart: function(interval)
             {
@@ -361,7 +366,7 @@ x.date = {
             },
 
             /**
-            * 取得当前日期所在月的最大天数  
+            * 取得当前日期所在月的最大天数
             * @method getMaxDayOfMonth
             * @memberof x.date.newTime#
             */
@@ -374,7 +379,7 @@ x.date = {
             },
 
             /**
-            * 取得当前日期所在季度是一年中的第几季度 
+            * 取得当前日期所在季度是一年中的第几季度
             * @method getQuarterOfYear
             * @memberof x.date.newTime#
             */
@@ -384,7 +389,7 @@ x.date = {
             },
 
             /*
-            * 取得当前日期是一年中的第几周  
+            * 取得当前日期是一年中的第几周
             */
             getWeekOfYear: function()
             {
@@ -419,7 +424,7 @@ x.date = {
             },
 
             /*
-            * 判断闰年  
+            * 判断闰年
             */
             isLeapYear: function()
             {
@@ -454,18 +459,18 @@ x.date = {
             },
 
             /**
-            * 日期格式化  
-            * 格式 
-            * yyyy/yy 表示年份  
-            * MM 月份  
-            * w 星期  
-            * dd/d 日期  
-            * hh/h 时间  
-            * mm/m 分钟  
-            * ss/s 秒  
+            * 日期格式化
+            * 格式
+            * yyyy/yy 表示年份
+            * MM 月份
+            * w 星期
+            * dd/d 日期
+            * hh/h 时间
+            * mm/m 分钟
+            * ss/s 秒
             * @method toString
             * @memberof x.date.newTime#
-            * @param {string} format 时间格式 
+            * @param {string} format 时间格式
             * @returns {string}
             */
             toString: function(format)
