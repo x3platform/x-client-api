@@ -2,7 +2,7 @@
 // Name     : x-client-api 
 // Version  : 1.0.0 
 // Author   : ruanyu@live.com
-// Date     : 2014-10-11
+// Date     : 2014-11-02
 (function(global, factory) 
 {
     if (typeof module === "object" && typeof module.exports === "object") 
@@ -5046,6 +5046,11 @@
     
                     date = new Date(keys[0], Number(keys[1]) - 1, keys[2], keys[3], keys[4], keys[5]);
                 }
+                else if (/\/Date\((-?\d+)\)\//.test(timeValue))
+                {
+                    // .NET 日期对象
+                    date = new Date(parseInt(timeValue.replace(/\/Date\((-?\d+)\)\//, '$1')));
+                }
                 else
                 {
                     // 其他情况
@@ -5197,9 +5202,9 @@
                 },
     
                 /*
-                * 取得日期数据信息  
-                * 参数 interval 表示数据类型  
-                * y 年 M月 d日 w星期 ww周 h时 n分 s秒  
+                * 取得日期数据信息
+                * 参数 interval 表示数据类型
+                * y 年 M月 d日 w星期 ww周 h时 n分 s秒
                 */
                 getDatePart: function(interval)
                 {
@@ -5234,7 +5239,7 @@
                 },
     
                 /**
-                * 取得当前日期所在月的最大天数  
+                * 取得当前日期所在月的最大天数
                 * @method getMaxDayOfMonth
                 * @memberof x.date.newTime#
                 */
@@ -5247,7 +5252,7 @@
                 },
     
                 /**
-                * 取得当前日期所在季度是一年中的第几季度 
+                * 取得当前日期所在季度是一年中的第几季度
                 * @method getQuarterOfYear
                 * @memberof x.date.newTime#
                 */
@@ -5257,7 +5262,7 @@
                 },
     
                 /*
-                * 取得当前日期是一年中的第几周  
+                * 取得当前日期是一年中的第几周
                 */
                 getWeekOfYear: function()
                 {
@@ -5292,7 +5297,7 @@
                 },
     
                 /*
-                * 判断闰年  
+                * 判断闰年
                 */
                 isLeapYear: function()
                 {
@@ -5327,18 +5332,18 @@
                 },
     
                 /**
-                * 日期格式化  
-                * 格式 
-                * yyyy/yy 表示年份  
-                * MM 月份  
-                * w 星期  
-                * dd/d 日期  
-                * hh/h 时间  
-                * mm/m 分钟  
-                * ss/s 秒  
+                * 日期格式化
+                * 格式
+                * yyyy/yy 表示年份
+                * MM 月份
+                * w 星期
+                * dd/d 日期
+                * hh/h 时间
+                * mm/m 分钟
+                * ss/s 秒
                 * @method toString
                 * @memberof x.date.newTime#
-                * @param {string} format 时间格式 
+                * @param {string} format 时间格式
                 * @returns {string}
                 */
                 toString: function(format)
@@ -6968,10 +6973,10 @@
     }
     /*#endregion*//*#region 函数:val()*/
     /**
-    * 获取对象的值
-    * @method val
-    * @memberof x.dom
-    */
+     * 获取对象的值
+     * @method val
+     * @memberof x.dom
+     */
     dom.fn.val = function(value)
     {
         var element = this[0];
@@ -7018,10 +7023,10 @@
     
     /*#region 函数:size()*/
     /**
-    * 查看结果集记录数
-    * @method size
-    * @memberof x.dom
-    */
+     * 查看结果集记录数
+     * @method size
+     * @memberof x.dom
+     */
     dom.fn.size = function()
     {
         return this.results.length;
@@ -7030,13 +7035,13 @@
     
     /*#region 函数:css()*/
     /**
-    * 设置样式
-    * @method css
-    * @memberof x.dom
-    */
+     * 设置样式
+     * @method css
+     * @memberof x.dom
+     */
     dom.fn.css = function()
     {
-        if (arguments.length == 1 && x.type(arguments[0])=='string')
+        if (arguments.length == 1 && x.type(arguments[0]) == 'string')
         {
             var element = this[0];
     
@@ -7048,20 +7053,23 @@
         }
         else
         {
+            var me = this;
+    
+            var originalArgs = Array.prototype.slice.call(arguments).slice(0);
+    
             x.each(this.results, function(index, node)
             {
-                var args = Array.prototype.slice.call(arguments).slice(0);
+                var args = originalArgs.slice(0);
     
-                args.unshift(element);
+                args.unshift(node);
     
-                x.css.style.apply(this, args);
+                x.css.style.apply(me, args);
             });
         }
     
         return this;
     };
-    /*#endregion*/
-
+    /*#endregion*/// -*- ecoding=utf-8 -*-
     
     /**
     * @namespace net
@@ -7076,29 +7084,34 @@
         defaults: {
             // 异步请求的数据键值
             xhrDataKey: 'xhr-xml',
+            // 获取客户端标识信息        
+            getClientId: function () 
+            {
+                var element = x.query('#session-client-id');
+    
+                // 根据页面存放的 session-client-id 元素，获取客户端标识信息, 如果页面不存在 session-client-id 元素，则返回空值。
+                return element == null ? '' : x.isUndefined(element.value, '');
+            },
             // 获取客户端签名信息
             getClientSignature: function()
             {
-                var element = x.query('#session-signature');
+                var element = x.query('#session-client-signature');
     
-                // 根据页面存放的 system-signature 元素，获取签名信息, 如果页面不存在 system-signature 元素，则返回空值。
+                // 根据页面存放的 session-client-signature 元素，获取签名信息, 如果页面不存在 session-client-signature 元素，则返回空值。
                 return element == null ? '' : x.isUndefined(element.value, '');
-            },
-            // 获取客户端标识信息        
-            getClientId: function()
-            {
-                var element = x.query('#session-clientId');
+            }, 
+            // 获取时间信息
+            getTimestamp: function () {
+                var element = x.query('#session-timestamp');
     
-                // 根据页面存放的 session-clientId 元素，获取客户端标识信息, 如果页面不存在 session-clientId 元素，则返回空值。
+                // 根据页面存放的 session-timestamp 元素，获取时间戳信息, 如果页面不存在 session-timestamp 元素，则返回空值。
                 return element == null ? '' : x.isUndefined(element.value, '');
-            },
-            // 获取客户端密钥信息
-            getClientSecret: function()
-            {
-                // 根据页面存放的 session-clientSecret 元素，获取签名信息
-                var element = x.query('#session-clientSecret');
+            }, 
+            // 获取随机数信息
+            getNonce: function () {
+                var element = x.query('#session-nonce');
     
-                // 根据页面存放的 session-clientSecret 元素，获取签名信息, 如果页面不存在 session-clientSecret 元素，则返回空值。
+                // 根据页面存放的 session-nonce 元素，获取签名信息, 如果页面不存在 session-nonce 元素，则返回空值。
                 return element == null ? '' : x.isUndefined(element.value, '');
             },
             // 获取等待窗口
@@ -7511,18 +7524,15 @@
                 });
             }
     
-            if (x.isFunction(options.getClientSignature) && options.getClientSignature() != '')
-            {
-                data.clientSignature = options.getClientSignature();
-            }
-    
             if (x.isFunction(options.getClientId) && options.getClientId() != '')
             {
                 data.clientId = options.getClientId();
     
-                if (x.isFunction(options.getClientId) && options.getClientSecret() != '')
+                if (x.isFunction(options.getClientId) && options.getClientSignature() != '')
                 {
-                    data.clientSecret = options.getClientSecret();
+                    data.clientSignature = options.getClientSignature();
+                    data.timestamp = options.getTimestamp();
+                    data.nonce = options.getNonce();
                 }
             }
     

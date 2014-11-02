@@ -13,29 +13,34 @@ x.net = {
     defaults: {
         // 异步请求的数据键值
         xhrDataKey: 'xhr-xml',
+        // 获取客户端标识信息        
+        getClientId: function () 
+        {
+            var element = x.query('#session-client-id');
+
+            // 根据页面存放的 session-client-id 元素，获取客户端标识信息, 如果页面不存在 session-client-id 元素，则返回空值。
+            return element == null ? '' : x.isUndefined(element.value, '');
+        },
         // 获取客户端签名信息
         getClientSignature: function()
         {
-            var element = x.query('#session-signature');
+            var element = x.query('#session-client-signature');
 
-            // 根据页面存放的 system-signature 元素，获取签名信息, 如果页面不存在 system-signature 元素，则返回空值。
+            // 根据页面存放的 session-client-signature 元素，获取签名信息, 如果页面不存在 session-client-signature 元素，则返回空值。
             return element == null ? '' : x.isUndefined(element.value, '');
-        },
-        // 获取客户端标识信息        
-        getClientId: function()
-        {
-            var element = x.query('#session-clientId');
+        }, 
+        // 获取时间信息
+        getTimestamp: function () {
+            var element = x.query('#session-timestamp');
 
-            // 根据页面存放的 session-clientId 元素，获取客户端标识信息, 如果页面不存在 session-clientId 元素，则返回空值。
+            // 根据页面存放的 session-timestamp 元素，获取时间戳信息, 如果页面不存在 session-timestamp 元素，则返回空值。
             return element == null ? '' : x.isUndefined(element.value, '');
-        },
-        // 获取客户端密钥信息
-        getClientSecret: function()
-        {
-            // 根据页面存放的 session-clientSecret 元素，获取签名信息
-            var element = x.query('#session-clientSecret');
+        }, 
+        // 获取随机数信息
+        getNonce: function () {
+            var element = x.query('#session-nonce');
 
-            // 根据页面存放的 session-clientSecret 元素，获取签名信息, 如果页面不存在 session-clientSecret 元素，则返回空值。
+            // 根据页面存放的 session-nonce 元素，获取签名信息, 如果页面不存在 session-nonce 元素，则返回空值。
             return element == null ? '' : x.isUndefined(element.value, '');
         },
         // 获取等待窗口
@@ -448,18 +453,15 @@ x.net = {
             });
         }
 
-        if (x.isFunction(options.getClientSignature) && options.getClientSignature() != '')
-        {
-            data.clientSignature = options.getClientSignature();
-        }
-
         if (x.isFunction(options.getClientId) && options.getClientId() != '')
         {
             data.clientId = options.getClientId();
 
-            if (x.isFunction(options.getClientId) && options.getClientSecret() != '')
+            if (x.isFunction(options.getClientId) && options.getClientSignature() != '')
             {
-                data.clientSecret = options.getClientSecret();
+                data.clientSignature = options.getClientSignature();
+                data.timestamp = options.getTimestamp();
+                data.nonce = options.getNonce();
             }
         }
 
