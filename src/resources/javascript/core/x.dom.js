@@ -41,7 +41,7 @@ dom = x.ext(dom, {
     query: function(selector)
     {
         // 默认根据id查找元素
-        if (selector.indexOf('#') == -1 && selector.indexOf('.') == -1 && selector.indexOf(' ') == -1) { selector = '[id="' + selector + '"]'; }
+        if(selector.indexOf('#') == -1 && selector.indexOf('.') == -1 && selector.indexOf(' ') == -1) { selector = '[id="' + selector + '"]'; }
 
         var result = x.query(selector);
 
@@ -58,7 +58,7 @@ dom = x.ext(dom, {
 
         tmp.innerHTML = html;
 
-        for (var i = 0; i < tmp.childNodes.length; i++)
+        for(var i = 0;i < tmp.childNodes.length;i++)
         {
             list[list.length] = tmp.childNodes[i].cloneNode(true);
         }
@@ -109,19 +109,19 @@ dom = x.ext(dom, {
     {
         var node = null;
 
-        if (x.type(arguments[0]).indexOf('html') == 0)
+        if(x.type(arguments[0]).indexOf('html') == 0)
         {
             // Html 元素类型 直接返回
             node = arguments[0];
         }
-        else if (x.type(arguments[0]) == 'string')
+        else if(x.type(arguments[0]) == 'string')
         {
             node = document.getElementById(id);
         }
 
-        if (node == null) { return null; }
+        if(node == null) { return null; }
 
-        if (x.isUndefined(value))
+        if(x.isUndefined(value))
         {
             return node.getAttribute(name);
         }
@@ -152,7 +152,7 @@ dom = x.ext(dom, {
     {
         var nodes = dom.nodes(html);
 
-        for (var i = 0; i < nodes.length; i++)
+        for(var i = 0;i < nodes.length;i++)
         {
             element.appendChild(nodes[i]);
         }
@@ -180,7 +180,7 @@ dom = x.ext(dom, {
     {
         var nodes = dom.nodes(html);
 
-        for (var i = 0; i < nodes.length; i++)
+        for(var i = 0;i < nodes.length;i++)
         {
             element.parentNode.insertBefore(nodes[i], element);
         }
@@ -192,7 +192,7 @@ dom = x.ext(dom, {
     {
         var nodes = dom.nodes(html);
 
-        for (var i = 0; i < nodes.length; i++)
+        for(var i = 0;i < nodes.length;i++)
         {
             element.parentNode.insertBefore(nodes[i], element.nextSibling);
         }
@@ -214,7 +214,7 @@ dom = x.ext(dom, {
 
         x.each(options.attributes, function(index, node)
         {
-            if (fromInput.attr(node))
+            if(fromInput.attr(node))
             {
                 toInput.attr(node, fromInput.attr(node));
 
@@ -235,7 +235,7 @@ dom = x.ext(dom, {
     */
     fixed: function(selector, pointX, pointY)
     {
-        dom.css(selector, {
+        x.css.style(selector, {
             'position': 'fixed',
             'left': pointX + 'px',
             'top': pointY + 'px'
@@ -255,7 +255,7 @@ dom = x.ext(dom, {
     {
         var element = x.query(selector);
 
-        if (x.browser.ie && element.style.filter)
+        if(x.browser.ie && element.style.filter)
         {
             // IE
             element.style.filter = 'alpha(opacity:' + value + ')';
@@ -268,7 +268,7 @@ dom = x.ext(dom, {
     },
     /*#endregion*/
 
-    utils: {},
+    util: {},
 
     hooks: {},
 
@@ -294,7 +294,7 @@ dom = x.ext(dom, {
         {
             options = x.ext(dom.features.defaults, options || {});
 
-            if (x.isUndefined || options.featureScriptPath == '')
+            if(x.isUndefined || options.featureScriptPath == '')
             {
                 options.featureScriptPath = x.dir() + 'dom/features/';
             }
@@ -305,9 +305,9 @@ dom = x.ext(dom, {
             {
                 var list = document.getElementsByTagName(node);
 
-                for (var i = 0; i < list.length; i++)
+                for(var i = 0;i < list.length;i++)
                 {
-                    if (x.isFunction(options.listen))
+                    if(x.isFunction(options.listen))
                     {
                         options.listen(list[i]);
                     }
@@ -330,30 +330,31 @@ dom = x.ext(dom, {
                     */
                     try
                     {
-                        if (x.isUndefined(list[i].id) || list[i].id === '')
+                        if(x.isUndefined(list[i].id) || list[i].id === '')
                         {
                             continue;
                         }
 
                         var feature = dom('#' + list[i].id).attr(options.featureAttributeName);
 
-                        if (feature != null && dom('#' + list[i].id).attr(options.featureLoadedAttributeName) != '1')
+                        if(feature != null && dom('#' + list[i].id).attr(options.featureLoadedAttributeName) != '1')
                         {
                             feature = x.camelCase(feature);
 
                             x.require({
                                 id: 'x-dom-feature-' + feature + '-script',
+                                async: false,
                                 path: options.featureScriptPath + 'x.dom.features.' + feature + '.js',
                                 data: { target: list[i], feature: feature },
                                 callback: function(context)
                                 {
-                                    // x.debug.log('feature:' + feature + ',' + response.data.feature);
+                                    x.debug.log('feature:' + feature + ',' + context.data.feature + ',' + context.data.target.id);
                                     var data = context.data;
 
                                     // 加载完毕后, 加个 featureLoaded 标识, 避免重复加载效果.
                                     dom('#' + data.target.id).attr(options.featureLoadedAttributeName, '1');
 
-                                    if (x.isUndefined(dom.features[data.feature]))
+                                    if(x.isUndefined(dom.features[data.feature]))
                                     {
                                         x.debug.error('x.dom.features.bind() 异常:系统加载表单元素特性【' + data.feature + '】失败，请检查相关配置。');
                                     }
@@ -376,7 +377,7 @@ dom = x.ext(dom, {
                             */
                         }
                     }
-                    catch (ex)
+                    catch(ex)
                     {
                         x.debug.error(ex)
                     }
@@ -391,7 +392,7 @@ x.each(['on', 'off', 'append', 'before', 'after', 'wrap'], function(index, name)
 {
     dom.fn[name] = function()
     {
-        for (var i = 0; i < this.results.length; i++)
+        for(var i = 0;i < this.results.length;i++)
         {
             var args = Array.prototype.slice.call(arguments).slice(0);
 
@@ -409,7 +410,7 @@ x.each(['attr', 'options'], function(index, name)
 {
     dom.fn[name] = function()
     {
-        if (this.results.length > 0)
+        if(this.results.length > 0)
         {
             var args = Array.prototype.slice.call(arguments).slice(0);
 
@@ -433,13 +434,13 @@ x.ext(dom, {
     ready: function()
     {
         // 简化调用方法 x.dom(document).ready(fn) => x.dom.ready(fn)
-        if (x.isFunction(arguments[0]))
+        if(x.isFunction(arguments[0]))
         {
             return dom(document).ready(arguments[0]);
         }
 
         // Abort if there are pending holds or we're already ready
-        if (dom.isReady)
+        if(dom.isReady)
         {
             return;
         }
@@ -448,7 +449,7 @@ x.ext(dom, {
         dom.isReady = true;
 
         // If there are functions bound, to execute
-        if (dom.readyList)
+        if(dom.readyList)
         {
             // Execute all of them
             x.each(dom.readyList, function()
@@ -467,7 +468,7 @@ dom.fn.ready = function(fn)
     // Attach the listeners
     bindReady();
 
-    if (dom.isReady)
+    if(dom.isReady)
     {
         // If the DOM is already ready
         // Execute the function immediately
@@ -487,9 +488,9 @@ dom.fn.ready = function(fn)
 function completed()
 {
     // 支持旧版的 IE : readyState === "complete"
-    if (document.addEventListener || event.type === "load" || document.readyState === "complete")
+    if(document.addEventListener || event.type === "load" || document.readyState === "complete")
     {
-        if (document.addEventListener)
+        if(document.addEventListener)
         {
             document.removeEventListener("DOMContentLoaded", completed, false);
             window.removeEventListener("load", completed, false);
@@ -509,16 +510,16 @@ var readyBound = false;
 
 function bindReady()
 {
-    if (readyBound) return;
+    if(readyBound) return;
 
     readyBound = true;
 
-    if (document.readyState === "complete")
+    if(document.readyState === "complete")
     {
         // 处理异步的文档加载情况, 允许直接执行函数
         setTimeout(dom.ready);
     }
-    else if (document.addEventListener)
+    else if(document.addEventListener)
     {
         // 支持 DOMContentLoaded 的标准浏览器
 
@@ -528,7 +529,7 @@ function bindReady()
         // A fallback to window.onload, that will always work
         window.addEventListener("load", completed, false);
     }
-    else if (document.attachEvent)
+    else if(document.attachEvent)
     {
         // If IE event model is used
 
@@ -541,9 +542,9 @@ function bindReady()
 
         // If IE and not an iframe
         // continually check to see if the document is ready
-        if (document.documentElement.doScroll && window == window.top) (function()
+        if(document.documentElement.doScroll && window == window.top) (function()
         {
-            if (dom.isReady) return;
+            if(dom.isReady) return;
 
             try
             {
@@ -551,7 +552,7 @@ function bindReady()
                 // http://javascript.nwbox.com/IEContentLoaded/
                 document.documentElement.doScroll("left");
             }
-            catch (error)
+            catch(error)
             {
                 setTimeout(arguments.callee, 0);
                 return;

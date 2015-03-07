@@ -1,0 +1,226 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+<title>对话框</title>
+<link rel="stylesheet" href="../resources/styles/normalize.css" type="text/css" />
+<link rel="stylesheet" href="../resources/styles/x-ui/x.ui.dialogs.css" type="text/css" />
+<script src='../resources/javascript/jquery-2.0.3.min.js' type='text/javascript'></script>
+<script src="../resources/javascript/x-client-api-core.zh-cn.js" type="text/javascript" ></script>
+<script src="../resources/javascript/x-client-api-ui.zh-cn.js" type="text/javascript" ></script>
+<script src="../resources/javascript/ui/core/x.ui.dialogs.js" type="text/javascript" ></script>
+<script src="x.ui.dialogs.html.js" type="text/javascript" ></script>
+<style type="text/css">
+#main { width: 960px; margin:auto; font-size:14px; }
+#main li { list-style:none; padding: 10px 0 0 0; }
+#main ul { list-style:none; padding: 0; }
+a { color:blue; }
+blockquote { font-family: Georgia; border:4px dashed #666; margin: 0 0 10px; padding: 0 0 0 16px; }
+button {
+  color: #fff;
+  text-decoration: none;
+  text-align: center;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  background-color: #569e3d;
+  background-image: linear-gradient(#666666, #3b3b3b);
+  background-repeat: repeat-x;
+  border:1px solid #000000;
+  padding: 0.5em 1em 0.5em 1em;
+  font-size: 14px;
+  font-weight: bold;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  border-radius: 3px;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-appearance: none;
+  line-height: 120%;
+}
+button:hover {
+  color: #fff;
+  background-color: #569e3d;
+  background-image: linear-gradient(#79d858, #569e3d);
+  border:1px solid #4a993e;
+}
+</style>
+
+</head>
+
+<body>
+<div id="main">
+  <h3>应用演示：</h3>
+    <ul>
+        <li>
+            <span>兼容性测试元素：</span> <br /><br />
+            下拉框：
+            <select name="leothemem" id="leotheme">
+                <option value="0" selected="selected">http://www.x3platform.com/
+                <option value="1">http://github.x3platform.com/
+            </select><br /><br />
+            输入框：
+            <input type="text" /><br /><br />
+            链接：
+            <a href="#" title="">默认</a>
+            <br />
+        </li>
+        <li>
+        <h4>弹出普通文本信息提示以及位置演示：</h4>
+        <blockquote>
+<pre>
+x.dom("#id").on('click',function(){
+    x.ui.dialogs.newDialog(); //默认
+    x.ui.dialogs.newDialog({offsets:"left-top"}); //左上角
+    x.ui.dialogs.newDialog({offsets:"right-top"}); //右上角
+    x.ui.dialogs.newDialog({offsets:"left-bottom"}); //左下角
+    x.ui.dialogs.newDialog({offsets:"right-bottom"}); //右下角
+    x.ui.dialogs.newDialog({offsets:"left-middle"}); //靠左居中
+    x.ui.dialogs.newDialog({offsets:"right-middle"}); //靠右居中
+    x.ui.dialogs.newDialog({offsets:"middle-top"}); //居中置顶
+    x.ui.dialogs.newDialog({offsets:"middle-bottom"}); //居中置底
+    x.ui.dialogs.newDialog({offsets:{left:"100px",top:"100px"}}); //自定义
+});
+</pre>
+        </blockquote>
+            <button id="test1_0">不带参数</button>
+            <button id="test1_1">左上角</button>
+            <button id="test1_2">右上角</button>
+            <button id="test1_3">左下角</button>
+            <button id="test1_4">右下角</button>
+            <button id="test1_5">靠左居中</button>
+            <button id="test1_6">靠右居中</button>
+            <button id="test1_7">居中置顶</button>
+            <button id="test1_8">居中置底</button>
+            <button id="test1_9">自定位置</button>
+        </li>
+        <li>
+            <h4>其他特殊应用演示：</h4>
+                    <blockquote>
+<pre>
+x.dom("#id").on('click', function(){
+    x.ui.dialogs.newDialog(); // 默认
+    // 更多参数查看源码
+});
+</pre>
+        </blockquote>
+            <button id="test2_0">无边框</button>
+            <button id="test2_1">透明边框</button>
+            <button id="test2_2">alert</button>
+            <button id="test2_3">confirm</button>
+            <button id="test2_4">载入提示</button>
+            <button id="test2_5">普通TIPS</button>
+            <button id="test2_6">吸附模式</button>
+            <button id="test2_7">右下弹出</button>
+            <button id="test2_8">可拖动</button>
+            <button id="test2_9">自动关闭</button>
+            <div id="info"></div>
+        </li>
+        <li>
+        <h4>弹出一个普通的信息提示（可拖动，遮罩层）：</h4>
+        <blockquote>
+<pre>
+x.ui.dialogs.newDialog({
+    title:"Hello world",
+    content:"text:提示信息内容",
+    width:"300",
+    height:"200",
+    dray:"boxTitle",
+    showbg:true
+});
+</pre>
+        </blockquote>
+        <button id="test_1">点击测试</button>
+        </li>
+
+        <li>
+        <h4>弹出页面中的某个ID（可拖动，遮罩层）：</h4>
+        <blockquote>
+<pre>
+x.ui.dialogs.newDialog({
+    title:"弹出页面中的某个ID",
+    content:"id:testID",
+    showbg:true,
+    drag:"boxTitle"
+});
+</pre>
+        </blockquote>
+
+        <button id="test_2">点击测试</button>
+        <div id="testID" style="display:none ">
+            <p class="lh25">我是测试ID里的内容 <br />
+            我换行了...<br /></p>
+            <br />
+        </div>
+
+        </li>
+
+        <li>
+        <h4>弹出一张图片（可拖动，遮罩层）： </h4>
+        <blockquote>
+<pre>
+x.ui.dialogs.newDialog({
+    title:"Hello world",
+    content:"img:图片路径",
+    width:"500",
+    height:"250",
+    drag:"boxTitle",
+    showbg:true
+});
+</pre>
+        </blockquote>
+
+        <button id="test_3">点击测试</button>
+        </li>
+
+        <li>
+        <h4>弹出一个视频或FLASH动画（可拖动）： </h4>
+        <blockquote>
+<pre>
+x.ui.dialogs.newDialog({
+    title:"Hello world",
+    content:"swf:路径",
+    width:"225",
+    height:"185",
+    drag:"boxTitle"
+});
+</pre>
+        </blockquote>
+        <button id="test_4">点击测试</button>
+        </li>
+
+        <li>
+        <h4>加载一个文件（也可以是.php/.asp?id=4之类的,可拖动，遮罩层）： </h4>
+        <blockquote>
+<pre>
+x.ui.dialogs.newDialog({
+    title:"Hello world",
+    content:"url:get?test.html",
+    width:"400",
+    height:"200",
+    drag:"boxTitle",
+    showbg:true
+});
+</pre>
+        </blockquote>
+
+        <button id="test_5">点击测试</button>
+        </li>
+
+        <li>
+        <h4>加载一个网页到框架里（可拖动，遮罩层）： </h4>
+        <blockquote>
+<pre>
+x.ui.dialogs.newDialog({
+    title: "框架应用",
+    content: "iframe:http://github.x3platform.com",
+    width: "800",
+    height: "450"
+});
+</pre>
+        </blockquote>
+        <button id="test_6">点击测试</button>
+        </li>
+    </ul>
+</div>
+</body>
+</html>

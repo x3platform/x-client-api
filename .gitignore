@@ -1,5 +1,7 @@
 bin
 dist
+aspnet_client
+dist
 doc
 node_modules
 /src/tests

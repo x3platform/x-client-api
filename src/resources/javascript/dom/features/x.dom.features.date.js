@@ -12,8 +12,8 @@ x.dom.features.date = {
     {
         x.require({
             files:[
-                { fileType: 'css', id: 'x-ui-calendar-css', path: x.ui.stylesheetPathPrefix + 'x.ui.calendar.css'},
-                { fileType: 'script', id: 'x-ui-calendar-script', path: x.dir() + 'ui/packages/x.ui.calendar.js' }
+                { fileType: 'css', id: 'x-ui-pkg-calendar-css', path: x.ui.styles.dir() + 'x.ui.pkg.calendar.css' },
+                { fileType: 'script', id: 'x-ui-pkg-calendar-script', path: x.ui.pkg.dir() + 'x.ui.pkg.calendar.js' }
             ],
             data: { inputName: inputName },
             callback: function(context)
@@ -30,7 +30,7 @@ x.dom.features.date = {
                 // 设置新的显示元素
                 input.after('<div id="' + calendarName + '" style="display:none;" ></div>');
 
-                var calendar = window[calendarName] = x.ui.calendar.newCalendar(calendarName, calendarName, inputName, '', {
+                var calendar = window[calendarName] = x.ui.pkg.calendar.newCalendar(calendarName, calendarName, inputName, '', {
                     getDayEvent: function()
                     {
                         if (typeof (this.input.attr('bind')) !== 'undefined')

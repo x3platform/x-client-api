@@ -12,11 +12,11 @@ x.dom.features.combobox = {
     {
         // x.config.net.require['x-ui-combobox'].path;
 
-        x.require({ fileType: 'css', id: 'x-ui-combobox-css', path: x.ui.stylesheetPathPrefix + 'x.ui.combobox.css' });
-
         x.require({
-            id: 'x-ui-combobox-script',
-            path: x.dir() + 'ui/packages/x.ui.combobox.js',
+            files: [
+                { fileType: 'css', id: 'x-ui-pkg-combobox-css', path: x.ui.styles.dir() + 'x.ui.pkg.combobox.css' },
+                { fileType: 'script', id: 'x-ui-pkg-combobox-script', async: false, path: x.ui.pkg.dir() + 'x.ui.pkg.combobox.js' }
+            ],
             callback: function(context)
             {
                 // <div id="combobox1_mask" style="display:none;" ><input id="combobox1" /></div>
@@ -36,7 +36,7 @@ x.dom.features.combobox = {
 
                 var selectedText = (typeof (input.attr('selectedText')) == 'undefined') ? '' : input.attr('selectedText');
 
-                if (typeof (input.attr('url')) != 'undefined')
+                if(typeof (input.attr('url')) != 'undefined')
                 {
                     input.attr('comboboxType', 'dynamic');
                 }
@@ -52,7 +52,7 @@ x.dom.features.combobox = {
 
                 var inputView = x.dom.query(viewName);
 
-                if (inputView.width() > 20 && input.attr('hiddeIcon') != '1' && iconHidden == '0')
+                if(inputView.width() > 20 && input.attr('hiddeIcon') != '1' && iconHidden == '0')
                 {
                     inputView.css({
                         'background-image': 'url("/resources/images/form/combobox_icon.gif")',
@@ -75,15 +75,15 @@ x.dom.features.combobox = {
                     callback: (typeof (input.attr('callback')) == 'undefined') ? undefined : input.attr('callback')
                 };
 
-                if (options.comboboxType == 'static')
+                if(options.comboboxType == 'static')
                 {
                     options.list = x.toJSON(input.attr('data'));
                 }
-                else if (options.comboboxType == 'dynamic')
+                else if(options.comboboxType == 'dynamic')
                 {
                     options.url = input.attr('url');
 
-                    if (typeof (input.attr('comboboxWhereClause')) != 'undefined')
+                    if(typeof (input.attr('comboboxWhereClause')) != 'undefined')
                     {
                         options.whereClause = input.attr('comboboxWhereClause');
                     }
@@ -93,7 +93,7 @@ x.dom.features.combobox = {
                     }
                 }
 
-                window[comboboxName] = x.ui.combobox.newCombobox(comboboxName, comboboxName, viewName, inputName, options);
+                window[comboboxName] = x.ui.pkg.combobox.newCombobox(comboboxName, comboboxName, viewName, inputName, options);
 
                 inputView.bind('focus', function()
                 {
@@ -111,13 +111,13 @@ x.dom.features.combobox = {
 
                     var list = $('.' + classNamePrefix + '-combobox-wrapper');
 
-                    for (var i = 0; i < list.length; i++)
+                    for(var i = 0;i < list.length;i++)
                     {
-                        if (target.id != list[i].id.replace('-wrapper', '') && target.id != list[i].id.replace('-wrapper', '-view'))
+                        if(target.id != list[i].id.replace('-wrapper', '') && target.id != list[i].id.replace('-wrapper', '-view'))
                         {
                             var targetObject = window[list[i].id.replace('-wrapper', '') + '-combobox'];
 
-                            if (targetObject != null)
+                            if(targetObject != null)
                             {
                                 targetObject.close();
                             }

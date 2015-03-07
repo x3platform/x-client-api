@@ -96,9 +96,11 @@ dom.data = {
         {
             try
             {
-                if (x.dom(node).attr('custom-forms-data-required') || x.dom(node).attr('custom-forms-data-regexp'))
+                if(x.type(node) == 'array' || x.type(node) == 'function') return;
+
+                if(x.dom(node).attr('x-dom-data-required') || x.dom(node).attr('x-dom-data-regexp'))
                 {
-                    warning += x.ui.form.checkDataInput(node, options.tooltip);
+                    warning += x.dom.data.checkDataInput(node, options.tooltip);
                 }
             }
             catch (ex)
@@ -135,12 +137,12 @@ dom.data = {
             x.tooltip.newWarnTooltip({ element: node.id, hide: 1 });
         }
 
-        if ($(node).hasClass('custom-forms-data-required'))
+        if($(node).attr('x-dom-data-required'))
         {
             // 数据必填项验证
             if ($(node).val().trim() === '')
             {
-                var dataVerifyWarning = $(node).attr('dataVerifyWarning');
+                var dataVerifyWarning = $(node).attr('x-dom-data-required-warning');
 
                 // x.debug.log('x:' + x.page.getElementLeft(node) + ' y:' + x.page.getElementTop(node));
 
@@ -155,15 +157,15 @@ dom.data = {
                 }
             }
         }
-        // x-dom
-        if ($(node).hasClass('x-dom-data-regexp'))
+       
+        if($(node).attr('x-dom-data-regexp'))
         {
             // 数据规则验证
             if ($(node).val().trim() !== '')
             {
-                if (!x.expressions.exists({ text: $(node).val(), ignoreCase: $(node).attr('dataIgnoreCase'), regexpName: $(node).attr('dataRegExpName'), regexp: $(node).attr('dataRegExp') }))
+                if(!x.expressions.exists({ text: $(node).val(), ignoreCase: $(node).attr('x-dom-data-regexp-ignoreCase'), regexpName: $(node).attr('x-dom-data-regexp-name'), regexp: $(node).attr('x-dom-data-regexp') }))
                 {
-                    var dataRegExpWarning = $(node).attr('dataRegExpWarning');
+                    var dataRegExpWarning = $(node).attr('x-dom-data-regexp-warning');
 
                     // x.debug.log(x.page.getElementTop(node));
 
@@ -260,9 +262,9 @@ serializeHooks['JSON'] = function(options)
 {
     var outString = '';
 
-    if (options.includeAjaxStorageNode)
+    if (options.includeRequestNode)
     {
-        outString = '{"ajaxStorage":{'
+        outString = '{"request":{'
     }
 
     var list = x.dom('*');
@@ -405,7 +407,7 @@ serializeHooks['JSON'] = function(options)
     // 移除最后一个逗号
     outString = x.string.rtrim(outString, ',');
 
-    if (options.includeAjaxStorageNode)
+    if (options.includeRequestNode)
     {
         outString += '}}';
     }
@@ -421,13 +423,13 @@ serializeHooks['XML'] = function(options)
 
     if (typeof (options) == 'undefined')
     {
-        options = { includeAjaxStorageNode: false };
+        options = { includeRequestNode: false };
     }
 
-    if (options.includeAjaxStorageNode)
+    if (options.includeRequestNode)
     {
         outString += '<?xml version="1.0" encoding="utf-8" ?>';
-        outString += '<ajaxStorage>';
+        outString += '<request>';
     }
 
     var list = x.dom('*');
@@ -504,9 +506,9 @@ serializeHooks['XML'] = function(options)
         }
     });
 
-    if (options.includeAjaxStorageNode)
+    if (options.includeRequestNode)
     {
-        outString += '</ajaxStorage>';
+        outString += '</request>';
     }
 
     return outString;

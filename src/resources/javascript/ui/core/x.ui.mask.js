@@ -40,7 +40,7 @@ x.ui.mask = {
             // 获得默认遮罩实例
             if (this.defaultInstance === null)
             {
-                var name = x.getFriendlyName(location.pathname + '$mask$default$instance');
+                var name = x.getFriendlyName(location.pathname + '-mask-default-instance');
 
                 this.defaultInstance = instance = x.ui.mask.newMaskWrapper(name, options);
             }
@@ -106,7 +106,7 @@ x.ui.mask = {
                 }, options || {});
 
                 this.name = name;
-                this.popupWindowName = name + '$maskPopupWindow';
+                this.popupWindowName = name + '-maskPopupWindow';
 
                 if (this.options.url)
                 {
@@ -139,7 +139,7 @@ x.ui.mask = {
                     {
                         $(this).unbind('click');
 
-                        x.stopEventPropagation(event);
+                        x.event.stopPropagation(event);
 
                         var mask = window[this.id];
 
@@ -279,7 +279,7 @@ x.ui.mask = {
                     pointX = (x.page.getRange().width - $(element).width()) / 2;
 
                     // 设置窗口的位置
-                    x.util.setLocation(element, pointX, pointY);
+                    x.dom.fixed('#' + this.popupWindowName, pointX, pointY);
                 }
                 else
                 {
@@ -290,7 +290,7 @@ x.ui.mask = {
 
                     pointX = (x.page.getRange().width - $(element).width()) / 2;
 
-                    x.util.setLocation(element, pointX, pointY);
+                    x.dom.fixed('#' + this.popupWindowName, pointX, pointY);
                 }
 
                 this.resize();
@@ -326,11 +326,11 @@ x.ui.mask = {
                 pointX = (x.page.getRange().width - width) / 2;
 
                 // 设置窗口位置
-                x.dom.fixed(element, pointX, pointY);
+                x.dom.fixed('#' + this.popupWindowName, pointX, pointY);
 
                 // 设置窗口可拖拽
-                x.drag.getDraggableWindow({
-                    targetWindowName: this.popupWindowName,
+                x.ui.drag.getDraggableWindow({
+                    targetWindowName: options.draggableWindowName || this.popupWindowName,
                     targetWindowWidth: options.draggableWidth,
                     targetWindowHeight: options.draggableHeight,
                     draggingStyle: 'default'

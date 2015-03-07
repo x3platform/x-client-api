@@ -13,16 +13,16 @@ x.dom.util.select = {
         // clear options
         try
         {
-            if (x.net.browser.getName() == 'Internet Explorer')
+            if(x.net.browser.getName() == 'Internet Explorer')
             {
                 var selectObjectLength = select.options.length;
 
                 // IE
-                while (selectObjectLength !== 0)
+                while(selectObjectLength !== 0)
                 {
                     selectObjectLength = select.options.length;
 
-                    for (var i = 0; i < selectObjectLength; i++)
+                    for(var i = 0;i < selectObjectLength;i++)
                     {
                         select.options.remove(i);
                     }
@@ -35,7 +35,7 @@ x.dom.util.select = {
                 select.innerHTML = '';
             }
         }
-        catch (ex)
+        catch(ex)
         {
             select.innerHTML = ''; // Firefox
         }
@@ -44,7 +44,7 @@ x.dom.util.select = {
     /**
     * 添加 select 元素的 options 元素
     * @method add
-    * @memberof x.dom.select
+    * @memberof x.dom.util.select
     */
     add: function(selectName, text, value)
     {
@@ -64,9 +64,9 @@ x.dom.util.select = {
     convert: function(selectName, options)
     {
         // clear options
-        x.dom.select.clear(selectName);
+        x.dom.util.select.clear(selectName);
 
-        x.dom.select.append(selectName, options);
+        x.dom.util.select.append(selectName, options);
     },
 
     /**
@@ -77,29 +77,29 @@ x.dom.util.select = {
         var select = x.dom.query(selectName)[0];
 
         // append options
-        for (var i = 0; i < options.length; i++)
+        for(var i = 0;i < options.length;i++)
         {
-            x.dom.select.add(selectName, options[i].text, options[i].value);
+            x.dom.util.select.add(selectName, options[i].text, options[i].value);
         }
 
         // 如果长度为1, 直接禁用.
-        if (select.options.lenght == 1) { select.disabled = false; }
+        if(select.options.lenght == 1) { select.disabled = false; }
     },
 
     /**
     * 获取 select 元素的文本信息.
     * @method getText
-    * @memberof x.dom.select
+    * @memberof x.dom.util.select
     */
     getText: function(selectName)
     {
         var select = x.dom.query(selectName)[0];
 
-        var value = x.dom.select.getValue(selectName);
+        var value = x.dom.util.select.getValue(selectName);
 
-        for (var i = 0; i < select.options.length; i++)
+        for(var i = 0;i < select.options.length;i++)
         {
-            if (select.options[i].value == value)
+            if(select.options[i].value == value)
             {
                 return select.options[i].text;
             }
@@ -111,7 +111,7 @@ x.dom.util.select = {
     /**
     * 获取 select 元素的值
     * @method getValue
-    * @memberof x.dom.select
+    * @memberof x.dom.util.select
     */
     getValue: function(selectName)
     {
@@ -121,15 +121,15 @@ x.dom.util.select = {
     /**
     * 设置 select 元素的值
     * @method setValue
-    * @memberof x.dom.select
+    * @memberof x.dom.util.select
     */
     setValue: function(selectName, value)
     {
         var select = $(selectName);
 
-        for (var i = 0; i < select.options.length; i++)
+        for(var i = 0;i < select.options.length;i++)
         {
-            if (select.options[i].value == value)
+            if(select.options[i].value == value)
             {
                 try
                 {
@@ -137,7 +137,7 @@ x.dom.util.select = {
                     select.options[i].selected = true;
                     return true;
                 }
-                catch (ex)
+                catch(ex)
                 {
                 }
             }

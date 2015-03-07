@@ -11,10 +11,12 @@ x.net = {
     * 默认配置信息
     */
     defaults: {
+        // 返回类型
+        returnType: 'json',
         // 异步请求的数据键值
         xhrDataKey: 'xhr-xml',
         // 获取客户端标识信息        
-        getClientId: function () 
+        getClientId: function()
         {
             var element = x.query('#session-client-id');
 
@@ -28,16 +30,18 @@ x.net = {
 
             // 根据页面存放的 session-client-signature 元素，获取签名信息, 如果页面不存在 session-client-signature 元素，则返回空值。
             return element == null ? '' : x.isUndefined(element.value, '');
-        }, 
+        },
         // 获取时间信息
-        getTimestamp: function () {
+        getTimestamp: function()
+        {
             var element = x.query('#session-timestamp');
 
             // 根据页面存放的 session-timestamp 元素，获取时间戳信息, 如果页面不存在 session-timestamp 元素，则返回空值。
             return element == null ? '' : x.isUndefined(element.value, '');
-        }, 
+        },
         // 获取随机数信息
-        getNonce: function () {
+        getNonce: function()
+        {
             var element = x.query('#session-nonce');
 
             // 根据页面存放的 session-nonce 元素，获取签名信息, 如果页面不存在 session-nonce 元素，则返回空值。
@@ -52,16 +56,16 @@ x.net = {
                 text: i18n.net.waiting.commitTipText    // 提示信息
             }, options || {});
 
-            if (x.isUndefined(options.name))
+            if(x.isUndefined(options.name))
             {
                 options.name = x.getFriendlyName(location.pathname + '$' + options.type + '$waiting$window');
             }
 
             var name = options.name;
 
-            if (x.isUndefined(window[name]))
+            if(x.isUndefined(window[name]))
             {
-                if (options.type == 'mini')
+                if(options.type == 'mini')
                 {
                     window[name] = {
                         // 名称
@@ -76,7 +80,7 @@ x.net = {
                         /*#region 函数:create(text)*/
                         create: function(text)
                         {
-                            if (document.getElementById(this.name + '-text') == null)
+                            if(document.getElementById(this.name + '-text') == null)
                             {
                                 $(document.body).append('<div id="' + this.name + '-container" class="x-ui-dialog-waiting-mini-window-container" ><div id="' + this.name + '-text" class="x-ui-dialog-waiting-mini-window-text" >' + text + '</div></div>');
                             }
@@ -85,7 +89,7 @@ x.net = {
                                 x.query('[id="' + this.name + '-text"]').innerHTML = text;
                             }
 
-                            if (this.container === null)
+                            if(this.container === null)
                             {
                                 this.container = document.getElementById(this.name + '-container');
                             }
@@ -98,7 +102,7 @@ x.net = {
                         */
                         show: function()
                         {
-                            if (!x.isUndefined(arguments[0]))
+                            if(!x.isUndefined(arguments[0]))
                             {
                                 this.options.text = arguments[0];
                             }
@@ -121,7 +125,7 @@ x.net = {
                         */
                         hide: function()
                         {
-                            if (this.container != null)
+                            if(this.container != null)
                             {
                                 x.css.style(this.container, { display: 'none' });
 
@@ -177,7 +181,7 @@ x.net = {
                             var pointX = (range.width - this.width) / 2;
                             var pointY = (range.height - this.height) / 3;
 
-                            x.util.setLocation(this.container, pointX, pointY);
+                            x.dom.fixed(this.container, pointX, pointY);
                         },
                         /*#endregion*/
 
@@ -186,7 +190,7 @@ x.net = {
                         {
                             var wrapper = document.getElementById(this.name + '$maskWrapper');
 
-                            if (wrapper === null)
+                            if(wrapper === null)
                             {
                                 $(document.body).append('<div id="' + this.name + '$maskWrapper" style="display:none;" ></div>');
 
@@ -198,7 +202,7 @@ x.net = {
                             wrapper.style.height = x.page.getRange().height + 'px';
                             wrapper.style.width = x.page.getRange().width + 'px';
 
-                            if (wrapper.style.display === 'none')
+                            if(wrapper.style.display === 'none')
                             {
                                 $(document.getElementById(this.name + '$maskWrapper')).css({ display: '', opacity: 0.1 });
                                 $(document.getElementById(this.name + '$maskWrapper')).fadeTo((this.maxDuration * 1000), this.maxOpacity, function()
@@ -214,7 +218,7 @@ x.net = {
                         /*#region 函数:create(text)*/
                         create: function(text)
                         {
-                            if (document.getElementById(this.name + '$text') == null)
+                            if(document.getElementById(this.name + '$text') == null)
                             {
                                 $(document.body).append('<div id="' + this.name + '$container" class="x-ui-dialog-waiting-window-container" ><div id="' + this.name + '$text" class="x-ui-dialog-waiting-window-text" >' + text + '</div></div>');
 
@@ -225,7 +229,7 @@ x.net = {
                                 document.getElementById(this.name + '$text').innerHTML = text;
                             }
 
-                            if (this.container === null)
+                            if(this.container === null)
                             {
                                 this.container = document.getElementById(this.name + '$container');
                                 this.maskWrapper = document.getElementById(this.name + '$maskWrapper');
@@ -245,16 +249,16 @@ x.net = {
 
                             var timer = x.newTimer(this.lazy, function(timer)
                             {
-                                if (that.lock > 0)
+                                if(that.lock > 0)
                                 {
                                     // x.debug.log('x.net.waitingWindow.lock:【' + that.lock + '】');
 
-                                    if (that.maskWrapper === null)
+                                    if(that.maskWrapper === null)
                                     {
-                                        that.maskWrapper = x.mask.newMaskWrapper(that.name + '$maskWrapper');
+                                        that.maskWrapper = x.ui.mask.newMaskWrapper(that.name + '$maskWrapper');
                                     }
 
-                                    if (typeof (text) !== 'undefined')
+                                    if(typeof (text) !== 'undefined')
                                     {
                                         that.options.text = text;
                                     }
@@ -268,7 +272,7 @@ x.net = {
                                     //var pointY = (range.height - this.height) / 3;
                                     var pointY = 120;
 
-                                    x.util.setLocation(that.container, pointX, pointY);
+                                    x.dom.fixed(that.container, pointX, pointY);
 
                                     // 设置弹出窗口的位置
                                     that.container.style.display = '';
@@ -292,14 +296,14 @@ x.net = {
 
                             x.debug.log('x.net.waitingWindow.lock:【' + this.lock + '】');
 
-                            if (this.lock === 0)
+                            if(this.lock === 0)
                             {
-                                if (this.container != null)
+                                if(this.container != null)
                                 {
                                     this.container.style.display = 'none';
                                 }
 
-                                if (this.maskWrapper != null && $(document.getElementById(this.name + '$maskWrapper')).css('display') !== 'none')
+                                if(this.maskWrapper != null && $(document.getElementById(this.name + '$maskWrapper')).css('display') !== 'none')
                                 {
                                     var that = this;
 
@@ -331,9 +335,9 @@ x.net = {
             {
                 var result = x.toJSON(response);
 
-                if (!x.isUndefined(result) && !x.isUndefined(result.message) && !x.isUndefined(result.message.category) && result.message.category === 'exception')
+                if(!x.isUndefined(result) && !x.isUndefined(result.message) && !x.isUndefined(result.message.category) && result.message.category === 'exception')
                 {
-                    if (outputType == 'console')
+                    if(outputType == 'console')
                     {
                         x.debug.error(result.message.description);
                     }
@@ -343,7 +347,7 @@ x.net = {
                     }
                 }
             }
-            catch (ex)
+            catch(ex)
             {
                 x.debug.error(ex);
             }
@@ -380,7 +384,7 @@ x.net = {
 
         var url, xhrDataValue, options;
 
-        if (arguments.length == 2 && x.type(arguments[1]) === 'object')
+        if(arguments.length == 2 && x.type(arguments[1]) === 'object')
         {
             // 支持没有Xml数据，只有地址和回调函数的调用。
 
@@ -388,7 +392,7 @@ x.net = {
             options = arguments[1];
             xhrDataValue = '';
         }
-        else if (arguments.length == 2 && x.type(arguments[1]) === 'string')
+        else if(arguments.length == 2 && x.type(arguments[1]) === 'string')
         {
             // 支持没有回调函数，只有地址和Xml数据的调用。
 
@@ -396,7 +400,7 @@ x.net = {
             options = {};
             xhrDataValue = arguments[1];
         }
-        else if (arguments.length == 3 && x.type(arguments[1]) === 'string' && x.isFunction(arguments[2]))
+        else if(arguments.length == 3 && x.type(arguments[1]) === 'string' && x.isFunction(arguments[2]))
         {
             // 支持没有回调函数，只有地址和Xml数据的调用。
 
@@ -411,14 +415,14 @@ x.net = {
             options = arguments[2];
         }
 
-        options = x.ext(x.net.defaults, options);
+        options = x.ext({}, x.net.defaults, options);
 
         // 判断是否启用等待窗口
         var enableWaitingWindow = x.isFunction(options.getWaitingWindow)
                                     && !x.isUndefined(options.waitingMessage)
                                     && options.waitingMessage !== '';
 
-        if (enableWaitingWindow)
+        if(enableWaitingWindow)
         {
             // 开启等待窗口
             options.getWaitingWindow({ text: options.waitingMessage, type: x.isUndefined(options.waitingType, 'default') }).show();
@@ -433,11 +437,11 @@ x.net = {
 
         var xml = x.toXML(xhrDataValue, 1);
 
-        if (xhrDataValue != '' && xml)
+        if(xhrDataValue != '' && xml)
         {
             data[options.xhrDataKey] = xhrDataValue;
         }
-        else if (!xml && xhrDataValue.indexOf('=') > 0)
+        else if(!xml && xhrDataValue.indexOf('=') > 0)
         {
             // 非Xml字符格式, 普通的POST数据
             var list = xhrDataValue.split('&');
@@ -446,18 +450,18 @@ x.net = {
             {
                 var items = node.split('=');
 
-                if (items.length == 2)
+                if(items.length == 2)
                 {
                     data[items[0]] = decodeURIComponent(items[1]);
                 }
             });
         }
 
-        if (x.isFunction(options.getClientId) && options.getClientId() != '')
+        if(x.isFunction(options.getClientId) && options.getClientId() != '')
         {
             data.clientId = options.getClientId();
 
-            if (x.isFunction(options.getClientId) && options.getClientSignature() != '')
+            if(x.isFunction(options.getClientId) && options.getClientSignature() != '')
             {
                 data.clientSignature = options.getClientSignature();
                 data.timestamp = options.getTimestamp();
@@ -473,24 +477,24 @@ x.net = {
             async: async,
             success: function(response)
             {
-                if (enableWaitingWindow)
+                if(enableWaitingWindow)
                 {
                     // 关闭等待窗口
-                    options.getWaitingWindow({ type: options.waitingType }).hide();
+                    options.getWaitingWindow({ type: x.isUndefined(options.waitingType, 'default') }).hide();
                 }
 
-                if (options.returnType == 'json')
+                if(options.returnType == 'json')
                 {
                     // 捕获处理异常
                     options.catchException(response, options.outputException);
 
                     var result = x.toJSON(response).message;
 
-                    switch (Number(result.returnCode))
+                    switch(Number(result.returnCode))
                     {
                         case 0:
                             // 0:正确操作
-                            if (!!options.popResultValue)
+                            if(!!options.popResultValue)
                             {
                                 x.msg(result.value);
                             }
@@ -518,25 +522,25 @@ x.net = {
             {
                 x.debug.log(XMLHttpRequest.responseText);
 
-                if (x.isFunction(options.error))
+                if(x.isFunction(options.error))
                 {
                     options.error(XMLHttpRequest, textStatus, errorThrown);
                 }
                 else
                 {
-                    if (XMLHttpRequest.status == 401)
+                    if(XMLHttpRequest.status == 401)
                     {
                         x.msg(i18n.net.errors['401']);
                     }
-                    else if (XMLHttpRequest.status == 404)
+                    else if(XMLHttpRequest.status == 404)
                     {
                         x.msg(i18n.net.errors['404']);
                     }
-                    else if (XMLHttpRequest.status == 500)
+                    else if(XMLHttpRequest.status == 500)
                     {
                         x.msg(i18n.net.errors['500']);
                     }
-                    else if (XMLHttpRequest.status != 0)
+                    else if(XMLHttpRequest.status != 0)
                     {
                         x.debug.error(i18n.net.errors['unkown'].format(XMLHttpRequest.status + (XMLHttpRequest.statusText != '' ? (' ' + XMLHttpRequest.statusText) : '')));
                     }
@@ -562,7 +566,7 @@ x.net = {
             async: true
         }, options || {});
 
-        if (options.id != '' && x.net.requireLoaded[options.id])
+        if(options.id != '' && x.net.requireLoaded[options.id])
         {
             x.debug.log('require file {"id":"{0}", path:"{1}"} exist. [ajax]'.format(options.id, options.path));
 
@@ -584,13 +588,13 @@ x.net = {
 
                 var head = document.getElementsByTagName("HEAD").item(0);
 
-                if (options.fileType == 'template')
+                if(options.fileType == 'template')
                 {
                     var node = document.createElement("script");
                     node.type = "text/template";
                     node.src = options.path;
                 }
-                else if (options.fileType == 'css')
+                else if(options.fileType == 'css')
                 {
                     var node = document.createElement("style");
                     node.type = "text/css";
@@ -610,12 +614,12 @@ x.net = {
                     // IE8以及以下不支持这种方式，需要通过text属性来设置
                     node.appendChild(document.createTextNode(responseText));
                 }
-                catch (ex)
+                catch(ex)
                 {
                     node.text = responseText;
                 }
 
-                if (options.id != '')
+                if(options.id != '')
                 {
                     node.id = options.id;
                     x.net.requireLoaded[options.id] = true;
@@ -650,11 +654,11 @@ x.net = {
             // 发送
             send: function()
             {
-                if (this.xhr == null)
+                if(this.xhr == null)
                 {
                     this.xhr = x.net.newXmlHttpRequest();
 
-                    if (!this.xhr)
+                    if(!this.xhr)
                     {
                         x.debug.error('create xhr failed'); return false;
                     }
@@ -672,10 +676,10 @@ x.net = {
                     // x.debug.log('{0} readyState:{1} status:{2} done:{3}'.format(x.debug.timestamp(), xhr.readyState, xhr.status, me.done));
 
                     // 保持等待，直到数据完全加载，并保证请求未超时  
-                    if (xhr.readyState == 4 && !me.done)
+                    if(xhr.readyState == 4 && !me.done)
                     {
                         // 0 为访问的本地，200 到 300 代表访问服务器成功，304 代表没做修改访问的是缓存
-                        if (xhr.status == 0 || (xhr.status >= 200 && xhr.status < 300) || xhr.status == 304)
+                        if(xhr.status == 0 || (xhr.status >= 200 && xhr.status < 300) || xhr.status == 304)
                         {
                             // 成功则调用回调函数，并传入xhr对象  
                             x.call(me.success, xhr.responseText);
@@ -694,7 +698,7 @@ x.net = {
                 // 如果请求超过 timeout 设置的时间没有响应, 则取消请求（如果尚未完成的话）  
                 setTimeout(function() { me.done = true; }, me.timeout * 1000);
 
-                if (this.type == 'POST')
+                if(this.type == 'POST')
                 {
                     this.xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
                     this.xhr.send(x.serialize(this.data));
@@ -716,7 +720,7 @@ x.net = {
                     timeout: 90
                 }, options || {});
 
-                this.type = options.type;
+                this.type = options.type.toUpperCase();
                 this.url = options.url;
                 this.data = options.data;
                 this.async = options.async;
@@ -742,20 +746,20 @@ x.net = {
     {
         var xhr = null;
 
-        if (window.ActiveXObject) // IE
+        if(window.ActiveXObject) // IE
         {
             try
             {
                 // IE6 以及以后版本中可以使用
                 xhr = new ActiveXObject("Msxml2.XMLHTTP");
             }
-            catch (ex)
+            catch(ex)
             {
                 //IE5.5 以及以后版本可以使用
                 xhr = new ActiveXObject("Microsoft.XMLHTTP");
             }
         }
-        else if (window.XMLHttpRequest)
+        else if(window.XMLHttpRequest)
         {
             //Firefox，Opera 8.0+，Safari，Chrome
             xhr = new XMLHttpRequest();
@@ -785,9 +789,9 @@ x.net = {
             var resultValue = '';
             var list = location.search.substr(1).split('&');
 
-            for (var i = 0; i < list.length; i++)
+            for(var i = 0;i < list.length;i++)
             {
-                if (list[i].indexOf(key) === 0)
+                if(list[i].indexOf(key) === 0)
                 {
                     resultValue = decodeURIComponent(list[i].replace(key + '=', ''));
                     break;
@@ -816,15 +820,15 @@ x.net = {
 
             outString = '{';
 
-            if (list === '') { return; }
+            if(list === '') { return; }
 
-            for (var i = 0; i < list.length; i++)
+            for(var i = 0;i < list.length;i++)
             {
                 temp = list[i].split('=');
 
                 outString += '"' + temp[0] + '":"' + decodeURIComponent(temp[1]) + '"';
 
-                if (i < list.length - 1)
+                if(i < list.length - 1)
                     outString += ',';
             }
 
@@ -865,7 +869,7 @@ x.net.request_callback = function(response)
 {
     var result = x.toJSON(response).message;
 
-    switch (Number(result.returnCode))
+    switch(Number(result.returnCode))
     {
         case 0:
             // 0:正确操作

@@ -9,7 +9,7 @@ var x = {
     // 默认设置
     defaults: {
         // 默认消息提示方式
-        msg: function(text) { if (alert) { alert(text); } else { console.log(text); } }
+        msg: function(text) { if(alert) { alert(text); } else { console.log(text); } }
     },
 
     // 缓存
@@ -29,14 +29,14 @@ var x = {
     {
         try
         {
-            if (typeof (object) === 'undefined') { return 'undefined'; }
-            if (object === null) { return 'null'; }
+            if(typeof (object) === 'undefined') { return 'undefined'; }
+            if(object === null) { return 'null'; }
 
             return /\[object ([A-Za-z]+)\]/.exec(Object.prototype.toString.call(object))[1].toLowerCase();
         }
-        catch (ex)
+        catch(ex)
         {
-            if (ex instanceof RangeError) { return '...'; }
+            if(ex instanceof RangeError) { return '...'; }
 
             throw ex;
         }
@@ -107,7 +107,7 @@ var x = {
     */
     isUndefined: function(object, replacementValue)
     {
-        if (arguments.length == 2)
+        if(arguments.length == 2)
         {
             // 如果设置了 replacementValue 值, 则当对象是 undefined 值时, 返回替换值信息
             return (x.type(object) === 'undefined') ? replacementValue : object;
@@ -150,9 +150,9 @@ var x = {
 
         var root = window;
 
-        for (var i = 0; i < parts.length; i++)
+        for(var i = 0;i < parts.length;i++)
         {
-            if (x.isUndefined(root[parts[i]]))
+            if(x.isUndefined(root[parts[i]]))
             {
                 root[parts[i]] = {};
             }
@@ -185,11 +185,11 @@ var x = {
 
         var result = arguments[0] || {};
 
-        if (arguments.length > 1)
+        if(arguments.length > 1)
         {
-            for (var i = 1; i < arguments.length; i++)
+            for(var i = 1;i < arguments.length;i++)
             {
-                for (var property in arguments[i])
+                for(var property in arguments[i])
                 {
                     result[property] = arguments[i][property];
                 }
@@ -236,22 +236,22 @@ var x = {
     */
     call: function(anything)
     {
-        if (!x.isUndefined(anything))
+        if(!x.isUndefined(anything))
         {
             try
             {
-                if (x.isFunction(anything))
+                if(x.isFunction(anything))
                 {
                     var args = Array.prototype.slice.call(arguments).slice(1);
 
                     return anything.apply(this, args);
                 }
-                else if (x.type(anything) === 'string')
+                else if(x.type(anything) === 'string')
                 {
-                    if (anything !== '') { return eval(anything); }
+                    if(anything !== '') { return eval(anything); }
                 }
             }
-            catch (ex)
+            catch(ex)
             {
                 x.debug.error(ex);
             }
@@ -268,12 +268,12 @@ var x = {
     */
     query: function(selector)
     {
-        if (x.type(selector).indexOf('html') == 0)
+        if(x.type(selector).indexOf('html') == 0)
         {
             // Html 元素类型 直接返回
             return selector;
         }
-        else if (x.type(selector) == 'string')
+        else if(x.type(selector) == 'string')
         {
             var results = Sizzle.apply(window, Array.prototype.slice.call(arguments, 0));
 
@@ -291,7 +291,7 @@ var x = {
     */
     queryAll: function(selector)
     {
-        if (x.type(selector).indexOf('html') == 0)
+        if(x.type(selector).indexOf('html') == 0)
         {
             // Html 元素类型 直接返回
             var results = [];
@@ -299,7 +299,7 @@ var x = {
 
             return results;
         }
-        else if (x.type(selector) == 'string')
+        else if(x.type(selector) == 'string')
         {
             return Sizzle.apply(window, Array.prototype.slice.call(arguments, 0));
         }
@@ -317,17 +317,17 @@ var x = {
     {
         var buffer = [], length = data.length;
 
-        if (x.isArray(data))
+        if(x.isArray(data))
         {
             // 数组对象
-            for (var i = 0; i < length; i++)
+            for(var i = 0;i < length;i++)
             {
                 buffer.push(data[i].name + '=' + encodeURIComponent(data[i].value));
             }
         }
         else
         {
-            for (var name in data)
+            for(var name in data)
             {
                 buffer.push(name + '=' + encodeURIComponent(data[name]));
             }
@@ -349,17 +349,17 @@ var x = {
     {
         var name, i = 0, length = data.length;
 
-        if (x.isArray(data))
+        if(x.isArray(data))
         {
             // 数组对象
-            for (var value = data[0]; i < length && callback.call(value, i, value) != false; value = data[++i]) { }
+            for(var value = data[0];i < length && callback.call(value, i, value) != false;value = data[++i]) { }
         }
         else
         {
             // 键/值对的散列表
-            for (name in data)
+            for(name in data)
             {
-                if (callback.call(data[name], name, data[name]) === false) { break; }
+                if(callback.call(data[name], name, data[name]) === false) { break; }
             }
         }
 
@@ -376,10 +376,10 @@ var x = {
     */
     toXML: function(text)
     {
-        if (x.type(text) === 'xmldocument') { return text; }
+        if(x.type(text) === 'xmldocument') { return text; }
 
         // 类型为 undefined 时或者字符串内容为空时, 返回 undefined 值.
-        if (x.isUndefined(text) || text === '') { return undefined; }
+        if(x.isUndefined(text) || text === '') { return undefined; }
 
         var hideError = !!arguments[1];
 
@@ -388,29 +388,29 @@ var x = {
         // Firefox, Mozilla, Opera, etc.
         try
         {
-            if (window.DOMParser)
+            if(window.DOMParser)
             {
                 var parser = new DOMParser();
                 doc = parser.parseFromString(text, "text/xml");
             }
-            else if (window.ActiveXObject)
+            else if(window.ActiveXObject)
             {
                 doc = new ActiveXObject("Microsoft.XMLDOM");
                 doc.async = "false";
                 doc.loadXML(text);
             }
         }
-        catch (ex)
+        catch(ex)
         {
             doc = undefined;
 
-            if (!hideError) x.debug.error('{"method":"x.toXML(text)", "arguments":{"text":"' + text + '"}');
+            if(!hideError) x.debug.error('{"method":"x.toXML(text)", "arguments":{"text":"' + text + '"}');
         }
 
-        if (!doc || doc.getElementsByTagName("parsererror").length)
+        if(!doc || doc.getElementsByTagName("parsererror").length)
         {
             doc = undefined;
-            if (!hideError) x.debug.error('{"method":"x.toXML(text)", "arguments":{"text":"' + text + '"}');
+            if(!hideError) x.debug.error('{"method":"x.toXML(text)", "arguments":{"text":"' + text + '"}');
         }
 
         return doc;
@@ -426,10 +426,10 @@ var x = {
     */
     toJSON: function(text)
     {
-        if (x.type(text) === 'object') { return text; }
+        if(x.type(text) === 'object') { return text; }
 
         // 类型为 undefined 时或者字符串内容为空时, 返回 undefined 值.
-        if (x.isUndefined(text) || text === '') { return undefined; }
+        if(x.isUndefined(text) || text === '') { return undefined; }
 
         var hideError = arguments[1];
 
@@ -438,15 +438,15 @@ var x = {
             // eval('(' + text + ')')
             return (JSON) ? JSON.parse(text) : (Function("return " + text))();
         }
-        catch (ex)
+        catch(ex)
         {
             try
             {
                 return (Function("return " + text))();
             }
-            catch (ex1)
+            catch(ex1)
             {
-                if (!hideError) x.debug.error('{"method":"x.toJSON(text)", "arguments":{"text":"' + text + '"}');
+                if(!hideError) x.debug.error('{"method":"x.toJSON(text)", "arguments":{"text":"' + text + '"}');
                 return undefined;
             }
         }
@@ -464,32 +464,32 @@ var x = {
     {
         var outString = '';
 
-        for (var i = 0; i < text.length; i++)
+        for(var i = 0;i < text.length;i++)
         {
             var ch = text.substr(i, 1);
 
-            if (ch === '"' || ch === '\'' || ch === '\\')
+            if(ch === '"' || ch === '\'' || ch === '\\')
             {
                 outString += '\\';
                 outString += ch;
             }
-            else if (ch === '\b')
+            else if(ch === '\b')
             {
                 outString += '\\b';
             }
-            else if (ch === '\f')
+            else if(ch === '\f')
             {
                 outString += '\\f';
             }
-            else if (ch === '\n')
+            else if(ch === '\n')
             {
                 outString += '\\n';
             }
-            else if (ch === '\t')
+            else if(ch === '\t')
             {
                 outString += '\\t';
             }
-            else if (ch === '\r')
+            else if(ch === '\r')
             {
                 outString += '\\r';
             }
@@ -575,7 +575,7 @@ var x = {
     */
     formatNature: function(text)
     {
-        switch (text.toLowerCase())
+        switch(text.toLowerCase())
         {
             case 'en-us':
                 text = 'en-us';
@@ -646,9 +646,9 @@ var x = {
             */
             exist: function(key)
             {
-                for (var i = 0; i < this.innerArray.length; i++)
+                for(var i = 0;i < this.innerArray.length;i++)
                 {
-                    if (this.innerArray[i].name === key)
+                    if(this.innerArray[i].name === key)
                     {
                         return true;
                     }
@@ -676,11 +676,11 @@ var x = {
             */
             add: function(key, value)
             {
-                if (arguments.length === 1)
+                if(arguments.length === 1)
                 {
                     var keyArr = key.split(';');
 
-                    for (var i = 0; i < keyArr.length; i++)
+                    for(var i = 0;i < keyArr.length;i++)
                     {
                         var valueArr = keyArr[i].split('#');
 
@@ -690,7 +690,7 @@ var x = {
                 }
                 else
                 {
-                    if (this.exist(key))
+                    if(this.exist(key))
                     {
                         throw 'hashtable aleardy exist same key[' + key + ']';
                     }
@@ -709,9 +709,9 @@ var x = {
             */
             find: function(key)
             {
-                for (var i = 0; i < this.innerArray.length; i++)
+                for(var i = 0;i < this.innerArray.length;i++)
                 {
-                    if (this.innerArray[i].name === key)
+                    if(this.innerArray[i].name === key)
                     {
                         return this.innerArray[i].value;
                     }
@@ -771,7 +771,7 @@ var x = {
             */
             pop: function()
             {
-                if (this.innerArray.length === 0)
+                if(this.innerArray.length === 0)
                 {
                     return null;
                 }
@@ -780,7 +780,7 @@ var x = {
                     var targetObject = this.innerArray[0];
 
                     // 将队列元素往前移动一个单位
-                    for (var i = 0; i < this.innerArray.length - 1; i++)
+                    for(var i = 0;i < this.innerArray.length - 1;i++)
                     {
                         this.innerArray[i] = this.innerArray[i + 1];
                     }
@@ -797,7 +797,7 @@ var x = {
             */
             peek: function()
             {
-                if (this.innerArray.length === 0)
+                if(this.innerArray.length === 0)
                 {
                     return null;
                 }
@@ -880,7 +880,7 @@ var x = {
             */
             pop: function()
             {
-                if (this.innerArray.length === 0)
+                if(this.innerArray.length === 0)
                 {
                     return null;
                 }
@@ -900,7 +900,7 @@ var x = {
             */
             peek: function()
             {
-                if (this.innerArray.length === 0)
+                if(this.innerArray.length === 0)
                 {
                     return null;
                 }
@@ -1125,7 +1125,7 @@ var x = {
         preventDefault: function(event)
         {
             // 如果提供了事件对象，则这是一个非IE浏览器 
-            if (event && event.preventDefault)
+            if(event && event.preventDefault)
             {
                 //阻止默认浏览器动作(W3C) 
                 event.preventDefault();
@@ -1161,7 +1161,7 @@ var x = {
             //            {
 
             //如果提供了事件对象，则这是一个非IE浏览器  
-            if (event && event.stopPropagation)
+            if(event && event.stopPropagation)
             {
                 //因此它支持W3C的stopPropagation()方法  
                 event.stopPropagation();
@@ -1187,13 +1187,13 @@ var x = {
         */
         add: function(target, type, listener, useCapture)
         {
-            if (target == null) return;
+            if(target == null) return;
 
-            if (target.addEventListener)
+            if(target.addEventListener)
             {
                 target.addEventListener(type, listener, useCapture);
             }
-            else if (target.attachEvent)
+            else if(target.attachEvent)
             {
                 target.attachEvent('on' + type, listener);
             }
@@ -1216,13 +1216,13 @@ var x = {
         */
         remove: function(target, type, listener, useCapture)
         {
-            if (target == null) return;
+            if(target == null) return;
 
-            if (target.removeEventListener)
+            if(target.removeEventListener)
             {
                 target.removeEventListener(type, listener, useCapture);
             }
-            else if (target.detachEvent)
+            else if(target.detachEvent)
             {
                 target.detachEvent('on' + type, listener);
             }
@@ -1264,13 +1264,13 @@ var x = {
             // 格式限制
             format = x.isUndefined(format, '-').toLowerCase();
 
-            for (var i = 0; i < 8; i++)
+            for(var i = 0;i < 8;i++)
             {
                 text += (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
 
-                if (i > 0 && i < 5)
+                if(i > 0 && i < 5)
                 {
-                    if (format === '-')
+                    if(format === '-')
                     {
                         text += '-';
                     }
@@ -1306,7 +1306,7 @@ var x = {
 
             var buffer = x.type(buffer) == 'string' ? buffer : "0123456789abcdefghijklmnopqrstuvwyzx";
 
-            for (var i = 0; i < length; i++)
+            for(var i = 0;i < length;i++)
             {
                 result += buffer.charAt(Math.ceil(Math.random() * 100000000) % buffer.length);
             }
@@ -1334,13 +1334,13 @@ var x = {
         {
             var type = x.type(value);
 
-            if (type !== 'string')
+            if(type !== 'string')
             {
-                if (type === 'number')
+                if(type === 'number')
                 {
                     value += '';
                 }
-                else if (type === 'function')
+                else if(type === 'function')
                 {
                     value = x.string.stringify(value.call(value));
                 }
@@ -1364,7 +1364,7 @@ var x = {
         */
         trim: function(text, trimText)
         {
-            if (x.isUndefined(trimText))
+            if(x.isUndefined(trimText))
             {
                 return text.replace(x.expressions.rules['trim'], '');
             }
@@ -1385,7 +1385,7 @@ var x = {
         */
         ltrim: function(text, trimText)
         {
-            if (x.isUndefined(trimText))
+            if(x.isUndefined(trimText))
             {
                 return text.replace(/(^[\s\uFEFF\xA0]+)/g, '');
             }
@@ -1406,7 +1406,7 @@ var x = {
         */
         rtrim: function(text, trimText)
         {
-            if (x.isUndefined(trimText))
+            if(x.isUndefined(trimText))
             {
                 return text.replace(/([\s\uFEFF\xA0]+$)/g, '');
             }
@@ -1428,11 +1428,11 @@ var x = {
         */
         format: function()
         {
-            if (arguments.length == 0) { return null; }
+            if(arguments.length == 0) { return null; }
 
             var text = arguments[0];
 
-            for (var i = 1; i < arguments.length; i++)
+            for(var i = 1;i < arguments.length;i++)
             {
                 var re = new RegExp('\\{' + (i - 1) + '\\}', 'gm');
                 text = text.replace(re, arguments[i]);
@@ -1459,9 +1459,9 @@ var x = {
         */
         left: function(text, length, hasEllipsis)
         {
-            if (text.length === 0) { return text; }
+            if(text.length === 0) { return text; }
 
-            if (text.length > length)
+            if(text.length > length)
             {
                 return text.substr(0, length) + (x.isUndefined(hasEllipsis, true) ? '...' : '');
             }
@@ -1488,15 +1488,15 @@ var x = {
         */
         hex: function(colorRgbCode)
         {
-            if (/^(rgb|RGB)/.test(colorRgbCode))
+            if(/^(rgb|RGB)/.test(colorRgbCode))
             {
                 var colorBuffer = colorRgbCode.replace(/(?:\(|\)|rgb|RGB)*/g, "").split(",");
                 var strHex = "#";
-                for (var i = 0; i < colorBuffer.length; i++)
+                for(var i = 0;i < colorBuffer.length;i++)
                 {
                     var hex = Number(colorBuffer[i]).toString(16);
 
-                    if (hex === "0")
+                    if(hex === "0")
                     {
                         hex += hex;
                     }
@@ -1504,26 +1504,26 @@ var x = {
                     strHex += hex;
                 }
 
-                if (strHex.length !== 7)
+                if(strHex.length !== 7)
                 {
                     strHex = colorRgbCode;
                 }
 
                 return strHex;
             }
-            else if (/^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/.test(colorRgbCode))
+            else if(/^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/.test(colorRgbCode))
             {
                 var colorBuffer = colorRgbCode.replace(/#/, "").split("");
 
-                if (colorBuffer.length === 6)
+                if(colorBuffer.length === 6)
                 {
                     return colorRgbCode;
                 }
-                else if (colorBuffer.length === 3)
+                else if(colorBuffer.length === 3)
                 {
                     var numHex = "#";
 
-                    for (var i = 0; i < colorBuffer.length; i += 1)
+                    for(var i = 0;i < colorBuffer.length;i += 1)
                     {
                         numHex += (colorBuffer[i] + colorBuffer[i]);
                     }
@@ -1544,14 +1544,14 @@ var x = {
         {
             var color = colorHexCode.toLowerCase();
 
-            if (color && /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/.test(color))
+            if(color && /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/.test(color))
             {
                 // 处理简写的颜色
-                if (color.length === 4)
+                if(color.length === 4)
                 {
                     var originalColor = "#";
 
-                    for (var i = 1; i < 4; i += 1)
+                    for(var i = 1;i < 4;i += 1)
                     {
                         originalColor += color.slice(i, i + 1).concat(color.slice(i, i + 1));
                     }
@@ -1562,7 +1562,7 @@ var x = {
                 // 处理六位的颜色值
                 var colorBuffer = [];
 
-                for (var i = 1; i < 7; i += 2)
+                for(var i = 1;i < 7;i += 2)
                 {
                     colorBuffer.push(parseInt("0x" + color.slice(i, i + 2)));
                 }
@@ -1586,7 +1586,7 @@ x.file = function()
 
 x.dir = function()
 {
-    if (scriptFilePath.length > 0)
+    if(scriptFilePath.length > 0)
     {
         return scriptFilePath.substring(0, scriptFilePath.lastIndexOf("/") + 1);
     }
@@ -1596,7 +1596,7 @@ x.dir = function()
     }
 };
 
-if (document)
+if(document)
 {
     try
     {
@@ -1607,7 +1607,7 @@ if (document)
 
         scriptFilePath = scripts[scripts.length - 1].src.replace(location.origin, '');
     }
-    catch (ex)
+    catch(ex)
     {
         scriptFilePath = '';
     }
@@ -1617,33 +1617,35 @@ if (document)
 * 加载脚本
 * @method require
 * @memberof x
-* @param {object} options 选项,    
+* @param {object} options 选项 
 */
 var require = x.require = function(options)
 {
-    if (x.isArray(options.files))
+    if(x.isArray(options.files))
     {
         var file, files = options.files;
 
-        if (files.length > 0)
+        if(files.length > 0)
         {
             file = files.shift();
 
-            if (files.length == 0)
+            if(files.length == 0)
             {
                 require.newRequire({
                     fileType: file.fileType,
                     id: file.id,
+                    async: file.async,
                     path: file.path,
                     data: options.data,
                     callback: options.callback
                 });
             }
-            else if (files.length > 0)
+            else if(files.length > 0)
             {
                 require.newRequire({
                     fileType: file.fileType,
                     id: file.id,
+                    async: file.async,
                     path: file.path,
                     data: options.data,
                     next: { files: files, callback: options.callback },
@@ -1664,6 +1666,7 @@ var require = x.require = function(options)
         require.newRequire({
             fileType: options.fileType,
             id: options.id,
+            async: options.async,
             path: options.path,
             data: options.data,
             callback: options.callback
@@ -1679,9 +1682,9 @@ require.newRequire = function(options)
         path: ''
     }, options || {});
 
-    if (context.fileType == 'template')
+    if(context.fileType == 'template')
     {
-        if (context.next)
+        if(context.next)
         {
             x.net.require({
                 fileType: context.fileType,
@@ -1721,7 +1724,7 @@ require.newRequire = function(options)
         //Note the test for "[native code" with no closing brace, see:
         //https://github.com/jrburke/requirejs/issues/273
 
-        if (node.attachEvent
+        if(node.attachEvent
                 && !(node.attachEvent.toString && node.attachEvent.toString().indexOf('[native code') < 0)
                 && !x.browser.opera)
         {
@@ -1735,15 +1738,17 @@ require.newRequire = function(options)
 
     var onScriptLoad = function(event)
     {
-        x.debug.log('require file {"id":"{0}", path:"{1}"} finished.'.format(context.id, context.path));
+        // x.debug.log('require file {"id":"{0}", path:"{1}"} finished.'.format(context.id, context.path));
 
         var node = x.event.getTarget(event);
 
-        if (event.type === 'load' || /^(complete|loaded)$/.test(node.readyState))
+        if(event.type === 'load' || /^(complete|loaded)$/.test(node.readyState))
         {
             node.ready = true;
-
-            if (x.isFunction(context.callback))
+    
+            // x.debug.log('node.ready:' + node.ready);
+    
+            if(x.isFunction(context.callback))
             {
                 context.callback(context);
             }
@@ -1754,10 +1759,12 @@ require.newRequire = function(options)
 
     var node = document.getElementById(context.id);
 
-    if (node == null)
+    // x.debug.log(node);
+
+    if(node == null)
     {
         // 未找到相关依赖资源文件
-        if (context.fileType == 'css')
+        if(context.fileType == 'css')
         {
             var node = document.createElement("link");
 
@@ -1765,6 +1772,7 @@ require.newRequire = function(options)
             node.type = "text/css";
             node.rel = "stylesheet";
             node.href = context.path;
+            node.ready = false;
         }
         else
         {
@@ -1772,20 +1780,22 @@ require.newRequire = function(options)
 
             node.id = context.id;
             node.type = "text/javascript";
-            node.async = true;
+            node.async = options.async == false ? false : true;
             node.src = context.path;
+            node.ready = false;
         }
 
         load(node, onScriptLoad);
 
         head.appendChild(node);
 
-        x.debug.log('require file {"id":"{0}", path:"{1}"} loading.'.format(context.id, context.path));
+        // x.debug.log('require file {"id":"{0}", path:"{1}"} loading.'.format(context.id, context.path));
     }
     else
     {
         // 存在相关依赖文件
-        if (x.isFunction(context.callback))
+        // if(x.isFunction(context.callback))
+        if(node.ready)
         {
             context.callback(context);
         }
@@ -1794,10 +1804,30 @@ require.newRequire = function(options)
             load(node, onScriptLoad);
         }
 
-        x.debug.log('require file {"id":"{0}", path:"{1}"} exist.'.format(options.id, options.path));
+        // x.debug.log('require file {"id":"{0}", path:"{1}"} exist.'.format(options.id, options.path));
     }
 
     return context;
+};
+
+/**
+* JSONP 函数
+* @method require
+* @memberof x
+* @param {object} options 选项
+*/
+x.jsonp = function(options)
+{
+    var options = x.ext({
+        fileType: 'javascipt',
+        id: 'JSONP' + Number(new Date()),
+        jsonp: 'callback',
+        jsonpCallback: 'jsonpCallback'
+    }, options);
+
+    options.path = options.url + ((options.url.indexOf('?') == -1) ? '?' : '&') + options.jsonp + '=' + options.jsonpCallback;
+
+    x.require(options);
 };
 
 /**
@@ -1886,19 +1916,19 @@ x.browser = {
     */
     getName: function()
     {
-        if (navigator.userAgent.indexOf("MSIE") > 0)
+        if(navigator.userAgent.indexOf("MSIE") > 0)
             return "Internet Explorer";
-        if (navigator.userAgent.indexOf("Chrome") >= 0)
+        if(navigator.userAgent.indexOf("Chrome") >= 0)
             return "Chrome";
-        if (navigator.userAgent.indexOf("Firefox") >= 0)
+        if(navigator.userAgent.indexOf("Firefox") >= 0)
             return "Firefox";
-        if (navigator.userAgent.indexOf("Opera") >= 0)
+        if(navigator.userAgent.indexOf("Opera") >= 0)
             return "Opera";
-        if (navigator.userAgent.indexOf("Safari") > 0)
+        if(navigator.userAgent.indexOf("Safari") > 0)
             return "Safari";
-        if (navigator.userAgent.indexOf("Camino") > 0)
+        if(navigator.userAgent.indexOf("Camino") > 0)
             return "Camino";
-        if (navigator.userAgent.indexOf("Gecko") > 0)
+        if(navigator.userAgent.indexOf("Gecko") > 0)
             return "Gecko";
 
         return "unknown";
@@ -1922,7 +1952,7 @@ x.browser = {
         var startValue;
         var lengthValue;
 
-        switch (browserName)
+        switch(browserName)
         {
             case "Internet Explorer":
                 startValue = version.indexOf("MSIE") + 5;
@@ -2008,6 +2038,13 @@ x.ui = {
     stylesheetPathPrefix: '/resources/styles/x-ui/',
 
     packagesPathPrefix: null,
+
+    /**
+    * 组件包根目录
+    * @method dir
+    * @memberof x.ui.pkg
+    */
+    dir: function() { return x.dir() + 'ui/'; },
 
     /**
     * 通用 组件包默认名称空间

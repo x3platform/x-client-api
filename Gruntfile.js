@@ -12,7 +12,7 @@ module.exports = function(grunt)
             options: {
                 // 大括号包裹
                 curly: true,
-                //对于简单类型，使用===和!==，而不是==和!=
+                // 对于简单类型，使用===和!==，而不是==和!=
                 eqeqeq: false,
                 //对于首字母大写的函数（声明的类），强制使用new
                 newcap: false,
@@ -53,6 +53,7 @@ module.exports = function(grunt)
                         'src/resources/javascript/core/x.dom.js',
                         'src/resources/javascript/core/x.dom.data.js',
                         'src/resources/javascript/core/x.dom.fn.js',
+                        // 'src/resources/javascript/dom/util/x.dom.util.select.js',
                         'src/resources/javascript/core/x.net.js',
                         'src/resources/javascript/core/x.page.js',
                         'src/resources/javascript/core/x.util.js'
@@ -188,10 +189,56 @@ module.exports = function(grunt)
             }
         },
 
-        less: {
+        // 监视引用文件变化
+        watch: {
+            development:
+            {
+                files: [
+                    'src/resources/styles/default/*.less',
+                    'src/resources/styles/x-ui/*.less'
+                ],
+                tasks: ['less:development'],
+                options:
+                {
+                    event: ['changed']
+                }
+            },
+            'x-ui':
+            {
+                files: [
+                    'src/resources/styles/x-ui/*.less'
+                ],
+                tasks: ['less:x-ui'],
+                options:
+                {
+                    event: ['changed']
+                }
+            }
+        },
+
+        less:
+        {
             development: {
                 files: {
-                    'src/resources/styles/default/login.css': 'src/resources/styles/default/login.less'
+                    'src/resources/styles/default/login.css': 'src/resources/styles/default/login.less',
+                    'src/resources/styles/x-ui/x.ui.dialogs.less': 'src/resources/styles/x-ui/x.ui.dialogs.less'
+                }
+            }
+        },
+
+        // CSS 压缩
+        cssmin:
+        {
+            // WebSite 2.2.0 样式
+            development:
+            {
+                files:
+                {
+                    'src/resources/styles/x-ui/x-ui.min.css': [
+                        'src/resources/styles/x-ui/x.ui.accordion.css',
+                        'src/resources/styles/x-ui/x.ui.calendar.css',
+                        'src/resources/styles/x-ui/x.ui.dialogs.css'
+                    ]
                 }
             }
         }
