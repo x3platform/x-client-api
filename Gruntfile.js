@@ -76,7 +76,16 @@ module.exports = function(grunt)
                         'src/resources/javascript/ui/core/x.ui.wizards.js',
                         'src/resources/javascript/ui/core/x.ui.dialogs.js',
                         'src/resources/javascript/ui/core/x.ui.util.js'
-                        ]
+                    ],
+                    // Workflow
+                    'dist/<%= pkg.version %>/<%= pkg.name %>-workflow.zh-cn.js': [
+                        'src/resources/javascript/workflow/x.workflow.js',
+                        'src/resources/javascript/workflow/x.workflow.template.js',
+                        'src/resources/javascript/workflow/x.workflow.instance.js',
+                        'src/resources/javascript/workflow/x.workflow.node.js',
+                        'src/resources/javascript/workflow/x.workflow.historyNode.js',
+                        'src/resources/javascript/workflow/x.workflow.switcherExit.js'
+                    ],
                 }
             }
         },
@@ -150,6 +159,10 @@ module.exports = function(grunt)
                 {
                     src: 'dist/<%= pkg.version %>/<%= pkg.name %>-ui.zh-cn.js',
                     dest: 'src/resources/javascript/<%= pkg.name %>-ui.zh-cn.js'
+                },
+                {
+                    src: 'dist/<%= pkg.version %>/<%= pkg.name %>-workflow.zh-cn.js',
+                    dest: 'src/resources/javascript/<%= pkg.name %>-workflow.zh-cn.js'
                 }]
             },
             // 发布版
@@ -166,6 +179,10 @@ module.exports = function(grunt)
                 {
                     src: 'dist/<%= pkg.version %>/<%= pkg.name %>-ui.zh-cn.min.js',
                     dest: 'src/resources/javascript/<%= pkg.name %>-ui.zh-cn.min.js'
+                },
+                {
+                    src: 'dist/<%= pkg.version %>/<%= pkg.name %>-workflow.zh-cn.min.js',
+                    dest: 'src/resources/javascript/<%= pkg.name %>-workflow.zh-cn.min.js'
                 }]
             }
         },
@@ -177,7 +194,9 @@ module.exports = function(grunt)
                     'src/resources/javascript/ui/core/*.js',
                     'src/resources/javascript/ui/pkg/x.ui.pkg.tabs.js',
                     'src/resources/javascript/ui/pkg/x.ui.pkg.tree.js',
-                    'src/resources/javascript/ui/pkg/x.ui.pkg.slide.js'],
+                    'src/resources/javascript/ui/pkg/x.ui.pkg.slide.js',
+                    'src/resources/javascript/workflow/x.workflow.js'
+                ],
                 options: {
                     // 输出文件夹位置
                     destination: 'doc',
@@ -282,6 +301,7 @@ module.exports = function(grunt)
         'uglify:dist-core',
         'uglify:dist-template',
         'uglify:dist-ui',
+        'uglify:dist-workflow',
         'copy:dist']);
 
     // 代码格式验证

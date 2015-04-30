@@ -1377,7 +1377,7 @@ var x = {
 
         /*#region 函数:ltrim(text, trimText)*/
         /**
-        * 去除字符串左侧空白.
+        * 去除字符串左侧空白
         * @method ltrim
         * @memberof x.string
         * @param {string} text 文本信息.
@@ -1398,7 +1398,7 @@ var x = {
 
         /*#region 函数:rtrim(text, trimText)*/
         /**
-        * 去除字符串右侧空白.
+        * 去除字符串右侧空白
         * @method rtrim
         * @memberof x.string
         * @param {string} text 文本信息.
@@ -1420,11 +1420,11 @@ var x = {
 
         /*#region 函数:format(text, args)*/
         /**
-        * 去除字符串右侧空白.
-        * @method rtrim
+        * 字符串格式化
+        * @method format
         * @memberof x.string
         * @param {string} text 文本信息.
-        * @param {number} [trimText] 需要去除的文本信息(默认为空白).
+        * @param {number} [args] 参数.
         */
         format: function()
         {

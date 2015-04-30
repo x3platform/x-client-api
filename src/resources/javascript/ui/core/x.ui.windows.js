@@ -128,9 +128,9 @@ x.ui.windows = {
     */
     getWindow: function(name, options)
     {
-        var name = x.getFriendlyName(location.pathname + '$window$' + name);
+        var name = x.getFriendlyName(location.pathname + '-window-' + name);
 
-        var internalWindow = x.windows.newWindow(name, options);
+        var internalWindow = x.ui.windows.newWindow(name, options);
 
         // 加载界面、数据、事件
         internalWindow.load(options);

@@ -162,7 +162,7 @@ x.net = {
                         lock: 0,
 
                         // 延迟显示等待窗口
-                        lazy: options.lazy ? options.lazy : 0,
+                        // lazy: options.lazy ? options.lazy : 0,
 
                         maxOpacity: options.maxOpacity ? options.maxOpacity : 0.4,
 
@@ -188,13 +188,13 @@ x.net = {
                         /*#region 函数:createMaskWrapper()*/
                         createMaskWrapper: function()
                         {
-                            var wrapper = document.getElementById(this.name + '$maskWrapper');
+                            var wrapper = document.getElementById(this.name + '-maskWrapper');
 
                             if(wrapper === null)
                             {
-                                $(document.body).append('<div id="' + this.name + '$maskWrapper" style="display:none;" ></div>');
+                                $(document.body).append('<div id="' + this.name + '-maskWrapper" style="display:none;" ></div>');
 
-                                wrapper = document.getElementById(this.name + '$maskWrapper');
+                                wrapper = document.getElementById(this.name + '-maskWrapper');
                             }
 
                             wrapper.className = 'x-ui-dialog-mask-wrapper';
@@ -204,8 +204,8 @@ x.net = {
 
                             if(wrapper.style.display === 'none')
                             {
-                                $(document.getElementById(this.name + '$maskWrapper')).css({ display: '', opacity: 0.1 });
-                                $(document.getElementById(this.name + '$maskWrapper')).fadeTo((this.maxDuration * 1000), this.maxOpacity, function()
+                                $('#' + this.name + '-maskWrapper').css({ display: '', opacity: 0.1 });
+                                $('#' + this.name + '-maskWrapper').fadeTo((this.maxDuration * 1000), this.maxOpacity, function()
                                 {
                                     // var mask = window[this.id];
 
@@ -218,21 +218,21 @@ x.net = {
                         /*#region 函数:create(text)*/
                         create: function(text)
                         {
-                            if(document.getElementById(this.name + '$text') == null)
+                            if(document.getElementById(this.name + '-text') == null)
                             {
-                                $(document.body).append('<div id="' + this.name + '$container" class="x-ui-dialog-waiting-window-container" ><div id="' + this.name + '$text" class="x-ui-dialog-waiting-window-text" >' + text + '</div></div>');
+                                $(document.body).append('<div id="' + this.name + '-container" class="x-ui-dialog-waiting-window-container" ><div id="' + this.name + '-text" class="x-ui-dialog-waiting-window-text" >' + text + '</div></div>');
 
                                 this.createMaskWrapper();
                             }
                             else
                             {
-                                document.getElementById(this.name + '$text').innerHTML = text;
+                                document.getElementById(this.name + '-text').innerHTML = text;
                             }
 
                             if(this.container === null)
                             {
-                                this.container = document.getElementById(this.name + '$container');
-                                this.maskWrapper = document.getElementById(this.name + '$maskWrapper');
+                                this.container = document.getElementById(this.name + '-container');
+                                this.maskWrapper = document.getElementById(this.name + '-maskWrapper');
                             }
                         },
                         /*#endregion*/
@@ -247,15 +247,15 @@ x.net = {
 
                             var that = this;
 
-                            var timer = x.newTimer(this.lazy, function(timer)
-                            {
+                            //var timer = x.newTimer(this.lazy, function(timer)
+                            //{
                                 if(that.lock > 0)
                                 {
                                     // x.debug.log('x.net.waitingWindow.lock:【' + that.lock + '】');
 
                                     if(that.maskWrapper === null)
                                     {
-                                        that.maskWrapper = x.ui.mask.newMaskWrapper(that.name + '$maskWrapper');
+                                        that.maskWrapper = x.ui.mask.newMaskWrapper(that.name + '-maskWrapper');
                                     }
 
                                     if(typeof (text) !== 'undefined')
@@ -279,10 +279,10 @@ x.net = {
                                     that.maskWrapper.style.display = '';
                                 }
 
-                                timer.stop();
-                            });
+                                //timer.stop();
+                            //});
 
-                            timer.start();
+                            //timer.start();
                         },
                         /*#endregion*/
 
@@ -294,7 +294,7 @@ x.net = {
                         {
                             this.lock--;
 
-                            x.debug.log('x.net.waitingWindow.lock:【' + this.lock + '】');
+                            // x.debug.log('x.net.waitingWindow.lock:【' + this.lock + '】');
 
                             if(this.lock === 0)
                             {
@@ -303,14 +303,14 @@ x.net = {
                                     this.container.style.display = 'none';
                                 }
 
-                                if(this.maskWrapper != null && $(document.getElementById(this.name + '$maskWrapper')).css('display') !== 'none')
+                                if(this.maskWrapper != null && $(document.getElementById(this.name + '-maskWrapper')).css('display') !== 'none')
                                 {
                                     var that = this;
 
-                                    $(document.getElementById(this.name + '$maskWrapper')).css({ display: '', opacity: this.maxOpacity });
-                                    $(document.getElementById(this.name + '$maskWrapper')).fadeOut((this.maxDuration * 2000), function()
+                                    $(document.getElementById(this.name + '-maskWrapper')).css({ display: '', opacity: this.maxOpacity });
+                                    $(document.getElementById(this.name + '-maskWrapper')).fadeOut((this.maxDuration * 2000), function()
                                     {
-                                        $(document.getElementById(that.name + '$maskWrapper')).css({ display: 'none' });
+                                        $(document.getElementById(that.name + '-maskWrapper')).css({ display: 'none' });
                                     });
                                 }
                             }

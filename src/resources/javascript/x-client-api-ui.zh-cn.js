@@ -1299,7 +1299,7 @@ x.ui.mask = {
 
     getMaskStack: function()
     {
-        if (x.ui.mask.stack === null)
+        if(x.ui.mask.stack === null)
         {
             x.ui.mask.stack = x.newStack();
         }
@@ -1320,10 +1320,10 @@ x.ui.mask = {
     */
     getWindow: function(options, instance)
     {
-        if (x.isUndefined(instance))
+        if(x.isUndefined(instance))
         {
             // 获得默认遮罩实例
-            if (this.defaultInstance === null)
+            if(this.defaultInstance === null)
             {
                 var name = x.getFriendlyName(location.pathname + '-mask-default-instance');
 
@@ -1352,7 +1352,7 @@ x.ui.mask = {
     {
         var mask = x.ui.mask.getMaskStack().peek();
 
-        if (mask !== null)
+        if(mask !== null)
         {
             mask.close();
         }
@@ -1366,6 +1366,8 @@ x.ui.mask = {
     */
     newMaskWrapper: function(name, options)
     {
+        options = options || {};
+
         var maskWrapper = {
             // 实例名称
             name: 'maskWrapper',
@@ -1393,7 +1395,7 @@ x.ui.mask = {
                 this.name = name;
                 this.popupWindowName = name + '-maskPopupWindow';
 
-                if (this.options.url)
+                if(this.options.url)
                 {
                     this.options.content = '<div >'
                             + '<iframe border="0" frameborder="0" marginheight="0" marginwidth="0" border="0" scrolling="no" '
@@ -1411,14 +1413,14 @@ x.ui.mask = {
             {
                 var wrapper = document.getElementById(this.name);
 
-                if (wrapper === null)
+                if(wrapper === null)
                 {
                     $(document.body).append('<div id="' + this.name + '" style="display:none;" ></div>');
 
                     wrapper = document.getElementById(this.name);
                 }
 
-                if (this.autoHide === 1)
+                if(this.autoHide === 1)
                 {
                     $(wrapper).bind('click', function(event)
                     {
@@ -1428,7 +1430,7 @@ x.ui.mask = {
 
                         var mask = window[this.id];
 
-                        if (x.dom.query(mask.name).css('display') === '')
+                        if(x.dom.query(mask.name).css('display') === '')
                         {
                             // x.debug.log(mask.name + '.close()');
                             mask.close();
@@ -1453,7 +1455,7 @@ x.ui.mask = {
                     'background': 'rgba(0,0,0,100)'
                 });
 
-                if (wrapper.style.display === 'none')
+                if(wrapper.style.display === 'none')
                 {
                     // x.debug.log('show:' + mask.name);
 
@@ -1480,7 +1482,7 @@ x.ui.mask = {
             */
             hide: function()
             {
-                if (x.dom.query(this.popupWindowName).css('display') !== 'none')
+                if(x.dom.query(this.popupWindowName).css('display') !== 'none')
                 {
                     /*
                     x.dom.query(this.popupWindowName).css({ display: 'none' });
@@ -1526,12 +1528,12 @@ x.ui.mask = {
                 // 如果之前有遮罩，则隐藏之前的遮罩内容。
                 var mask = x.ui.mask.getMaskStack().peek();
 
-                if (mask !== null && mask.name !== this.name)
+                if(mask !== null && mask.name !== this.name)
                 {
                     mask.hide();
                 }
 
-                if (mask === null || mask.name !== this.name)
+                if(mask === null || mask.name !== this.name)
                 {
                     x.ui.mask.getMaskStack().push(this);
                 }
@@ -1543,7 +1545,7 @@ x.ui.mask = {
                 // 弹出窗口的位置
                 var pointX = this.options.left, pointY = this.options.top;
 
-                if (element === null)
+                if(element === null)
                 {
                     element = document.createElement('div');
 
@@ -1592,14 +1594,14 @@ x.ui.mask = {
             {
                 var element = x.dom.query(this.popupWindowName);
 
-                if (element.size() === 0) { return; }
+                if(element.size() === 0) { return; }
 
                 // 弹出窗口的位置
                 var pointX = this.options.left, pointY = this.options.top;
 
                 var width = 720;
 
-                if (element.children().length === 0) { return; }
+                if(element.children().length === 0) { return; }
 
                 // 弹出窗口宽度
                 var width = element.width();
@@ -1638,13 +1640,13 @@ x.ui.mask = {
                 // 如果之前遮罩，则显示之前的遮罩内容。
                 var mask = x.ui.mask.getMaskStack().peek();
 
-                if (mask !== null)
+                if(mask !== null)
                 {
                     // x.debug.log(mask.name + '.show()');
                     mask.show();
                 }
 
-                if (this.closeEvent)
+                if(this.closeEvent)
                 {
                     this.closeEvent();
                 }
@@ -2160,9 +2162,9 @@ x.ui.windows = {
     */
     getWindow: function(name, options)
     {
-        var name = x.getFriendlyName(location.pathname + '$window$' + name);
+        var name = x.getFriendlyName(location.pathname + '-window-' + name);
 
-        var internalWindow = x.windows.newWindow(name, options);
+        var internalWindow = x.ui.windows.newWindow(name, options);
 
         // 加载界面、数据、事件
         internalWindow.load(options);
@@ -2274,7 +2276,7 @@ x.ui.wizards = {
     newWizard: function(name, options)
     {
         // x.wizard 继承与 x.window 对象
-        var wizard = x.ext(x.windows.newWindow(name, options), {
+        var wizard = x.ext(x.ui.windows.newWindow(name, options), {
 
             // 遮罩
             maskWrapper: null,
@@ -2298,7 +2300,7 @@ x.ui.wizards = {
             {
                 var result = this.save_callback(e);
 
-                if (result === 0)
+                if(result === 0)
                 {
                     this.close();
                 }
@@ -2318,7 +2320,7 @@ x.ui.wizards = {
             /*#region 函数:cancel()*/
             cancel: function()
             {
-                if (typeof (this.cancel_callback) !== 'undefined')
+                if(typeof (this.cancel_callback) !== 'undefined')
                 {
                     this.cancel_callback();
                 }
@@ -2337,19 +2339,19 @@ x.ui.wizards = {
             /*#endregion*/
 
             /*#region 函数:bindOptions(options)*/
-//            bindOptions: function(options)
-//            {
-//                x.debug.error("必须重写向导对象的 bindOptions() 方法。");
-//            },
+            //            bindOptions: function(options)
+            //            {
+            //                x.debug.error("必须重写向导对象的 bindOptions() 方法。");
+            //            },
             /*#endregion*/
 
             /*#region 函数:load(options)*/
             load: function(options)
             {
                 // 设置遮罩对象
-                if (typeof (options.maskWrapper) === 'undefined')
+                if(typeof (options.maskWrapper) === 'undefined')
                 {
-                    this.maskWrapper = x.mask.newMaskWrapper(this.name + '$maskWrapper');
+                    this.maskWrapper = x.ui.mask.newMaskWrapper(this.name + '-maskWrapper');
                 }
                 else
                 {
@@ -2357,7 +2359,7 @@ x.ui.wizards = {
                 }
 
                 // 设置重写后的创建函数
-                if (typeof (options.bindOptions) !== 'undefined')
+                if(typeof (options.bindOptions) !== 'undefined')
                 {
                     this.bindOptions = options.bindOptions;
                 }
@@ -2366,25 +2368,25 @@ x.ui.wizards = {
                 this.bindOptions(options);
 
                 // 设置重写后的创建函数
-                if (typeof (options.create) !== 'undefined')
+                if(typeof (options.create) !== 'undefined')
                 {
                     this.create = options.create;
                 }
 
                 // 设置保存回调函数
-                if (typeof (options.save_callback) !== 'undefined')
+                if(typeof (options.save_callback) !== 'undefined')
                 {
                     this.save_callback = options.save_callback;
                 }
 
                 // 设置取消回调函数
-                if (typeof (options.cancel_callback) !== 'undefined')
+                if(typeof (options.cancel_callback) !== 'undefined')
                 {
                     this.cancel_callback = options.cancel_callback;
                 }
 
                 // 加载遮罩和页面内容
-                x.mask.getWindow(this.create(), this.maskWrapper);
+                x.ui.mask.getWindow({ content: this.create() }, this.maskWrapper);
 
                 x.dom.features.bind();
             }
@@ -2396,9 +2398,9 @@ x.ui.wizards = {
 
     getWizard: function(name, options)
     {
-        var name = x.getFriendlyName(location.pathname + '$wizard$' + name);
+        var name = x.getFriendlyName(location.pathname + '-wizard-' + name);
 
-        var wizard = x.wizards.newWizard(name, options);
+        var wizard = x.ui.wizards.newWizard(name, options);
 
         // 加载界面、数据、事件
         wizard.load(options);
@@ -2422,7 +2424,7 @@ x.ui.wizards = {
 
         options.width = typeof (options.width) === 'undefined' ? '360px' : options.width;
 
-        x.wizards.getWizard('alert', {
+        x.ui.wizards.getWizard('alert', {
 
             bindOptions: function(options)
             {
@@ -2476,7 +2478,7 @@ x.ui.wizards = {
 
         options.width = typeof (options.width) === 'undefined' ? '360px' : options.width;
 
-        x.wizards.getWizard('confirm', {
+        x.ui.wizards.getWizard('confirm', {
 
             bindOptions: function(options)
             {
@@ -2486,7 +2488,7 @@ x.ui.wizards = {
 
             save_callback: function()
             {
-                if (options.callback)
+                if(options.callback)
                 {
                     options.callback();
                 }
@@ -2536,7 +2538,7 @@ x.ui.wizards = {
 
         options.width = typeof (options.width) === 'undefined' ? '360px' : options.width;
 
-        x.wizards.getWizard('confirm', {
+        x.ui.wizards.getWizard('confirm', {
 
             bindOptions: function(options)
             {
@@ -2546,7 +2548,7 @@ x.ui.wizards = {
 
             save_callback: function()
             {
-                if (options.callback)
+                if(options.callback)
                 {
                     options.callback(x.dom.query(this.name + '$input').val());
                 }

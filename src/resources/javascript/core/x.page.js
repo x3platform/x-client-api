@@ -34,7 +34,7 @@ x.page = {
             window.open('', '_self');
             window.close();
         }
-        catch (ex)
+        catch(ex)
         {
             window.close();
         }
@@ -49,13 +49,15 @@ x.page = {
     */
     refreshParentWindow: function()
     {
-        if (typeof (window.opener) == 'object')
+        if(window.opener == null)
         {
-            x.debug.error('未定义父级窗口。');
+            x.debug.warn('未定义父级窗口。');
         }
 
         // 如果有父级窗口，调用父级窗口刷新函数
-        if (x.type(window.opener) == 'object' && x.isFunction(window.opener.window$refresh$callback))
+        // Firefox 显示 Window 为 [object window]
+        // Chrome 显示 Window 为 [object global]
+        if((x.type(window.opener) == 'window' || x.type(window.opener) == 'global') && x.isFunction(window.opener.window$refresh$callback))
         {
             window.opener.window$refresh$callback();
         }
@@ -77,12 +79,12 @@ x.page = {
 
         var xScroll, yScroll;
 
-        if (window.innerHeight && window.scrollMaxY)
+        if(window.innerHeight && window.scrollMaxY)
         {
             xScroll = window.innerWidth + window.scrollMaxX;
             yScroll = window.innerHeight + window.scrollMaxY;
         }
-        else if (document.body.scrollHeight > document.body.offsetHeight)
+        else if(document.body.scrollHeight > document.body.offsetHeight)
         {
             // all but Explorer Mac
             xScroll = document.body.scrollWidth;
@@ -98,10 +100,10 @@ x.page = {
         //console.log('self.innerWidth:' + self.innerWidth);
         //console.log('document.documentElement.clientWidth:' + document.documentElement.clientWidth);
 
-        if (window.innerHeight)
+        if(window.innerHeight)
         {
             // all except Explorer
-            if (document.documentElement.clientWidth)
+            if(document.documentElement.clientWidth)
             {
                 windowWidth = document.documentElement.clientWidth;
             }
@@ -112,13 +114,13 @@ x.page = {
 
             windowHeight = window.innerHeight;
         }
-        else if (document.documentElement && document.documentElement.clientHeight)
+        else if(document.documentElement && document.documentElement.clientHeight)
         {
             // IE
             windowWidth = document.documentElement.clientWidth;
             windowHeight = document.documentElement.clientHeight;
         }
-        else if (document.body)
+        else if(document.body)
         {
             // other Explorers
             windowWidth = document.body.clientWidth;
@@ -126,7 +128,7 @@ x.page = {
         }
 
         // for small pages with total height less then height of the viewport
-        if (yScroll < windowHeight)
+        if(yScroll < windowHeight)
         {
             pageHeight = windowHeight;
         }
@@ -139,7 +141,7 @@ x.page = {
         //console.log("windowWidth " + windowWidth)
 
         // for small pages with total width less then width of the viewport
-        if (xScroll < windowWidth)
+        if(xScroll < windowWidth)
         {
             pageWidth = xScroll;
         }
@@ -288,11 +290,11 @@ x.page = {
 
         var parents = $(element).parents();
 
-        for (var i = 0; i < parents.length; i++)
+        for(var i = 0;i < parents.length;i++)
         {
             var parent = $(parents[i]);
 
-            if (parent.css('position') === 'absolute' && parent.css('top') !== 'auto')
+            if(parent.css('position') === 'absolute' && parent.css('top') !== 'auto')
             {
                 top = top - Number(parent.css('top').replace('px', ''));
             }
@@ -311,7 +313,7 @@ x.page = {
         var display = $(element).css('display');
 
         // Safari bug
-        if (display != 'none' && display != null)
+        if(display != 'none' && display != null)
         {
             return { width: element.offsetWidth, height: element.offsetHeight };
         }
@@ -393,7 +395,7 @@ x.page = {
     */
     printXml: function(text)
     {
-        if (text == null) { return ''; }
+        if(text == null) { return ''; }
 
         return text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
     },
@@ -416,7 +418,7 @@ x.page = {
 
         listen: function()
         {
-            if ($(document.getElementById('forbidCopy$activate')).val() === '1')
+            if($(document.getElementById('forbidCopy$activate')).val() === '1')
             {
                 // 禁止拷贝
                 x.page.forbidCopy.activate();
@@ -429,7 +431,7 @@ x.page = {
         {
             var event = window.event ? window.event : e;
 
-            if (document.layers)
+            if(document.layers)
             {
                 document.captureEvents(event.MOUSEDOWN);
 
@@ -460,17 +462,17 @@ x.page = {
         {
             var event = window.event ? window.event : e;
 
-            if (document.all)
+            if(document.all)
             {
-                if (event.button == 1 || event.button == 2 || event.button == 3)
+                if(event.button == 1 || event.button == 2 || event.button == 3)
                 {
                     window.document.oncontextmenu = function() { return false; }
                 }
             }
 
-            if (document.layers)
+            if(document.layers)
             {
-                if (event.which == 3)
+                if(event.which == 3)
                 {
                     window.document.oncontextmenu = function() { return false; }
                 }
@@ -487,9 +489,9 @@ x.page = {
 
             var result = false;
 
-            for (var i = 0; i < hotkeys.length; i++)
+            for(var i = 0;i < hotkeys.length;i++)
             {
-                if (hotkeys[i] == event.keyCode)
+                if(hotkeys[i] == event.keyCode)
                 {
                     result = true;
                     break;
@@ -497,7 +499,7 @@ x.page = {
             }
 
             // event.shiftKey | event.altKey | event.ctrlKey
-            if (event.ctrlKey || result)
+            if(event.ctrlKey || result)
             {
                 alert(x.page.forbidCopy.message);
 
@@ -514,7 +516,7 @@ x.page = {
     */
     newPagingHelper: function(pageSize)
     {
-        if (pageSize === undefined || pageSize === '') { pageSize = 10; }
+        if(pageSize === undefined || pageSize === '') { pageSize = 10; }
 
         var helper = {
 
@@ -537,7 +539,7 @@ x.page = {
             lastPage: 0,
 
             query: {
-                table: '', fields: '', where: {}, orders: ''
+                scence: '', table: '', fields: '', where: {}, orders: ''
             },
 
             /*
@@ -545,19 +547,19 @@ x.page = {
             */
             load: function(paging)
             {
-                if (!x.isUndefined(paging.pageSize)) { this.pagingize = Number(paging.pageSize); }
+                if(!x.isUndefined(paging.pageSize)) { this.pagingize = Number(paging.pageSize); }
 
-                if (!x.isUndefined(paging.rowCount)) { this.rowCount = Number(paging.rowCount); }
+                if(!x.isUndefined(paging.rowCount)) { this.rowCount = Number(paging.rowCount); }
 
-                if (!x.isUndefined(paging.rowIndex)) { this.rowIndex = Number(paging.rowIndex); }
+                if(!x.isUndefined(paging.rowIndex)) { this.rowIndex = Number(paging.rowIndex); }
 
-                if (!x.isUndefined(paging.firstPage)) { this.firstPage = Number(paging.firstPage); }
+                if(!x.isUndefined(paging.firstPage)) { this.firstPage = Number(paging.firstPage); }
 
-                if (!x.isUndefined(paging.previousPage)) { this.previousPage = Number(paging.previousPage); }
+                if(!x.isUndefined(paging.previousPage)) { this.previousPage = Number(paging.previousPage); }
 
-                if (!x.isUndefined(paging.nextPage)) { this.nextPage = Number(paging.nextPage); }
+                if(!x.isUndefined(paging.nextPage)) { this.nextPage = Number(paging.nextPage); }
 
-                if (!x.isUndefined(paging.lastPage)) { this.lastPage = Number(paging.lastPage); }
+                if(!x.isUndefined(paging.lastPage)) { this.lastPage = Number(paging.lastPage); }
             },
 
             /*
@@ -567,7 +569,7 @@ x.page = {
             {
                 this.previousPage = value - 1;
 
-                if (this.previousPage < 1)
+                if(this.previousPage < 1)
                 {
                     this.previousPage = 1;
                 }
@@ -580,7 +582,7 @@ x.page = {
             {
                 this.nextPage = value + 1;
 
-                if (this.nextPage > this.lastPage)
+                if(this.nextPage > this.lastPage)
                 {
                     this.nextPage = this.lastPage;
                 }
@@ -602,7 +604,7 @@ x.page = {
 
                 var counter;
 
-                if (value - length > 0)
+                if(value - length > 0)
                 {
                     value -= length;
                 }
@@ -613,18 +615,18 @@ x.page = {
 
                 counter = value + (length * 2) + 1;
 
-                if (counter > this.lastPage)
+                if(counter > this.lastPage)
                 {
                     value = this.lastPage - (length * 2);
                 }
 
-                for (var i = value; i < counter; i++)
+                for(var i = value;i < counter;i++)
                 {
-                    if (i < 1) { continue; }
+                    if(i < 1) { continue; }
 
-                    if (i > this.lastPage) { break; }
+                    if(i > this.lastPage) { break; }
 
-                    if (format.indexOf('{0}') > -1)
+                    if(format.indexOf('{0}') > -1)
                     {
                         outString += '<a href="' + format.replace('{0}', i) + '" >';
                     }
@@ -651,7 +653,7 @@ x.page = {
                 outString += '<div class="nav-pager-1" >';
                 outString += '共有' + this.rowCount + '条信息 当前' + (this.rowIndex + 1) + '-' + (this.rowIndex + this.pageSize) + '信息 ';
 
-                if (format.indexOf('{0}') > -1)
+                if(format.indexOf('{0}') > -1)
                 {
                     outString += '<a href="' + format.replace('{0}', this.firstPage) + '">首页</a> ';
                     outString += '<a href="' + format.replace('{0}', this.previousPage) + '">上一页</a> ';
@@ -682,8 +684,9 @@ x.page = {
 
                 outString += '<query>';
 
-                if (this.query.table.length > 0) outString += '<table><![CDATA[' + this.query.table + ']]></table>';
-                if (this.query.fields.length > 0) outString += '<fields><![CDATA[' + this.query.fields + ']]></fields>';
+                if(this.query.scence.length > 0) outString += '<scence><![CDATA[' + this.query.scence + ']]></scence>';
+                if(this.query.table.length > 0) outString += '<table><![CDATA[' + this.query.table + ']]></table>';
+                if(this.query.fields.length > 0) outString += '<fields><![CDATA[' + this.query.fields + ']]></fields>';
 
                 var where = '<where>';
                 x.each(this.query.where, function(name, value)
@@ -691,14 +694,14 @@ x.page = {
                     where += '<key name="' + name + '" ><![CDATA[' + value + ']]></key>';
                 });
                 where += '</where>';
-                if (where != '<where></where>') outString += where;
+                if(where != '<where></where>') outString += where;
 
-                if (this.query.orders.length > 0) outString += '<orders><![CDATA[' + this.query.orders + ']]></orders>';
+                if(this.query.orders.length > 0) outString += '<orders><![CDATA[' + this.query.orders + ']]></orders>';
 
                 outString += '</query>';
 
-                if (outString == '<query></query>') outString += '';
-                
+                if(outString == '<query></query>') outString += '';
+
                 return outString;
             },
 
@@ -719,7 +722,7 @@ x.page = {
                 outString += '<lastPage>' + this.lastPage + '</lastPage>';
                 outString += '</paging>';
                 outString += this.toQueryXml();
-                
+
                 return outString;
             }
         };

@@ -196,7 +196,7 @@ x.expressions = {
             regexp = x.expressions.rules[regexpName];
         }
 
-        return text.exists(regexp);
+        return text.match(regexp) !== null;
     },
     /*#endregion*/
 

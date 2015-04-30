@@ -348,7 +348,7 @@ dom = x.ext(dom, {
                                 data: { target: list[i], feature: feature },
                                 callback: function(context)
                                 {
-                                    x.debug.log('feature:' + feature + ',' + context.data.feature + ',' + context.data.target.id);
+                                    // x.debug.log('feature:' + feature + ',' + context.data.feature + ',' + context.data.target.id);
                                     var data = context.data;
 
                                     // 加载完毕后, 加个 featureLoaded 标识, 避免重复加载效果.

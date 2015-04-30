@@ -14,7 +14,7 @@ x.ui.mask = {
 
     getMaskStack: function()
     {
-        if (x.ui.mask.stack === null)
+        if(x.ui.mask.stack === null)
         {
             x.ui.mask.stack = x.newStack();
         }
@@ -35,10 +35,10 @@ x.ui.mask = {
     */
     getWindow: function(options, instance)
     {
-        if (x.isUndefined(instance))
+        if(x.isUndefined(instance))
         {
             // 获得默认遮罩实例
-            if (this.defaultInstance === null)
+            if(this.defaultInstance === null)
             {
                 var name = x.getFriendlyName(location.pathname + '-mask-default-instance');
 
@@ -67,7 +67,7 @@ x.ui.mask = {
     {
         var mask = x.ui.mask.getMaskStack().peek();
 
-        if (mask !== null)
+        if(mask !== null)
         {
             mask.close();
         }
@@ -81,6 +81,8 @@ x.ui.mask = {
     */
     newMaskWrapper: function(name, options)
     {
+        options = options || {};
+
         var maskWrapper = {
             // 实例名称
             name: 'maskWrapper',
@@ -108,7 +110,7 @@ x.ui.mask = {
                 this.name = name;
                 this.popupWindowName = name + '-maskPopupWindow';
 
-                if (this.options.url)
+                if(this.options.url)
                 {
                     this.options.content = '<div >'
                             + '<iframe border="0" frameborder="0" marginheight="0" marginwidth="0" border="0" scrolling="no" '
@@ -126,14 +128,14 @@ x.ui.mask = {
             {
                 var wrapper = document.getElementById(this.name);
 
-                if (wrapper === null)
+                if(wrapper === null)
                 {
                     $(document.body).append('<div id="' + this.name + '" style="display:none;" ></div>');
 
                     wrapper = document.getElementById(this.name);
                 }
 
-                if (this.autoHide === 1)
+                if(this.autoHide === 1)
                 {
                     $(wrapper).bind('click', function(event)
                     {
@@ -143,7 +145,7 @@ x.ui.mask = {
 
                         var mask = window[this.id];
 
-                        if (x.dom.query(mask.name).css('display') === '')
+                        if(x.dom.query(mask.name).css('display') === '')
                         {
                             // x.debug.log(mask.name + '.close()');
                             mask.close();
@@ -168,7 +170,7 @@ x.ui.mask = {
                     'background': 'rgba(0,0,0,100)'
                 });
 
-                if (wrapper.style.display === 'none')
+                if(wrapper.style.display === 'none')
                 {
                     // x.debug.log('show:' + mask.name);
 
@@ -195,7 +197,7 @@ x.ui.mask = {
             */
             hide: function()
             {
-                if (x.dom.query(this.popupWindowName).css('display') !== 'none')
+                if(x.dom.query(this.popupWindowName).css('display') !== 'none')
                 {
                     /*
                     x.dom.query(this.popupWindowName).css({ display: 'none' });
@@ -241,12 +243,12 @@ x.ui.mask = {
                 // 如果之前有遮罩，则隐藏之前的遮罩内容。
                 var mask = x.ui.mask.getMaskStack().peek();
 
-                if (mask !== null && mask.name !== this.name)
+                if(mask !== null && mask.name !== this.name)
                 {
                     mask.hide();
                 }
 
-                if (mask === null || mask.name !== this.name)
+                if(mask === null || mask.name !== this.name)
                 {
                     x.ui.mask.getMaskStack().push(this);
                 }
@@ -258,7 +260,7 @@ x.ui.mask = {
                 // 弹出窗口的位置
                 var pointX = this.options.left, pointY = this.options.top;
 
-                if (element === null)
+                if(element === null)
                 {
                     element = document.createElement('div');
 
@@ -307,14 +309,14 @@ x.ui.mask = {
             {
                 var element = x.dom.query(this.popupWindowName);
 
-                if (element.size() === 0) { return; }
+                if(element.size() === 0) { return; }
 
                 // 弹出窗口的位置
                 var pointX = this.options.left, pointY = this.options.top;
 
                 var width = 720;
 
-                if (element.children().length === 0) { return; }
+                if(element.children().length === 0) { return; }
 
                 // 弹出窗口宽度
                 var width = element.width();
@@ -353,13 +355,13 @@ x.ui.mask = {
                 // 如果之前遮罩，则显示之前的遮罩内容。
                 var mask = x.ui.mask.getMaskStack().peek();
 
-                if (mask !== null)
+                if(mask !== null)
                 {
                     // x.debug.log(mask.name + '.show()');
                     mask.show();
                 }
 
-                if (this.closeEvent)
+                if(this.closeEvent)
                 {
                     this.closeEvent();
                 }

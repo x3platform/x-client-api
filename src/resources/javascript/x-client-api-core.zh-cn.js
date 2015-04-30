@@ -2,7 +2,7 @@
 // Name     : x-client-api 
 // Version  : 1.0.0 
 // Author   : ruanyu@live.com
-// Date     : 2015-03-06
+// Date     : 2015-04-22
 (function(global, factory) 
 {
     if (typeof module === "object" && typeof module.exports === "object") 
@@ -2185,6 +2185,11 @@
     
         i18n = init(i18n, {
             /* 常用 */
+            msg: {
+                // Are you sure you want to delete these items.
+                ARE_YOU_SURE_YOU_WANT_TO_DELETE: '确定删除?'
+            },
+            /* 常用 */
             generic: {
                 filter: '查询',
                 query: '查询',
@@ -2219,8 +2224,11 @@
                 },
     
                 waiting: {
+                    loadingTipText: '正在加载数据，请稍后......',
+                    loadingWorkflowTemplateTipText: '正在加载工作流模板，请稍后......',
                     queryTipText: '正在查询数据，请稍后......',
                     commitTipText: '正在提交数据，请稍候......',
+                    holdTipText: '正在暂存数据，请稍候......',
                     saveTipText: '正在保存数据，请稍候......',
                     deleteTipText: '正在删除数据，请稍候......'
                 }
@@ -3609,7 +3617,7 @@
     
             /*#region 函数:ltrim(text, trimText)*/
             /**
-            * 去除字符串左侧空白.
+            * 去除字符串左侧空白
             * @method ltrim
             * @memberof x.string
             * @param {string} text 文本信息.
@@ -3630,7 +3638,7 @@
     
             /*#region 函数:rtrim(text, trimText)*/
             /**
-            * 去除字符串右侧空白.
+            * 去除字符串右侧空白
             * @method rtrim
             * @memberof x.string
             * @param {string} text 文本信息.
@@ -3652,11 +3660,11 @@
     
             /*#region 函数:format(text, args)*/
             /**
-            * 去除字符串右侧空白.
-            * @method rtrim
+            * 字符串格式化
+            * @method format
             * @memberof x.string
             * @param {string} text 文本信息.
-            * @param {number} [trimText] 需要去除的文本信息(默认为空白).
+            * @param {number} [args] 参数.
             */
             format: function()
             {
@@ -5686,7 +5694,7 @@
                 regexp = x.expressions.rules[regexpName];
             }
     
-            return text.exists(regexp);
+            return text.match(regexp) !== null;
         },
         /*#endregion*/
     
@@ -6282,7 +6290,7 @@
                                     data: { target: list[i], feature: feature },
                                     callback: function(context)
                                     {
-                                        x.debug.log('feature:' + feature + ',' + context.data.feature + ',' + context.data.target.id);
+                                        // x.debug.log('feature:' + feature + ',' + context.data.feature + ',' + context.data.target.id);
                                         var data = context.data;
     
                                         // 加载完毕后, 加个 featureLoaded 标识, 避免重复加载效果.
@@ -7273,7 +7281,7 @@
                             lock: 0,
     
                             // 延迟显示等待窗口
-                            lazy: options.lazy ? options.lazy : 0,
+                            // lazy: options.lazy ? options.lazy : 0,
     
                             maxOpacity: options.maxOpacity ? options.maxOpacity : 0.4,
     
@@ -7299,13 +7307,13 @@
                             /*#region 函数:createMaskWrapper()*/
                             createMaskWrapper: function()
                             {
-                                var wrapper = document.getElementById(this.name + '$maskWrapper');
+                                var wrapper = document.getElementById(this.name + '-maskWrapper');
     
                                 if(wrapper === null)
                                 {
-                                    $(document.body).append('<div id="' + this.name + '$maskWrapper" style="display:none;" ></div>');
+                                    $(document.body).append('<div id="' + this.name + '-maskWrapper" style="display:none;" ></div>');
     
-                                    wrapper = document.getElementById(this.name + '$maskWrapper');
+                                    wrapper = document.getElementById(this.name + '-maskWrapper');
                                 }
     
                                 wrapper.className = 'x-ui-dialog-mask-wrapper';
@@ -7315,8 +7323,8 @@
     
                                 if(wrapper.style.display === 'none')
                                 {
-                                    $(document.getElementById(this.name + '$maskWrapper')).css({ display: '', opacity: 0.1 });
-                                    $(document.getElementById(this.name + '$maskWrapper')).fadeTo((this.maxDuration * 1000), this.maxOpacity, function()
+                                    $('#' + this.name + '-maskWrapper').css({ display: '', opacity: 0.1 });
+                                    $('#' + this.name + '-maskWrapper').fadeTo((this.maxDuration * 1000), this.maxOpacity, function()
                                     {
                                         // var mask = window[this.id];
     
@@ -7329,21 +7337,21 @@
                             /*#region 函数:create(text)*/
                             create: function(text)
                             {
-                                if(document.getElementById(this.name + '$text') == null)
+                                if(document.getElementById(this.name + '-text') == null)
                                 {
-                                    $(document.body).append('<div id="' + this.name + '$container" class="x-ui-dialog-waiting-window-container" ><div id="' + this.name + '$text" class="x-ui-dialog-waiting-window-text" >' + text + '</div></div>');
+                                    $(document.body).append('<div id="' + this.name + '-container" class="x-ui-dialog-waiting-window-container" ><div id="' + this.name + '-text" class="x-ui-dialog-waiting-window-text" >' + text + '</div></div>');
     
                                     this.createMaskWrapper();
                                 }
                                 else
                                 {
-                                    document.getElementById(this.name + '$text').innerHTML = text;
+                                    document.getElementById(this.name + '-text').innerHTML = text;
                                 }
     
                                 if(this.container === null)
                                 {
-                                    this.container = document.getElementById(this.name + '$container');
-                                    this.maskWrapper = document.getElementById(this.name + '$maskWrapper');
+                                    this.container = document.getElementById(this.name + '-container');
+                                    this.maskWrapper = document.getElementById(this.name + '-maskWrapper');
                                 }
                             },
                             /*#endregion*/
@@ -7358,15 +7366,15 @@
     
                                 var that = this;
     
-                                var timer = x.newTimer(this.lazy, function(timer)
-                                {
+                                //var timer = x.newTimer(this.lazy, function(timer)
+                                //{
                                     if(that.lock > 0)
                                     {
                                         // x.debug.log('x.net.waitingWindow.lock:【' + that.lock + '】');
     
                                         if(that.maskWrapper === null)
                                         {
-                                            that.maskWrapper = x.ui.mask.newMaskWrapper(that.name + '$maskWrapper');
+                                            that.maskWrapper = x.ui.mask.newMaskWrapper(that.name + '-maskWrapper');
                                         }
     
                                         if(typeof (text) !== 'undefined')
@@ -7390,10 +7398,10 @@
                                         that.maskWrapper.style.display = '';
                                     }
     
-                                    timer.stop();
-                                });
+                                    //timer.stop();
+                                //});
     
-                                timer.start();
+                                //timer.start();
                             },
                             /*#endregion*/
     
@@ -7405,7 +7413,7 @@
                             {
                                 this.lock--;
     
-                                x.debug.log('x.net.waitingWindow.lock:【' + this.lock + '】');
+                                // x.debug.log('x.net.waitingWindow.lock:【' + this.lock + '】');
     
                                 if(this.lock === 0)
                                 {
@@ -7414,14 +7422,14 @@
                                         this.container.style.display = 'none';
                                     }
     
-                                    if(this.maskWrapper != null && $(document.getElementById(this.name + '$maskWrapper')).css('display') !== 'none')
+                                    if(this.maskWrapper != null && $(document.getElementById(this.name + '-maskWrapper')).css('display') !== 'none')
                                     {
                                         var that = this;
     
-                                        $(document.getElementById(this.name + '$maskWrapper')).css({ display: '', opacity: this.maxOpacity });
-                                        $(document.getElementById(this.name + '$maskWrapper')).fadeOut((this.maxDuration * 2000), function()
+                                        $(document.getElementById(this.name + '-maskWrapper')).css({ display: '', opacity: this.maxOpacity });
+                                        $(document.getElementById(this.name + '-maskWrapper')).fadeOut((this.maxDuration * 2000), function()
                                         {
-                                            $(document.getElementById(that.name + '$maskWrapper')).css({ display: 'none' });
+                                            $(document.getElementById(that.name + '-maskWrapper')).css({ display: 'none' });
                                         });
                                     }
                                 }
@@ -8034,7 +8042,7 @@
                 window.open('', '_self');
                 window.close();
             }
-            catch (ex)
+            catch(ex)
             {
                 window.close();
             }
@@ -8049,13 +8057,15 @@
         */
         refreshParentWindow: function()
         {
-            if (typeof (window.opener) == 'object')
+            if(window.opener == null)
             {
-                x.debug.error('未定义父级窗口。');
+                x.debug.warn('未定义父级窗口。');
             }
     
             // 如果有父级窗口，调用父级窗口刷新函数
-            if (x.type(window.opener) == 'object' && x.isFunction(window.opener.window$refresh$callback))
+            // Firefox 显示 Window 为 [object window]
+            // Chrome 显示 Window 为 [object global]
+            if((x.type(window.opener) == 'window' || x.type(window.opener) == 'global') && x.isFunction(window.opener.window$refresh$callback))
             {
                 window.opener.window$refresh$callback();
             }
@@ -8077,12 +8087,12 @@
     
             var xScroll, yScroll;
     
-            if (window.innerHeight && window.scrollMaxY)
+            if(window.innerHeight && window.scrollMaxY)
             {
                 xScroll = window.innerWidth + window.scrollMaxX;
                 yScroll = window.innerHeight + window.scrollMaxY;
             }
-            else if (document.body.scrollHeight > document.body.offsetHeight)
+            else if(document.body.scrollHeight > document.body.offsetHeight)
             {
                 // all but Explorer Mac
                 xScroll = document.body.scrollWidth;
@@ -8098,10 +8108,10 @@
             //console.log('self.innerWidth:' + self.innerWidth);
             //console.log('document.documentElement.clientWidth:' + document.documentElement.clientWidth);
     
-            if (window.innerHeight)
+            if(window.innerHeight)
             {
                 // all except Explorer
-                if (document.documentElement.clientWidth)
+                if(document.documentElement.clientWidth)
                 {
                     windowWidth = document.documentElement.clientWidth;
                 }
@@ -8112,13 +8122,13 @@
     
                 windowHeight = window.innerHeight;
             }
-            else if (document.documentElement && document.documentElement.clientHeight)
+            else if(document.documentElement && document.documentElement.clientHeight)
             {
                 // IE
                 windowWidth = document.documentElement.clientWidth;
                 windowHeight = document.documentElement.clientHeight;
             }
-            else if (document.body)
+            else if(document.body)
             {
                 // other Explorers
                 windowWidth = document.body.clientWidth;
@@ -8126,7 +8136,7 @@
             }
     
             // for small pages with total height less then height of the viewport
-            if (yScroll < windowHeight)
+            if(yScroll < windowHeight)
             {
                 pageHeight = windowHeight;
             }
@@ -8139,7 +8149,7 @@
             //console.log("windowWidth " + windowWidth)
     
             // for small pages with total width less then width of the viewport
-            if (xScroll < windowWidth)
+            if(xScroll < windowWidth)
             {
                 pageWidth = xScroll;
             }
@@ -8288,11 +8298,11 @@
     
             var parents = $(element).parents();
     
-            for (var i = 0; i < parents.length; i++)
+            for(var i = 0;i < parents.length;i++)
             {
                 var parent = $(parents[i]);
     
-                if (parent.css('position') === 'absolute' && parent.css('top') !== 'auto')
+                if(parent.css('position') === 'absolute' && parent.css('top') !== 'auto')
                 {
                     top = top - Number(parent.css('top').replace('px', ''));
                 }
@@ -8311,7 +8321,7 @@
             var display = $(element).css('display');
     
             // Safari bug
-            if (display != 'none' && display != null)
+            if(display != 'none' && display != null)
             {
                 return { width: element.offsetWidth, height: element.offsetHeight };
             }
@@ -8393,7 +8403,7 @@
         */
         printXml: function(text)
         {
-            if (text == null) { return ''; }
+            if(text == null) { return ''; }
     
             return text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
         },
@@ -8416,7 +8426,7 @@
     
             listen: function()
             {
-                if ($(document.getElementById('forbidCopy$activate')).val() === '1')
+                if($(document.getElementById('forbidCopy$activate')).val() === '1')
                 {
                     // 禁止拷贝
                     x.page.forbidCopy.activate();
@@ -8429,7 +8439,7 @@
             {
                 var event = window.event ? window.event : e;
     
-                if (document.layers)
+                if(document.layers)
                 {
                     document.captureEvents(event.MOUSEDOWN);
     
@@ -8460,17 +8470,17 @@
             {
                 var event = window.event ? window.event : e;
     
-                if (document.all)
+                if(document.all)
                 {
-                    if (event.button == 1 || event.button == 2 || event.button == 3)
+                    if(event.button == 1 || event.button == 2 || event.button == 3)
                     {
                         window.document.oncontextmenu = function() { return false; }
                     }
                 }
     
-                if (document.layers)
+                if(document.layers)
                 {
-                    if (event.which == 3)
+                    if(event.which == 3)
                     {
                         window.document.oncontextmenu = function() { return false; }
                     }
@@ -8487,9 +8497,9 @@
     
                 var result = false;
     
-                for (var i = 0; i < hotkeys.length; i++)
+                for(var i = 0;i < hotkeys.length;i++)
                 {
-                    if (hotkeys[i] == event.keyCode)
+                    if(hotkeys[i] == event.keyCode)
                     {
                         result = true;
                         break;
@@ -8497,7 +8507,7 @@
                 }
     
                 // event.shiftKey | event.altKey | event.ctrlKey
-                if (event.ctrlKey || result)
+                if(event.ctrlKey || result)
                 {
                     alert(x.page.forbidCopy.message);
     
@@ -8514,7 +8524,7 @@
         */
         newPagingHelper: function(pageSize)
         {
-            if (pageSize === undefined || pageSize === '') { pageSize = 10; }
+            if(pageSize === undefined || pageSize === '') { pageSize = 10; }
     
             var helper = {
     
@@ -8537,7 +8547,7 @@
                 lastPage: 0,
     
                 query: {
-                    table: '', fields: '', where: {}, orders: ''
+                    scence: '', table: '', fields: '', where: {}, orders: ''
                 },
     
                 /*
@@ -8545,19 +8555,19 @@
                 */
                 load: function(paging)
                 {
-                    if (!x.isUndefined(paging.pageSize)) { this.pagingize = Number(paging.pageSize); }
+                    if(!x.isUndefined(paging.pageSize)) { this.pagingize = Number(paging.pageSize); }
     
-                    if (!x.isUndefined(paging.rowCount)) { this.rowCount = Number(paging.rowCount); }
+                    if(!x.isUndefined(paging.rowCount)) { this.rowCount = Number(paging.rowCount); }
     
-                    if (!x.isUndefined(paging.rowIndex)) { this.rowIndex = Number(paging.rowIndex); }
+                    if(!x.isUndefined(paging.rowIndex)) { this.rowIndex = Number(paging.rowIndex); }
     
-                    if (!x.isUndefined(paging.firstPage)) { this.firstPage = Number(paging.firstPage); }
+                    if(!x.isUndefined(paging.firstPage)) { this.firstPage = Number(paging.firstPage); }
     
-                    if (!x.isUndefined(paging.previousPage)) { this.previousPage = Number(paging.previousPage); }
+                    if(!x.isUndefined(paging.previousPage)) { this.previousPage = Number(paging.previousPage); }
     
-                    if (!x.isUndefined(paging.nextPage)) { this.nextPage = Number(paging.nextPage); }
+                    if(!x.isUndefined(paging.nextPage)) { this.nextPage = Number(paging.nextPage); }
     
-                    if (!x.isUndefined(paging.lastPage)) { this.lastPage = Number(paging.lastPage); }
+                    if(!x.isUndefined(paging.lastPage)) { this.lastPage = Number(paging.lastPage); }
                 },
     
                 /*
@@ -8567,7 +8577,7 @@
                 {
                     this.previousPage = value - 1;
     
-                    if (this.previousPage < 1)
+                    if(this.previousPage < 1)
                     {
                         this.previousPage = 1;
                     }
@@ -8580,7 +8590,7 @@
                 {
                     this.nextPage = value + 1;
     
-                    if (this.nextPage > this.lastPage)
+                    if(this.nextPage > this.lastPage)
                     {
                         this.nextPage = this.lastPage;
                     }
@@ -8602,7 +8612,7 @@
     
                     var counter;
     
-                    if (value - length > 0)
+                    if(value - length > 0)
                     {
                         value -= length;
                     }
@@ -8613,18 +8623,18 @@
     
                     counter = value + (length * 2) + 1;
     
-                    if (counter > this.lastPage)
+                    if(counter > this.lastPage)
                     {
                         value = this.lastPage - (length * 2);
                     }
     
-                    for (var i = value; i < counter; i++)
+                    for(var i = value;i < counter;i++)
                     {
-                        if (i < 1) { continue; }
+                        if(i < 1) { continue; }
     
-                        if (i > this.lastPage) { break; }
+                        if(i > this.lastPage) { break; }
     
-                        if (format.indexOf('{0}') > -1)
+                        if(format.indexOf('{0}') > -1)
                         {
                             outString += '<a href="' + format.replace('{0}', i) + '" >';
                         }
@@ -8651,7 +8661,7 @@
                     outString += '<div class="nav-pager-1" >';
                     outString += '共有' + this.rowCount + '条信息 当前' + (this.rowIndex + 1) + '-' + (this.rowIndex + this.pageSize) + '信息 ';
     
-                    if (format.indexOf('{0}') > -1)
+                    if(format.indexOf('{0}') > -1)
                     {
                         outString += '<a href="' + format.replace('{0}', this.firstPage) + '">首页</a> ';
                         outString += '<a href="' + format.replace('{0}', this.previousPage) + '">上一页</a> ';
@@ -8682,8 +8692,9 @@
     
                     outString += '<query>';
     
-                    if (this.query.table.length > 0) outString += '<table><![CDATA[' + this.query.table + ']]></table>';
-                    if (this.query.fields.length > 0) outString += '<fields><![CDATA[' + this.query.fields + ']]></fields>';
+                    if(this.query.scence.length > 0) outString += '<scence><![CDATA[' + this.query.scence + ']]></scence>';
+                    if(this.query.table.length > 0) outString += '<table><![CDATA[' + this.query.table + ']]></table>';
+                    if(this.query.fields.length > 0) outString += '<fields><![CDATA[' + this.query.fields + ']]></fields>';
     
                     var where = '<where>';
                     x.each(this.query.where, function(name, value)
@@ -8691,14 +8702,14 @@
                         where += '<key name="' + name + '" ><![CDATA[' + value + ']]></key>';
                     });
                     where += '</where>';
-                    if (where != '<where></where>') outString += where;
+                    if(where != '<where></where>') outString += where;
     
-                    if (this.query.orders.length > 0) outString += '<orders><![CDATA[' + this.query.orders + ']]></orders>';
+                    if(this.query.orders.length > 0) outString += '<orders><![CDATA[' + this.query.orders + ']]></orders>';
     
                     outString += '</query>';
     
-                    if (outString == '<query></query>') outString += '';
-                    
+                    if(outString == '<query></query>') outString += '';
+    
                     return outString;
                 },
     
@@ -8719,7 +8730,7 @@
                     outString += '<lastPage>' + this.lastPage + '</lastPage>';
                     outString += '</paging>';
                     outString += this.toQueryXml();
-                    
+    
                     return outString;
                 }
             };

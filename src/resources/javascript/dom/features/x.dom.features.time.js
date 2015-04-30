@@ -12,8 +12,8 @@ x.dom.features.time = {
     {
         x.require({
             files: [
-                { fileType: 'css', id: 'x-ui-pkg-calendar-css', path: x.ui.styles.dir() + 'x.ui.pkg.calendar.css' },
-                { fileType: 'script', id: 'x-ui-pkg-calendar-script', path: x.ui.pkg.dir() + 'x.ui.pkg.calendar.js' }
+                { fileType: 'script', id: 'x-ui-pkg-calendar-script', path: x.ui.pkg.dir() + 'x.ui.pkg.calendar.js' },
+                { fileType: 'script', id: 'x-ui-pkg-combobox-script', path: x.ui.pkg.dir() + 'x.ui.pkg.combobox.js' }
             ],
             data: { inputName: inputName },
             callback: function(context)
@@ -109,7 +109,7 @@ x.dom.features.time = {
 
                 x.dom.query(inputName + '_calendarValue').bind('blur', function()
                 {
-                    if(this.value != '' && !x.expression.exists({ text: this.value, regexpName: 'date' }))
+                    if(this.value != '' && !x.expressions.exists({ text: this.value, regexpName: 'date' }))
                     {
                         alert('请填写正确的日期，例如【2000-01-01】。');
                         this.focus();
