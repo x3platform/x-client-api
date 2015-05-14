@@ -55,6 +55,8 @@ x.ui.mask = {
 
         instance.resize();
 
+        x.call(options.callback);
+
         return instance;
     },
 
