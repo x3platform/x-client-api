@@ -1340,6 +1340,8 @@ x.ui.mask = {
 
         instance.resize();
 
+        x.call(options.callback);
+
         return instance;
     },
 
@@ -2040,6 +2042,7 @@ x.ui.tooltip = {
 * @memberof x.ui
 */
 x.ui.windows = {
+
     /*#region 函数:newWindow(name, options)*/
     /**
     * 窗口
@@ -2339,26 +2342,19 @@ x.ui.wizards = {
             /*#endregion*/
 
             /*#region 函数:bindOptions(options)*/
-            //            bindOptions: function(options)
-            //            {
-            //                x.debug.error("必须重写向导对象的 bindOptions() 方法。");
-            //            },
+            // bindOptions: function(options)
+            // {
+            //    x.debug.error("必须重写向导对象的 bindOptions() 方法。");
+            // },
             /*#endregion*/
 
             /*#region 函数:load(options)*/
             load: function(options)
             {
                 // 设置遮罩对象
-                if(typeof (options.maskWrapper) === 'undefined')
-                {
-                    this.maskWrapper = x.ui.mask.newMaskWrapper(this.name + '-maskWrapper');
-                }
-                else
-                {
-                    this.maskWrapper = options.maskWrapper;
-                }
+                this.maskWrapper = options.maskWrapper || x.ui.mask.newMaskWrapper(this.name + '-maskWrapper');
 
-                // 设置重写后的创建函数
+                // 设置绑定选项函数
                 if(typeof (options.bindOptions) !== 'undefined')
                 {
                     this.bindOptions = options.bindOptions;
@@ -2367,26 +2363,23 @@ x.ui.wizards = {
                 // 验证并绑定选项信息
                 this.bindOptions(options);
 
-                // 设置重写后的创建函数
+                // 设置创建函数
                 if(typeof (options.create) !== 'undefined')
                 {
                     this.create = options.create;
                 }
 
-                // 设置保存回调函数
-                if(typeof (options.save_callback) !== 'undefined')
-                {
-                    this.save_callback = options.save_callback;
-                }
+                // 设置创建后回调函数
+                this.create_callback = options.create_callback || x.noop;
+
+                // 设置保存后回调函数
+                this.save_callback = options.save_callback || x.save_callback;
 
                 // 设置取消回调函数
-                if(typeof (options.cancel_callback) !== 'undefined')
-                {
-                    this.cancel_callback = options.cancel_callback;
-                }
+                this.cancel_callback = options.cancel_callback || x.noop;
 
                 // 加载遮罩和页面内容
-                x.ui.mask.getWindow({ content: this.create() }, this.maskWrapper);
+                x.ui.mask.getWindow({ content: this.create(), callback: this.create_callback }, this.maskWrapper);
 
                 x.dom.features.bind();
             }

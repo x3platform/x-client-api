@@ -5,195 +5,186 @@
 */
 x.dom.features.time = {
 
-    /*
-    * 绑定日期
-    */
-    bind: function(inputName)
-    {
-        x.require({
-            files: [
-                { fileType: 'script', id: 'x-ui-pkg-calendar-script', path: x.ui.pkg.dir() + 'x.ui.pkg.calendar.js' },
-                { fileType: 'script', id: 'x-ui-pkg-combobox-script', path: x.ui.pkg.dir() + 'x.ui.pkg.combobox.js' }
-            ],
-            data: { inputName: inputName },
-            callback: function(context)
-            {
-                var data = context.data;
+  /*
+  * 绑定日期
+  */
+  bind: function(inputName)
+  {
+    x.require({
+      files: [
+          { fileType: 'script', id: 'x-ui-pkg-calendar-script', path: x.ui.pkg.dir() + 'x.ui.pkg.calendar.js' },
+          { fileType: 'script', id: 'x-ui-pkg-combobox-script', path: x.ui.pkg.dir() + 'x.ui.pkg.combobox.js' }
+      ],
+      data: { inputName: inputName },
+      callback: function(context)
+      {
+        var data = context.data;
 
-                // <input id="dateView" name="dateView" type="text" />
-                // <div id="dateView_calendar" style="display:none;" ></div>
+        // <input id="dateView" name="dateView" type="text" />
+        // <div id="dateView-calendar" style="display:none;" ></div>
 
-                // 参数初始化
-                var input = x.dom.query(data.inputName);
+        // 参数初始化
+        var input = x.dom.query(data.inputName);
 
-                var maskName = inputName + '_mask';
+        var maskName = x.getFriendlyName(data.inputName + '-mask');
 
-                var viewName = inputName + '_view';
+        var viewName = x.getFriendlyName(data.inputName + '-view');
+        // 设置日历控件
+        var calendarInputName = data.inputName + '-calendar-value';
+        var calendarName = x.getFriendlyName(calendarInputName);
+        // 设置时间控件
+        var timeInputName = data.inputName + '-time-value';
+        var timeName = x.getFriendlyName(timeInputName);
 
-                var calendarName = inputName + '_calendarValue_calendar';
+        var time = input.val() == '' ? x.date.newTime() : x.date.newTime(input.val());
 
-                var timeName = inputName + '_timeValue_time';
+        var defaultCalendarValue = typeof (input.attr('defaultCalendarValue')) == 'undefined' ? (time == null ? '' : time.toString('yyyy-MM-dd')) : input.attr('defaultCalendarValue');
+        var defaultTimeValue = typeof (input.attr('defaultTimeValue')) == 'undefined' ? (time == null ? '' : time.toString('HH:mm')) : input.attr('defaultTimeValue');
 
-                var time = input.val() == '' ? x.date.newTime() : x.date.newTime(input.val());
+        var timeBeginHourValue = Number(typeof (input.attr('timeBeginHourValue')) == 'undefined' ? '0' : input.attr('timeBeginHourValue'));
+        var timeEndHourValue = Number(typeof (input.attr('timeEndHourValue')) == 'undefined' ? '24' : input.attr('timeEndHourValue'));
 
-                var defaultCalendarValue = typeof (input.attr('defaultCalendarValue')) == 'undefined' ? (time == null ? '' : time.toString('yyyy-MM-dd')) : input.attr('defaultCalendarValue');
-                var defaultTimeValue = typeof (input.attr('defaultTimeValue')) == 'undefined' ? (time == null ? '' : time.toString('HH:mm')) : input.attr('defaultTimeValue');
+        // 隐藏原始对象
+        input.wrap('<div id="' + maskName + '" style="display:none;" ></div>');
 
-                var timeBeginHourValue = Number(typeof (input.attr('timeBeginHourValue')) == 'undefined' ? '0' : input.attr('timeBeginHourValue'));
-                var timeEndHourValue = Number(typeof (input.attr('timeEndHourValue')) == 'undefined' ? '24' : input.attr('timeEndHourValue'));
+        // 设置新的显示元素
+        x.dom.query(maskName).after('<div class="form-inline" >'
+                              + '<div class="input-group" style="width:180px" >'
+                              + '<div class="input-group dropdown" >'
+                              + '<input id="' + calendarInputName + '" name="' + calendarInputName + '" type="text" value="' + defaultCalendarValue + '" class="form-control x-ui-pkg-calendar-dummy" style="width:120px;" />'
+                              + '<div id="' + calendarName + '" class="x-ui-pkg-calendar-wrapper dropdown-menu" ></div>'
+                              + '<div class="input-group-addon"><i class="glyphicon glyphicon-calendar" ></i></div>'
+                              + '</div>'
+                              + '</div>'
+                              + '<div class="input-group dropdown">'
+                              + '<input id="' + timeInputName + '" name="' + timeInputName + '" value="' + defaultTimeValue + '" type="text" data-toggle="dropdown" class="form-control " style="width:70px;" /> '
+                              + '<div id="' + timeInputName + '-wrapper" class="x-ui-pkg-combobox-wrapper dropdown-menu" style="height:200px;" ><div id="' + timeName + '" style="display:none;" ></div></div>'
+                              + '<div class="input-group-addon"><span class="glyphicon glyphicon-time" ></span></div>'
+                              + '</div>'
+                              + '</div>');
 
-                // 隐藏原始对象
-                input.wrap('<div id="' + maskName + '" style="display:none;" ></div>');
-
-                // 设置新的显示元素
-                x.dom.query(maskName).after('<div class="float-left" >'
-                                      + '<input id="' + inputName + '_calendarValue" name="' + inputName + '_calendarValue" type="text" value="' + defaultCalendarValue + '" class="input-normal ajax-calendar-dummy" style="width:90px;margin-right:10px;" />'
-                                      + '<div id="' + calendarName + '" class="ajax-calendar-wrapper " style="display:none; *height:0px;" ></div>'
-                                      + '</div>'
-                                      + '<div class="float-left" >'
-                                      + '<input id="' + inputName + '_timeValue" name="' + inputName + '_timeValue" value="' + defaultTimeValue + '" type="text" class="input-normal " style="width:60px;" /> '
-                                      + '<div id="' + inputName + '_timeValue_wrapper" class="ajax-combobox-wrapper" ><div id="' + inputName + '_timeValue_time" style="display:none;" ></div></div>'
-                                      + '</div>'
-                                      + '<div class="clear"><div>');
-
-                // 日历
-                window[calendarName] = x.ui.pkg.calendar.newCalendar(calendarName, calendarName, inputName + '_calendarValue', defaultCalendarValue, {
-                    getDayEvent: function()
-                    {
-                        x.dom.features.time.setValue(inputName);
-                    }
-                });
-
-                if(x.dom.query(inputName + '_calendarValue').width() > 20)
-                {
-                    x.dom.query(inputName + '_calendarValue').css('background-image', 'url("/resources/images/form/calendar_icon.gif")');
-                    x.dom.query(inputName + '_calendarValue').css('background-repeat', 'no-repeat');
-
-                    x.dom.query(inputName + '_calendarValue').css('background-position', (x.dom.query(inputName + '_calendarValue').width() - 20) + 'px 2px');
-                }
-
-                if(x.dom.query(inputName + '_timeValue').width() > 20)
-                {
-                    x.dom.query(inputName + '_timeValue').css('background-image', 'url("/resources/images/form/clock_icon.gif")');
-                    x.dom.query(inputName + '_timeValue').css('background-repeat', 'no-repeat');
-
-                    x.dom.query(inputName + '_timeValue').css('background-position', (x.dom.query(inputName + '_timeValue').width() - 20) + 'px 2px');
-                }
-
-                $(document).bind('click', function(event)
-                {
-                    var target = window.event ? window.event.srcElement : event ? event.target : null;
-
-                    var list = $('.ajax-calendar-wrapper');
-
-                    for(var i = 0;i < list.length;i++)
-                    {
-                        if(target.id == list[i].id)
-                        {
-                            continue;
-                        }
-
-                        if(target.id == list[i].id.replace('_calendar', '') || target.className.indexOf('ajax-calendar-dummy') > -1)
-                        {
-                            continue;
-                        }
-
-                        window[list[i].id].close();
-                    }
-                });
-
-                x.dom.query(inputName + '_calendarValue').bind('click', function()
-                {
-                    window[(this.id + '_calendar')].open();
-                });
-
-                x.dom.query(inputName + '_calendarValue').bind('blur', function()
-                {
-                    if(this.value != '' && !x.expressions.exists({ text: this.value, regexpName: 'date' }))
-                    {
-                        alert('请填写正确的日期，例如【2000-01-01】。');
-                        this.focus();
-                    }
-                });
-
-                // 时间
-
-                var options = {
-                    show: 'text',
-                    topOffset: '-1',
-                    widthOffset: '0',
-                    selectedValue: '00:00',
-                    comboboxType: 'static',
-                    list: [],
-                    callback: function() { x.dom.features.time.setValue(inputName); }
-                };
-
-                var timeText = '[';
-
-                for(var i = timeBeginHourValue;i < timeEndHourValue;i++)
-                {
-                    timeText += '{text:\'' + ((i < 10) ? '0' : '') + i + ':00\',value:\'' + ((i < 10) ? '0' : '') + i + ':00\'},';
-                    timeText += '{text:\'' + ((i < 10) ? '0' : '') + i + ':30\',value:\'' + ((i < 10) ? '0' : '') + i + ':30\'}';
-
-                    if((i + 1) < timeEndHourValue)
-                    {
-                        timeText += ',';
-                    }
-
-                    if((i + 1) == timeEndHourValue && i < 23)
-                    {
-                        timeText += ',{text:\'' + ((i + 1 < 10) ? '0' : '') + (i + 1) + ':00\',value:\'' + ((i + 1 < 10) ? '0' : '') + (i + 1) + ':00\'}';
-                    }
-                }
-
-                timeText += ']';
-
-                options.list = x.toJSON(timeText);
-
-                window[timeName] = x.ui.pkg.combobox.newCombobox(timeName, timeName, inputName + '_timeValue', inputName + '_timeValue', options);
-
-                x.dom.query(inputName + '_timeValue').bind('focus', function()
-                {
-                    window[(this.id + '_time')].open();
-                });
-
-                x.dom.query(inputName + '_timeValue').bind('keyup', function()
-                {
-                    window[(this.id + '_time')].open();
-                });
-
-                $(document).bind('click', function(event)
-                {
-                    var target = window.event ? window.event.srcElement : event ? event.target : null;
-
-                    var list = $('.ajax-combobox-wrapper');
-
-                    for(var i = 0;i < list.length;i++)
-                    {
-                        if(target.id != list[i].id.replace('_wrapper', '') && target.id != list[i].id.replace('_wrapper', '_time'))
-                        {
-                            var targetObject = window[list[i].id.replace('_wrapper', '') + '_time'];
-
-                            if(targetObject != null)
-                            {
-                                targetObject.close();
-                            }
-                        }
-                    }
-                });
-            }
+        // 日历
+        window[calendarName] = x.ui.pkg.calendar.newCalendar(calendarName, calendarName, calendarInputName, defaultCalendarValue, {
+          getDayEvent: function()
+          {
+            x.dom.features.time.setValue(inputName);
+          }
         });
-    },
 
-    setValue: function(inputName)
-    {
-        var calendarValue = x.dom.query(inputName + '_calendarValue').val();
-        var timeValue = x.dom.query(inputName + '_timeValue').val();
+        $(document).on('click', function(event)
+        {
+          var target = window.event ? window.event.srcElement : event ? event.target : null;
 
-        var value = calendarValue + ' ' + timeValue;
+          var list = $('.x-ui-pkg-calendar-wrapper');
 
-        x.debug.log(value);
+          for(var i = 0;i < list.length;i++)
+          {
+            if(target.id == list[i].id)
+            {
+              continue;
+            }
 
-        x.dom.query(inputName).val(value);
-    }
+            if(x.getFriendlyName(target.id) == list[i].id || target.className.indexOf('x-ui-pkg-calendar-dummy') > -1)
+            {
+              continue;
+            }
+
+            window[list[i].id].close();
+          }
+        });
+
+        $('#' + calendarInputName).on('click', function()
+        {
+          window[x.getFriendlyName(this.id)].open();
+        });
+
+        $('#' + calendarInputName).on('blur', function()
+        {
+          if(this.value != '' && !x.expressions.exists({ text: this.value, regexpName: 'date' }))
+          {
+            x.msg('请填写正确的日期，例如【2000-01-01】。');
+            this.focus();
+          }
+        });
+
+        // 时间
+
+        var options = {
+          show: 'text',
+          topOffset: '-1',
+          widthOffset: '0',
+          selectedValue: '00:00',
+          comboboxType: 'static',
+          list: [],
+          callback: function() { x.dom.features.time.setValue(inputName); }
+        };
+
+        var timeText = '[';
+
+        for(var i = timeBeginHourValue;i < timeEndHourValue;i++)
+        {
+          timeText += '{text:\'' + ((i < 10) ? '0' : '') + i + ':00\',value:\'' + ((i < 10) ? '0' : '') + i + ':00\'},';
+          timeText += '{text:\'' + ((i < 10) ? '0' : '') + i + ':30\',value:\'' + ((i < 10) ? '0' : '') + i + ':30\'}';
+
+          if((i + 1) < timeEndHourValue)
+          {
+            timeText += ',';
+          }
+
+          if((i + 1) == timeEndHourValue && i < 23)
+          {
+            timeText += ',{text:\'' + ((i + 1 < 10) ? '0' : '') + (i + 1) + ':00\',value:\'' + ((i + 1 < 10) ? '0' : '') + (i + 1) + ':00\'}';
+          }
+        }
+
+        timeText += ']';
+
+        options.list = x.toJSON(timeText);
+
+        window[timeName] = x.ui.pkg.combobox.newCombobox(timeName, timeName, timeInputName, timeInputName, options);
+
+        $('#' + timeInputName).on('focus', function()
+        {
+          window[x.getFriendlyName(this.id)].open();
+        });
+
+        $('#' + timeInputName).on('keyup', function()
+        {
+          window[x.getFriendlyName(this.id)].open();
+        });
+
+        $(document).on('click', function(event)
+        {
+          var target = window.event ? window.event.srcElement : event ? event.target : null;
+
+          var list = $('.x-ui-pkg-combobox-wrapper');
+
+          for(var i = 0;i < list.length;i++)
+          {
+            if(target.id != list[i].id.replace('-wrapper', '') && target.id != list[i].id.replace('-wrapper', '-time'))
+            {
+              var targetObject = window[list[i].id.replace('-wrapper', '') + '-time'];
+
+              if(targetObject != null)
+              {
+                targetObject.close();
+              }
+            }
+          }
+        });
+      }
+    });
+  },
+
+  setValue: function(inputName)
+  {
+    var calendarValue = x.dom.query(inputName + '-calendarValue').val();
+    var timeValue = x.dom.query(inputName + '-timeValue').val();
+
+    var value = calendarValue + ' ' + timeValue;
+
+    x.debug.log(value);
+
+    x.dom.query(inputName).val(value);
+  }
 };

@@ -14,13 +14,13 @@ module.exports = function(grunt)
                 curly: true,
                 // 对于简单类型，使用===和!==，而不是==和!=
                 eqeqeq: false,
-                //对于首字母大写的函数（声明的类），强制使用new
+                // 对于首字母大写的函数（声明的类），强制使用new
                 newcap: false,
-                //禁用arguments.caller和arguments.callee
+                // 禁用arguments.caller和arguments.callee
                 noarg: false,
-                //对于属性使用aaa.bbb而不是aaa['bbb']
+                // 对于属性使用aaa.bbb而不是aaa['bbb']
                 sub: false,
-                //查找所有未定义变量
+                // 查找所有未定义变量
                 undef: false,
                 // 查找类似与if(a = 0)这样的代码
                 boss: true,
@@ -66,7 +66,7 @@ module.exports = function(grunt)
                         'src/resources/javascript/template/x.template.syntax.js'
                     ],
                     // UI
-                    'dist/<%= pkg.version %>/<%= pkg.name %>-ui.zh-cn.js': [
+                    'dist/<%= pkg.version %>/<%= pkg.name %>-ui-core.zh-cn.js': [
                         'src/resources/javascript/ui/core/x.ui.animation.js',
                         'src/resources/javascript/ui/core/x.ui.drag.js',
                         'src/resources/javascript/ui/core/x.ui.form.js',
@@ -133,7 +133,7 @@ module.exports = function(grunt)
             },
             'dist-ui': {
                 files: {
-                    'dist/<%= pkg.version %>/<%= pkg.name %>-ui.zh-cn.min.js': ['dist/<%= pkg.version %>/<%= pkg.name %>-ui.zh-cn.js']
+                    'dist/<%= pkg.version %>/<%= pkg.name %>-ui-core.zh-cn.min.js': ['dist/<%= pkg.version %>/<%= pkg.name %>-ui-core.zh-cn.js']
                 }
             },
             'dist-workflow': {
@@ -253,7 +253,7 @@ module.exports = function(grunt)
             {
                 files:
                 {
-                    'src/resources/styles/x-ui/x-ui.min.css': [
+                        'src/resources/styles/x-ui/x-ui.min.css': [
                         'src/resources/styles/x-ui/x.ui.accordion.css',
                         'src/resources/styles/x-ui/x.ui.calendar.css',
                         'src/resources/styles/x-ui/x.ui.dialogs.css'
@@ -290,6 +290,7 @@ module.exports = function(grunt)
         'uglify:dist-core',
         'uglify:dist-template',
         'uglify:dist-ui',
+        'uglify:dist-workflow',
         'jsdoc']);
 
     // 开发环境

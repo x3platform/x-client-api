@@ -183,16 +183,14 @@ x.page = {
     */
     getViewHeight: function()
     {
-        // return document.documentElement.clientHeight;
         return x.page.getRange().windowHeight;
     },
 
-    /*
+    /**
     * 获取页面可视区域宽度
     */
     getViewWidth: function()
     {
-        // return document.documentElement.clientWidth;
         return x.page.getRange().windowWidth;
     },
 
@@ -338,6 +336,39 @@ x.page = {
         style.visibility = originalVisibility;
 
         return { width: originalWidth, height: originalHeight };
+    },
+
+    scrollBarWidth: null,
+
+    /**
+    * 获取滚动条宽度
+    */
+    getScrollBarWidth: function()
+    {
+        // 利用元素的 overflow:scroll; 样式, 显示滚动条  
+        // 然后获取 offsetHeight 和 clientHeight 的差值
+
+        if(this.scrollBarWidth) return this.scrollBarWidth;
+
+        var helper = document.createElement("div");
+        // if MSIE
+        // 如此设置的话，scroll bar的最大宽度不能大于50px（通常不会）。
+        helper.style.cssText = "overflow:scroll;width:50px;height:50px;";
+        // else OTHER Browsers:
+        // scrollBarHelper.style.cssText = "overflow:scroll;";
+        document.body.appendChild(helper);
+
+        if(helper)
+        {
+            this.scrollBarWidth = {
+                horizontal: helper.offsetHeight - helper.clientHeight,
+                vertical: helper.offsetWidth - helper.clientWidth
+            };
+        }
+
+        document.body.removeChild(helper);
+
+        return this.scrollBarWidth;
     },
 
     /**
@@ -593,11 +624,6 @@ x.page = {
             */
             getPagesNumber: function(format, value, length)
             {
-                // may be overwrite here. ^_^
-                //
-                // x.page.newPagesHelper.prototype.getPagesNumber
-                //
-
                 var outString = '';
 
                 var page = value;
@@ -626,17 +652,9 @@ x.page = {
 
                     if(i > this.lastPage) { break; }
 
-                    if(format.indexOf('{0}') > -1)
-                    {
-                        outString += '<a href="' + format.replace('{0}', i) + '" >';
-                    }
-                    else
-                    {
-                        outString += '<a href="javascript:' + format + '(' + i + ');" >';
-                    }
-
+                    outString += '<li ' + ((page == i) ? ('class="active"') : '') + ' ><a href="' + format.replace('{0}', i) + '" >';
                     outString += ((page == i) ? ('<strong>' + i + '</strong>') : i);
-                    outString += '</a> ';
+                    outString += '</a></li>';
                 }
 
                 return outString;
@@ -648,30 +666,26 @@ x.page = {
             tryParseMenu: function(format)
             {
                 var outString = '';
+                // 
+                // message //.format("{rowCount}条信息")
 
-                outString += '<div class="nav-pager" >';
-                outString += '<div class="nav-pager-1" >';
+                outString += '<div class="form-inline text-right">';
+                outString += '<div class="form-group" style="padding:0 10px 0 0;" >';
                 outString += '共有' + this.rowCount + '条信息 当前' + (this.rowIndex + 1) + '-' + (this.rowIndex + this.pageSize) + '信息 ';
-
-                if(format.indexOf('{0}') > -1)
-                {
-                    outString += '<a href="' + format.replace('{0}', this.firstPage) + '">首页</a> ';
-                    outString += '<a href="' + format.replace('{0}', this.previousPage) + '">上一页</a> ';
-                    outString += this.getPagesNumber(format, this.currentPage, 2)
-                    outString += '<a href="' + format.replace('{0}', this.nextPage) + '">下一页</a> ';
-                    outString += '<a href="' + format.replace('{0}', this.lastPage) + '">末页</a> ';
-                }
-                else
-                {
-                    outString += '<a href="javascript:' + format + '(' + this.firstPage + ');">首页</a> ';
-                    outString += '<a href="javascript:' + format + '(' + this.previousPage + ');">上一页</a> ';
-                    outString += this.getPagesNumber(format, this.currentPage, 2)
-                    outString += '<a href="javascript:' + format + '(' + this.nextPage + ');">下一页</a> ';
-                    outString += '<a href="javascript:' + format + '(' + this.lastPage + ');">末页</a> ';
-                }
-
                 outString += '</div>';
-                outString += '<div class="clear" ></div>';
+                outString += '<div class="form-group">';
+                outString += '<nav>';
+                outString += '<ul class="pagination pagination-sm">';
+
+                outString += '<li><a href="' + format.replace('{0}', this.firstPage) + '" aria-label="首页"><span class="glyphicon glyphicon-step-backward"></span></a></li>';
+                outString += '<li><a href="' + format.replace('{0}', this.previousPage) + '" aria-label="上一页"><span class="glyphicon glyphicon-triangle-left"></span></a></li>';
+                outString += this.getPagesNumber(format, this.currentPage, 2)
+                outString += '<li><a href="' + format.replace('{0}', this.nextPage) + '" aria-label="下一页"><span class="glyphicon glyphicon-triangle-right"></span></a></li> ';
+                outString += '<li><a href="' + format.replace('{0}', this.lastPage) + '" aria-label="末页"><span class="glyphicon glyphicon-step-forward"></span></a></li> ';
+
+                outString += '</ul>';
+                outString += '</nav>';
+                outString += '</div>';
                 outString += '</div>';
 
                 return outString;

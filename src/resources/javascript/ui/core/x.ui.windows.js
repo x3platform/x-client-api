@@ -6,6 +6,7 @@
 * @memberof x.ui
 */
 x.ui.windows = {
+
     /*#region 函数:newWindow(name, options)*/
     /**
     * 窗口
