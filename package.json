@@ -5,10 +5,10 @@
   "author":"ruanyu@live.com",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yoshow/x-client-api.git"
+    "url": "https://github.com/x3platform/x-client-api.git"
   },
   "bugs": {
-    "url" : "http://github.com/yoshow/x-client-api/issues"
+    "url" : "http://github.com/x3platform/x-client-api/issues"
   },
   "dependencies": {
     "chalk": "~0.4.0",

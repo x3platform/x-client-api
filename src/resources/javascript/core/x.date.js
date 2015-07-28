@@ -161,6 +161,10 @@ x.date = {
                 // Date 对象
                 date = timeValue;
             }
+            else if(x.isNumber(timeValue))
+            {
+              date = new Date(timeValue);
+            }
             else if (x.isArray(timeValue))
             {
                 // Array 对象

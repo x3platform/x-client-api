@@ -2,7 +2,7 @@
 // Name     : x-client-api 
 // Version  : 1.0.0 
 // Author   : ruanyu@live.com
-// Date     : 2015-06-06
+// Date     : 2015-07-25
 (function(global, factory) 
 {
     if (typeof module === "object" && typeof module.exports === "object") 
@@ -2181,63 +2181,73 @@
     })( window );
     (function(i18n)
     {
-        var init = function(destination, source) { for (var property in source) { destination[property] = source[property]; } return destination; };
+      var init = function(destination, source) { for(var property in source) { destination[property] = source[property]; } return destination; };
     
-        i18n = init(i18n, {
-            /* 常用 */
-            msg: {
-                // Are you sure you want to delete these items.
-                ARE_YOU_SURE_YOU_WANT_TO_DELETE: '确定删除?'
-            },
-            /* 常用 */
-            generic: {
-                filter: '查询',
-                query: '查询',
-                add: '新增',
-                edit: '编辑',
-                remove: '删除',
-                refresh: '刷新'
-            },
+      i18n = init(i18n, {
+        /* 文字 */
+        strings: {
+          btn_search: '搜索',
+          btn_filter: '查询',
+          btn_query: '查询',
+          btn_add: '新增',
+          btn_edit: '编辑',
+          btn_remove: '删除',
+          btn_refresh: '刷新'
+        },
+        /* 常用 */
+        msg: {
+          // Are you sure you want to delete these items.
+          are_you_sure_you_want_to_delete: '确定删除?'
+        },
+        /* 常用 */
+        generic: {
+          filter: '查询',
+          query: '查询',
+          add: '新增',
+          edit: '编辑',
+          remove: '删除',
+          refresh: '刷新'
+        },
     
-            /* 日期 */
-            date: {
-                dateformat: {
-                    "fulldaykey": "yyyyMMdd",
-                    "fulldayshow": "yyyy年M月d日",
-                    "fulldayvalue": "yyyy-M-d",
-                    "Md": "M/d (W)",
-                    "Md3": "M月d日"
-                }
-            },
-            /* 元素 */
-            dom: {
-                errors: {
-                }
-            },
-            /* 网络 */
-            net: {
-                errors: {
-                    401: '访问被拒绝，客户试图未经授权访问受密码保护的页面。',
-                    404: '无法找到指定位置的资源。',
-                    500: '服务器繁忙，请稍候再试。',
-                    unkown: '系统错误，错误信息【{0}】。'
-                },
+        /* 日期 */
+        date: {
+          dateformat: {
+            "fulldaykey": "yyyyMMdd",
+            "fulldayshow": "yyyy年M月d日",
+            "fulldayvalue": "yyyy-M-d",
+            "Md": "M/d (W)",
+            "Md3": "M月d日"
+          }
+        },
+        /* 元素 */
+        dom: {
+          errors: {
+          }
+        },
+        /* 网络 */
+        net: {
+          errors: {
+            401: '访问被拒绝，客户试图未经授权访问受密码保护的页面。',
+            404: '无法找到指定位置的资源。',
+            500: '服务器繁忙，请稍候再试。',
+            unkown: '系统错误，错误信息【{0}】。'
+          },
     
-                waiting: {
-                    loadingTipText: '正在加载数据，请稍后......',
-                    loadingWorkflowTemplateTipText: '正在加载工作流模板，请稍后......',
-                    queryTipText: '正在查询数据，请稍后......',
-                    commitTipText: '正在提交数据，请稍候......',
-                    holdTipText: '正在暂存数据，请稍候......',
-                    saveTipText: '正在保存数据，请稍候......',
-                    deleteTipText: '正在删除数据，请稍候......'
-                }
-            }
-        });
+          waiting: {
+            loadingTipText: '正在加载数据，请稍后......',
+            loadingWorkflowTemplateTipText: '正在加载工作流模板，请稍后......',
+            queryTipText: '正在查询数据，请稍后......',
+            commitTipText: '正在提交数据，请稍候......',
+            holdTipText: '正在暂存数据，请稍候......',
+            saveTipText: '正在保存数据，请稍候......',
+            deleteTipText: '正在删除数据，请稍候......'
+          }
+        }
+      });
     
-        window.i18n = i18n;
+      window.i18n = i18n;
     
-        return i18n;
+      return i18n;
     })(typeof i18n !== 'undefined' ? i18n : {});// -*- ecoding=utf-8 -*-
     
     /**
@@ -5078,6 +5088,10 @@
                     // Date 对象
                     date = timeValue;
                 }
+                else if(x.isNumber(timeValue))
+                {
+                  date = new Date(timeValue);
+                }
                 else if (x.isArray(timeValue))
                 {
                     // Array 对象
@@ -7026,21 +7040,26 @@
      */
     dom.fn.val = function(value)
     {
-        var element = this[0];
+      var element = this[0];
     
-        if (x.isUndefined(value))
-        {
-            return element.nodeType === 1 ? element.value : undefined;
-        }
-        else
-        {
-            x.each(this.results, function(index, node)
-            {
-                node.value = value;
-            });
-        }
+      if(x.isUndefined(element))
+      {
+        return null;
+      }
     
-        return this;
+      if(x.isUndefined(value))
+      {
+        return element.nodeType === 1 ? element.value : undefined;
+      }
+      else
+      {
+        x.each(this.results, function(index, node)
+        {
+          node.value = value;
+        });
+      }
+    
+      return this;
     };
     
     var valHooks = [];
@@ -7050,21 +7069,26 @@
     /*#region 函数:html()*/
     dom.fn.html = function(value)
     {
-        if (x.isUndefined(value))
-        {
-            var element = this[0];
+      var element = this[0];
     
-            return element.nodeType === 1 ? element.innerHTML : undefined;
-        }
-        else
-        {
-            x.each(this.results, function(index, node)
-            {
-                node.innerHTML = value;
-            });
-        }
+      if(x.isUndefined(element))
+      {
+        return null;
+      }
     
-        return this;
+      if(x.isUndefined(value))
+      {
+        return element.nodeType === 1 ? element.innerHTML : undefined;
+      }
+      else
+      {
+        x.each(this.results, function(index, node)
+        {
+          node.innerHTML = value;
+        });
+      }
+    
+      return this;
     };
     /*#endregion*/
     
@@ -7076,7 +7100,7 @@
      */
     dom.fn.size = function()
     {
-        return this.results.length;
+      return this.results.length;
     };
     /*#endregion*/
     
@@ -7088,33 +7112,33 @@
      */
     dom.fn.css = function()
     {
-        if (arguments.length == 1 && x.type(arguments[0]) == 'string')
+      if(arguments.length == 1 && x.type(arguments[0]) == 'string')
+      {
+        var element = this[0];
+    
+        var args = Array.prototype.slice.call(arguments).slice(0);
+    
+        args.unshift(element);
+    
+        return x.css.style.apply(this, args);
+      }
+      else
+      {
+        var me = this;
+    
+        var originalArgs = Array.prototype.slice.call(arguments).slice(0);
+    
+        x.each(this.results, function(index, node)
         {
-            var element = this[0];
+          var args = originalArgs.slice(0);
     
-            var args = Array.prototype.slice.call(arguments).slice(0);
+          args.unshift(node);
     
-            args.unshift(element);
+          x.css.style.apply(me, args);
+        });
+      }
     
-            return x.css.style.apply(this, args);
-        }
-        else
-        {
-            var me = this;
-    
-            var originalArgs = Array.prototype.slice.call(arguments).slice(0);
-    
-            x.each(this.results, function(index, node)
-            {
-                var args = originalArgs.slice(0);
-    
-                args.unshift(node);
-    
-                x.css.style.apply(me, args);
-            });
-        }
-    
-        return this;
+      return this;
     };
     /*#endregion*/// -*- ecoding=utf-8 -*-
     
@@ -7133,37 +7157,30 @@
         returnType: 'json',
         // 异步请求的数据键值
         xhrDataKey: 'xhr-xml',
+        // 获取访问令牌信息        
+        getAccessToken: function()
+        {
+          return localStorage['session-access-token'] || ($('#session-access-token') == null ? null : $('#session-access-token').val()) || '';
+        },
         // 获取客户端标识信息        
         getClientId: function()
         {
-          var element = x.query('#session-client-id');
-    
-          // 根据页面存放的 session-client-id 元素，获取客户端标识信息, 如果页面不存在 session-client-id 元素，则返回空值。
-          return element == null ? '' : x.isUndefined(element.value, '');
+          return localStorage['session-client-id'] || ($('#session-client-id') == null ? null : $('#session-client-id').val()) || '';
         },
         // 获取客户端签名信息
         getClientSignature: function()
         {
-          var element = x.query('#session-client-signature');
-    
-          // 根据页面存放的 session-client-signature 元素，获取签名信息, 如果页面不存在 session-client-signature 元素，则返回空值。
-          return element == null ? '' : x.isUndefined(element.value, '');
+          return localStorage['session-client-signature'] || ($('#session-client-signature') == null ? null : $('#session-client-signature').val()) || '';
         },
         // 获取时间信息
         getTimestamp: function()
         {
-          var element = x.query('#session-timestamp');
-    
-          // 根据页面存放的 session-timestamp 元素，获取时间戳信息, 如果页面不存在 session-timestamp 元素，则返回空值。
-          return element == null ? '' : x.isUndefined(element.value, '');
+          return localStorage['session-timestamp'] || ($('#session-timestamp') == null ? null : $('#session-timestamp').val()) || '';
         },
         // 获取随机数信息
         getNonce: function()
         {
-          var element = x.query('#session-nonce');
-    
-          // 根据页面存放的 session-nonce 元素，获取签名信息, 如果页面不存在 session-nonce 元素，则返回空值。
-          return element == null ? '' : x.isUndefined(element.value, '');
+          return localStorage['session-nonce'] || ($('#session-nonce') == null ? null : $('#session-nonce').val()) || '';
         },
         // 获取等待窗口
         getWaitingWindow: function(options)
@@ -7574,8 +7591,12 @@
             }
           });
         }
-    
-        if(x.isFunction(options.getClientId) && options.getClientId() != '')
+        
+        if(x.isFunction(options.getAccessToken) && options.getAccessToken() != '')
+        {
+          data.accessToken = options.getAccessToken();
+        }
+        else if(x.isFunction(options.getClientId) && options.getClientId() != '')
         {
           data.clientId = options.getClientId();
     

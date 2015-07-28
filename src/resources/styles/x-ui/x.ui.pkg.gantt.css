@@ -1,0 +1,94 @@
+﻿/**********************************************************
+
+CSS Document 2.0
+
+x-ui / x.ui.gantt.css
+
+**********************************************************/
+
+/**
+ *gatt diagram
+ */
+
+.x-ui-pkg-gantt-wrapper
+{
+	font-size:14px;
+	position: relative;
+}
+.x-ui-pkg-gantt-wrapper div
+{
+	
+}
+
+.x-ui-pkg-gantt-wrapper table
+{
+	border-collapse:collapse;
+	background-color:#fff;
+	border:1px solid #ccc;
+}
+.x-ui-pkg-gantt-wrapper table td
+{
+	border:1px solid #ccc;
+}
+.x-ui-pkg-gantt-wrapper table td div
+{
+	line-height:100%;
+}
+
+.x-ui-pkg-gantt-task-title
+{
+	font-weight:bold;
+	height:200%;
+	width:200px;
+	padding:4px;
+}
+
+.x-ui-pkg-gantt-month
+{
+	padding-left:5px;
+	font-weight:bold;	
+}
+
+.x-ui-pkg-gantt-today
+{
+	background-color: #FDFDE0;	
+}
+
+.x-ui-pkg-gantt-weekend
+{
+	font-family:tahoma, arial, verdana;
+	background-color:#F5F5F5;
+	text-align:center;
+}
+
+.x-ui-pkg-gantt-day
+{
+	font-family:tahoma, arial, verdana;
+	text-align:center;
+}
+
+.x-ui-pkg-gantt-task
+{
+	border-top:1px solid #CACACA;
+	border-bottom:1px solid #CACACA;
+	height:14px;
+	background-color:#AAA8CB;
+}
+.x-ui-pkg-gantt-task-resource
+{
+	margin:-3px 0 0 4px;
+	font-size:14px;
+}
+
+.x-ui-pkg-gantt-task-text
+{
+	font-size:14px;
+}
+
+.x-ui-pkg-gantt-progress
+{
+	background-color:#fff;
+	height:2px;
+	overflow: hidden;
+	margin-top:6px;
+}
