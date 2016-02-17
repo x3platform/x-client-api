@@ -100,10 +100,10 @@ var x = {
     * @param {string} [replacementValue] 替换的值
     * @example
     * // return true
-    * x.isUndefined(undefinedValue);    
+    * x.isUndefined(undefinedValue);
     * @example
     * // return ''
-    * x.isUndefined(undefinedValue, '');    
+    * x.isUndefined(undefinedValue, '');
     */
     isUndefined: function(object, replacementValue)
     {
@@ -179,7 +179,7 @@ var x = {
         {
         destination[property] = source[property];
         }
-
+    
         return destination;
         */
 
@@ -308,7 +308,7 @@ var x = {
 
     /*#region 函数:serialize(data)*/
     /**
-    * 返回数据串行化后的字符串  
+    * 返回数据串行化后的字符串
     * @method serialize
     * @memberof x
     * @param {object} data 表单输入元素的数组或键/值对的散列表
@@ -1002,10 +1002,10 @@ var x = {
     * // 初始化一个计时器
     * var timer = x.newTimer(5, function(timer) {
     *   console.log(new Date());
-    *   // 启动计时器
+    *   // 停止计时器
     *   timer.stop();
     * });
-    * // 停止计时器
+    * // 启动计时器
     * timer.start();
     */
     newTimer: function(interval, callback)
@@ -1124,15 +1124,15 @@ var x = {
         */
         preventDefault: function(event)
         {
-            // 如果提供了事件对象，则这是一个非IE浏览器 
+            // 如果提供了事件对象，则这是一个非IE浏览器
             if(event && event.preventDefault)
             {
-                //阻止默认浏览器动作(W3C) 
+                //阻止默认浏览器动作(W3C)
                 event.preventDefault();
             }
             else
             {
-                //IE中阻止函数器默认动作的方式   
+                //IE中阻止函数器默认动作的方式
                 window.event.returnValue = false;
             }
         },
@@ -1160,17 +1160,18 @@ var x = {
             //            else
             //            {
 
-            //如果提供了事件对象，则这是一个非IE浏览器  
+            //如果提供了事件对象，则这是一个非IE浏览器
             if(event && event.stopPropagation)
             {
-                //因此它支持W3C的stopPropagation()方法  
+                //因此它支持W3C的stopPropagation()方法
                 event.stopPropagation();
             }
             else
             {
-                //否则，我们需要使用IE的方式来取消事件冒泡   
+                //否则，我们需要使用IE的方式来取消事件冒泡
                 window.event.cancelBubble = true;
             }
+
             return false;
         },
         /*#endregion*/
@@ -1316,6 +1317,21 @@ var x = {
         /*#endregion*/
     },
 
+    /*#region 函数:nonce(length)*/
+    /**
+    * 创建随机数
+    * @method nonce
+    * @memberof x
+    * @param {length} 随机数长度
+    */
+    nonce: function(length)
+    {
+        length = x.isUndefined(length, 6);
+
+        return Number(x.randomText.create(1, '123456789') + x.randomText.create(length - 1, '0123456789'));
+    },
+    /*#endregion*/
+
     /**
     * 字符串
     * @namespace string
@@ -1391,7 +1407,7 @@ var x = {
             }
             else
             {
-                return text.replace(RegExp('(^' + trimText + ')', 'gi'), '');
+                return text.replace(RegExp('(^' + trimText.replace(/\\/g, '\\\\') + ')', 'gi'), '');
             }
         },
         /*#endregion*/
@@ -1412,7 +1428,7 @@ var x = {
             }
             else
             {
-                return text.replace(RegExp('(' + trimText + '$)', 'gi'), '');
+                return text.replace(RegExp('(' + trimText.replace(/\\/g, '\\\\') + '$)', 'gi'), '');
                 // return (text.substr(text.length - trimText.length, trimText.length) === trimText) ? text.substr(0, text.length - trimText.length) : text;
             }
         },
@@ -1617,7 +1633,7 @@ if(document)
 * 加载脚本
 * @method require
 * @memberof x
-* @param {object} options 选项 
+* @param {object} options 选项
 */
 var require = x.require = function(options)
 {
@@ -1745,9 +1761,9 @@ require.newRequire = function(options)
         if(event.type === 'load' || /^(complete|loaded)$/.test(node.readyState))
         {
             node.ready = true;
-    
+
             // x.debug.log('node.ready:' + node.ready);
-    
+
             if(x.isFunction(context.callback))
             {
                 context.callback(context);
@@ -1837,54 +1853,54 @@ x.jsonp = function(options)
 */
 x.browser = {
 
-    /** 
+    /**
     * 判断是否是 Internet Explorer 浏览器
-    * @member {bool} ie 
+    * @member {bool} ie
     * @memberof x.browser
     * @example
     * // returns true or false
     * x.browser.ie;
     */
     ie: !!(window.attachEvent && navigator.userAgent.indexOf('Opera') === -1),
-    /** 
+    /**
     * 判断是否是 Internet Explorer 6 浏览器
-    * @member {bool} ie6 
+    * @member {bool} ie6
     * @memberof x.browser
     * @example
     * // returns true or false
     * x.browser.ie6;
     */
     ie6: ! -[1, ] && !window.XMLHttpRequest,
-    /** 
+    /**
     * 判断是否是 Webkit 浏览器
-    * @member {bool} webkit 
+    * @member {bool} webkit
     * @memberof x.browser
     * @example
     * // returns true or false
     * x.browser.webkit;
     */
     webkit: navigator.userAgent.indexOf('AppleWebKit/') > -1,
-    /** 
+    /**
     * 判断是否是 Gecko 浏览器
-    * @member {bool} gecko 
+    * @member {bool} gecko
     * @memberof x.browser
     * @example
     * // returns true or false
     * x.browser.gecko;
     */
     gecko: navigator.userAgent.indexOf('Gecko') > -1 && navigator.userAgent.indexOf('KHTML') === -1,
-    /** 
+    /**
     * 判断是否是 Opera 浏览器
-    * @member {bool} opera 
+    * @member {bool} opera
     * @memberof x.browser
     * @example
     * // returns true or false
     * x.browser.opera;
     */
     opera: typeof opera !== 'undefined' && opera.toString() === '[object Opera]',
-    /** 
+    /**
     * 判断是否是 Mobile Safari 浏览器
-    * @member {bool} mobilesafari 
+    * @member {bool} mobilesafari
     * @memberof x.browser
     * @example
     * // returns true or false
@@ -1893,9 +1909,9 @@ x.browser = {
     mobilesafari: !!navigator.userAgent.match(/Apple.*Mobile.*Safari/),
 
     /*#region 函数:current()*/
-    /** 
+    /**
     * 获取当前浏览器的名称和版本
-    * @method current 
+    * @method current
     * @memberof x.browser
     * @example
     * x.browser.current();
@@ -1907,9 +1923,9 @@ x.browser = {
     /*#endregion*/
 
     /*#region 函数:getName()*/
-    /** 
+    /**
     * 获取当前浏览器的名称
-    * @method getName 
+    * @method getName
     * @memberof x.browser
     * @example
     * x.browser.getName();
@@ -1936,9 +1952,9 @@ x.browser = {
     /*#endregion*/
 
     /*#region 函数:getVersion()*/
-    /** 
+    /**
     * 获取当前浏览器的版本
-    * @method getVersion 
+    * @method getVersion
     * @memberof x.browser
     * @example
     * x.browser.getVersion();
@@ -2011,7 +2027,7 @@ x.browser = {
         // 元素特性
         elementExtensions: !!window.HTMLElement,
         specificElementExtensions:
-		        document.createElement('div')['__proto__']
+            document.createElement('div')['__proto__']
                 && document.createElement('div')['__proto__'] !== document.createElement('form')['__proto__']
     }
 };

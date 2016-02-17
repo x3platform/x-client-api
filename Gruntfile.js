@@ -323,6 +323,8 @@ module.exports = function(grunt)
     'uglify:dist-template',
     'uglify:dist-ui-core',
     'uglify:dist-workflow',
+    'less',
+    'cssmin',
     'jsdoc'
   ]);
 
@@ -336,6 +338,8 @@ module.exports = function(grunt)
     'uglify:dist-template',
     'uglify:dist-ui-core',
     'uglify:dist-workflow',
+    'less',
+    'cssmin',
     'copy:dist'
   ]);
 

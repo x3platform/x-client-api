@@ -52,19 +52,25 @@ x.page = {
         if(window.opener == null)
         {
             x.debug.warn('未定义父级窗口。');
+            return
+        }
+
+        if(!x.isFunction(window.opener.window$refresh$callback))
+        {
+            x.debug.warn('父级窗口未定义 window$refresh$callback() 函数。');
+            return
         }
 
         // 如果有父级窗口，调用父级窗口刷新函数
+        // IE 显示 Window 为 [object Object]
         // Firefox 显示 Window 为 [object window]
         // Chrome 显示 Window 为 [object global]
-        if((x.type(window.opener) == 'window' || x.type(window.opener) == 'global') && x.isFunction(window.opener.window$refresh$callback))
-        {
-            window.opener.window$refresh$callback();
-        }
-        else
-        {
-            x.debug.log('父级窗口未定义 window$refresh$callback() 函数。');
-        }
+        // if((x.type(window.opener) == 'object' || x.type(window.opener) == 'window' || x.type(window.opener) == 'global'))
+        // {
+        //    window.opener.window$refresh$callback();
+        // }
+
+        window.opener.window$refresh$callback();
     },
     /*#endregion*/
 
@@ -260,7 +266,7 @@ x.page = {
     getElementViewLeft: function(element)
     {
         return element.getBoundingClientRect().left;
-        /* 
+        /*
         var actualLeft = element.offsetLeft;
         var current = element.offsetParent;
         while (current !== null)
@@ -345,7 +351,7 @@ x.page = {
     */
     getScrollBarWidth: function()
     {
-        // 利用元素的 overflow:scroll; 样式, 显示滚动条  
+        // 利用元素的 overflow:scroll; 样式, 显示滚动条
         // 然后获取 offsetHeight 和 clientHeight 的差值
 
         if(this.scrollBarWidth) return this.scrollBarWidth;
@@ -666,7 +672,7 @@ x.page = {
             tryParseMenu: function(format)
             {
                 var outString = '';
-                // 
+                //
                 // message //.format("{rowCount}条信息")
 
                 outString += '<div class="form-inline text-right">';
@@ -679,7 +685,7 @@ x.page = {
 
                 outString += '<li><a href="' + format.replace('{0}', this.firstPage) + '" aria-label="首页"><span class="glyphicon glyphicon-step-backward"></span></a></li>';
                 outString += '<li><a href="' + format.replace('{0}', this.previousPage) + '" aria-label="上一页"><span class="glyphicon glyphicon-triangle-left"></span></a></li>';
-                outString += this.getPagesNumber(format, this.currentPage, 2)
+                outString += this.getPagesNumber(format, this.currentPage, 2);
                 outString += '<li><a href="' + format.replace('{0}', this.nextPage) + '" aria-label="下一页"><span class="glyphicon glyphicon-triangle-right"></span></a></li> ';
                 outString += '<li><a href="' + format.replace('{0}', this.lastPage) + '" aria-label="末页"><span class="glyphicon glyphicon-step-forward"></span></a></li> ';
 
@@ -732,7 +738,6 @@ x.page = {
                 outString += '<firstPage>' + this.firstPage + '</firstPage>';
                 outString += '<previousPage>' + this.previousPage + '</previousPage>';
                 outString += '<nextPage>' + this.nextPage + '</nextPage>';
-                outString += '<lastPage>' + this.lastPage + '</lastPage>';
                 outString += '<lastPage>' + this.lastPage + '</lastPage>';
                 outString += '</paging>';
                 outString += this.toQueryXml();

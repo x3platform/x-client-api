@@ -2,7 +2,7 @@
 // Name     : x-client-api 
 // Version  : 1.0.0 
 // Author   : ruanyu@live.com
-// Date     : 2015-07-25
+// Date     : 2016-02-02
 (function(global, factory) 
 {
     if (typeof module === "object" && typeof module.exports === "object") 

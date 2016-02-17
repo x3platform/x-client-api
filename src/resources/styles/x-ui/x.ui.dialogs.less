@@ -1,36 +1,24 @@
-// 导入全局定义
-@import "define.less";
-// 对话框默认字体
-@dialogs-font-size: 12px;
-// 
-@dialogs-font-size: 5px;
-// 对话框边框背景颜色
-@dialogs-box-bd-bg: #eee;
-// 对话框边框颜色
-@dialogs-box-bd-border: 1px solid #ccc;
-
-.x-ui-dialogs .box-bd{
-    background: @dialogs-box-bd-bg
+.x-ui-dialogs .box-bd {
+  background: #eeeeee;
 }
-
 .x-ui-dialogs .boxLoading {
-	position: absolute;
-	display: block;
-	width: 90px;
-	height: 30px;
-	line-height: 30px;
-	margin-left: -45px;
-	margin-top: -15px;
-	left: 50%;
-	top: 50%;
-	color: #f00;
+  position: absolute;
+  display: block;
+  width: 90px;
+  height: 30px;
+  line-height: 30px;
+  margin-left: -45px;
+  margin-top: -15px;
+  left: 50%;
+  top: 50%;
+  color: #f00;
 }
-.x-ui-dialogs .boxLoading{
-	width:28px;
-	margin-left: -14px;
-	background:url("images/dialogs_loading.gif") no-repeat;
-	text-indent: -999em;
-	text-align: center;
+.x-ui-dialogs .boxLoading {
+  width: 28px;
+  margin-left: -14px;
+  background: url("images/dialogs_loading.gif") no-repeat;
+  text-indent: -999em;
+  text-align: center;
 }
 .x-ui-dialogs .box-title,
 .x-ui-dialogs .box-title span,
@@ -41,96 +29,100 @@
 .x-ui-dialogs .colseBtn,
 .x-ui-dialogs .boxError em,
 .x-ui-dialogs .dialog-btn,
-.x-ui-dialogs .dialog-btn.hover{
-	background-image: url("images/dialogs.png");
-	background-repeat: no-repeat;
+.x-ui-dialogs .dialog-btn.hover {
+  background-image: url("images/dialogs.png");
+  background-repeat: no-repeat;
 }
 .x-ui-dialogs .box-title {
-	position: relative;
-	border: @dialogs-box-bd-border;
-	border-bottom: none;
-	background-position: 0 0;
-	background-repeat: repeat-x;
-	height: 30px;
-	line-height: 30px;
+  position: relative;
+  border: 1px solid #cccccc;
+  border-bottom: none;
+  background-position: 0 0;
+  background-repeat: repeat-x;
+  height: 30px;
+  line-height: 30px;
 }
 .x-ui-dialogs .box-title h3 {
-	float: left;
-	font-weight: normal;
-	color: #666;
-	font-size: 14px;
-	margin: 0;
-	text-indent: 10px;
+  float: left;
+  font-weight: normal;
+  color: #666;
+  font-size: 14px;
+  margin: 0;
+  text-indent: 10px;
 }
 .x-ui-dialogs .box-title span {
-	position: absolute;
-	width: 10px;
-	background-position: -80px -40px;
-	text-indent: -10em;
-	right: 10px;
-	top: 10px;
-	height: 16px;
-	overflow: hidden;
-	cursor: pointer;
+  position: absolute;
+  width: 10px;
+  background-position: -80px -40px;
+  text-indent: -10em;
+  right: 10px;
+  top: 10px;
+  height: 16px;
+  overflow: hidden;
+  cursor: pointer;
 }
-.x-ui-dialogs .box-title span.hover { background-position: -90px -40px; }
-.x-ui-dialogs .loadinglayer{ line-height: 40px; background-position: 0 -100px!important; }
-.x-ui-dialogs .tipslayer{
-	line-height: 20px;
-	text-align: left;
+.x-ui-dialogs .box-title span.hover {
+  background-position: -90px -40px;
 }
-.x-ui-dialogs .arrowLeft{
-	position: absolute;
-	width: 8px;
-	height: 16px;
-	background-position: -20px -170px;
-	text-indent: -9999em;
-	z-index: 20591;
-	overflow: hidden;
+.x-ui-dialogs .loadinglayer {
+  line-height: 40px;
+  background-position: 0 -100px !important;
+}
+.x-ui-dialogs .tipslayer {
+  line-height: 20px;
+  text-align: left;
+}
+.x-ui-dialogs .arrowLeft {
+  position: absolute;
+  width: 8px;
+  height: 16px;
+  background-position: -20px -170px;
+  text-indent: -9999em;
+  z-index: 20591;
+  overflow: hidden;
 }
 .x-ui-dialogs .colseBtn {
-	position: absolute;
-	top: 5px;
-	right: 5px;
-	width: 8px;
-	height: 8px;
-	background-position: -55px -170px;
-	text-indent: -9999em;
-	cursor: pointer;
-	z-index: 20591;
-	overflow: hidden;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 8px;
+  height: 8px;
+  background-position: -55px -170px;
+  text-indent: -9999em;
+  cursor: pointer;
+  z-index: 20591;
+  overflow: hidden;
 }
-.x-ui-dialogs .boxError{
-	position: absolute;
-	left: 50%;
-	top: 50%;
-	margin-left: -60px;
-	margin-top: -15px;
-	width: 120px;
-	height: 30px;
-	line-height: 30px;
-	color: #f00;
+.x-ui-dialogs .boxError {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-left: -60px;
+  margin-top: -15px;
+  width: 120px;
+  height: 30px;
+  line-height: 30px;
+  color: #f00;
 }
-.x-ui-dialogs .boxError em{
-	float: left;
-	width:30px;
-	height: 30px;
-	background-position: -35px -140px;
+.x-ui-dialogs .boxError em {
+  float: left;
+  width: 30px;
+  height: 30px;
+  background-position: -35px -140px;
 }
-.x-ui-dialogs .dialog-btn{
-	margin: 5px 5px 0 0;
-	width:80px;
-	height:35px;
-	background-position: 0 -30px;
-	border:none;
-	color:#333;
+.x-ui-dialogs .dialog-btn {
+  margin: 5px 5px 0 0;
+  width: 80px;
+  height: 35px;
+  background-position: 0 -30px;
+  border: none;
+  color: #333;
 }
-.x-ui-dialogs .dialog-btn.hover{ background-position: 0 -65px; }
+.x-ui-dialogs .dialog-btn.hover {
+  background-position: 0 -65px;
+}
 .x-ui-dialogs .shadow {
-	box-shadow:2px 2px 5px #C0BBB5;
-	-moz-box-shadow: 2px 2px 5px #C0BBB5;
-	-webkit-box-shadow:2px 2px 5px #C0BBB5;
+  box-shadow: 2px 2px 5px #C0BBB5;
+  -moz-box-shadow: 2px 2px 5px #C0BBB5;
+  -webkit-box-shadow: 2px 2px 5px #C0BBB5;
 }
-
-
-

@@ -3,16 +3,6 @@
   var init = function(destination, source) { for(var property in source) { destination[property] = source[property]; } return destination; };
 
   i18n = init(i18n, {
-    /* 文字 */
-    strings: {
-      btn_search: '搜索',
-      btn_filter: '查询',
-      btn_query: '查询',
-      btn_add: '新增',
-      btn_edit: '编辑',
-      btn_remove: '删除',
-      btn_refresh: '刷新'
-    },
     /* 常用 */
     msg: {
       // Are you sure you want to delete these items.
