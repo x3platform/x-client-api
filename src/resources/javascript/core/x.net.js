@@ -164,7 +164,7 @@ x.net = {
 
                             this.create(this.options.text);
 
-                            this.container= plus.nativeUI.showWaiting(this.options.text);
+                            this.container = plus.nativeUI.showWaiting(this.options.text);
                         },
                         /*#endregion*/
 
@@ -480,26 +480,33 @@ x.net = {
         // 设置 data 值
         var data = x.ext({}, options.data || {});
 
-        var xml = x.toXML(xhrDataValue, 1);
-
-        if(xhrDataValue != '' && xml)
+        if(x.type(xhrDataValue) === 'object')
         {
-            data[options.xhrDataKey] = xhrDataValue;
+            // JSON 格式数据
+            data = x.ext(data, xhrDataValue);
         }
-        else if(!xml && xhrDataValue.indexOf('=') > 0)
+        else
         {
-            // 非Xml字符格式, 普通的POST数据
-            var list = xhrDataValue.split('&');
-
-            x.each(list, function(index, node)
+            var xml = x.toXML(xhrDataValue, 1);
+            if(xhrDataValue != '' && xml)
             {
-                var items = node.split('=');
+                data[options.xhrDataKey] = xhrDataValue;
+            }
+            else if(!xml && xhrDataValue.indexOf('=') > 0)
+            {
+                // 非Xml字符格式, 普通的POST数据
+                var list = xhrDataValue.split('&');
 
-                if(items.length == 2)
+                x.each(list, function(index, node)
                 {
-                    data[items[0]] = decodeURIComponent(items[1]);
-                }
-            });
+                    var items = node.split('=');
+
+                    if(items.length == 2)
+                    {
+                        data[items[0]] = decodeURIComponent(items[1]);
+                    }
+                });
+            }
         }
 
         if(x.isFunction(options.getAccessToken) && options.getAccessToken() != '')
@@ -539,32 +546,40 @@ x.net = {
 
                     var result = x.toJSON(response);
 
-                    var message = result.message;
-
-                    switch(Number(message.returnCode))
+                    if(x.isUndefined(result) || x.isUndefined(result.message))
                     {
-                        case -1:
-                            // -1:异常信息
-                            x.msg(message.value);
-                            break;
-                        case 0:
-                            // 0:正确操作
-                            if(!!options.popCorrectValue)
-                            {
-                                x.msg(message.value);
-                            }
+                        x.call(options.callback, x.toJSON(response));
+                    }
+                    else
+                    {
+                        var message = result.message;
 
-                            x.call(options.callback, x.toJSON(response));
-                            break;
-                        default:
-                            // 其他错误操作
-                            if(!!options.popIncorrectValue)
-                            {
+                        // 支持内置 message 对象的处理
+                        switch(Number(message.returnCode))
+                        {
+                            case -1:
+                                // -1:异常信息
                                 x.msg(message.value);
-                            }
+                                break;
+                            case 0:
+                                // 0:正确操作
+                                if(!!options.popCorrectValue)
+                                {
+                                    x.msg(message.value);
+                                }
 
-                            x.call(options.callback, x.toJSON(response));
-                            break;
+                                x.call(options.callback, x.toJSON(response));
+                                break;
+                            default:
+                                // 其他错误操作
+                                if(!!options.popIncorrectValue)
+                                {
+                                    x.msg(message.value);
+                                }
+
+                                x.call(options.callback, x.toJSON(response));
+                                break;
+                        }
                     }
                 }
                 else
