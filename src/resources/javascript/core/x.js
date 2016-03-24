@@ -1117,7 +1117,7 @@ var x = {
 
         /*#region 函数:preventDefault(event)*/
         /**
-        * 停止事件传播
+        * 取消事件的默认动作
         * @method preventDefault
         * @memberof x.event
         * @param {event} event 事件对象
