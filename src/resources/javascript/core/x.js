@@ -179,7 +179,7 @@ var x = {
         {
         destination[property] = source[property];
         }
-    
+
         return destination;
         */
 
@@ -599,12 +599,12 @@ var x = {
     * @memberof x
     * @param {string} name 名称
     * @example
-    * // 将路径中的[$./\]符号替换为[-]符号
+    * // 将路径中的[$./\:?=]符号替换为[-]符号
     * console.log(x.getFriendlyName(location.pathname));
     */
     getFriendlyName: function(name)
     {
-        return x.camelCase(('x-' + name).replace(/[\#\$\.\/\\]/g, '-').replace(/[-]+/g, '-'));
+        return x.camelCase(('x-' + name).replace(/[\#\$\.\/\\\:\?\=]/g, '-').replace(/[-]+/g, '-'));
     },
     /*#endregion*/
 
