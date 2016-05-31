@@ -1,0 +1,23 @@
+{
+  "name": "x-client-api",
+  "authors": [
+    "ruanyu@x3platform.com"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "keywords": [],
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^2.2.3",
+    "polymer": "Polymer/polymer#1.1.0"
+  }
+}
