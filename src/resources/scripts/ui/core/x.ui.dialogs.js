@@ -12,8 +12,8 @@ x.ui.dialogs = {
         id: '',
         title: '标题',
         content: 'text:内容',
-        width: "280",
-        height: "140",
+        width: '600',
+        height: '480',
         titleClass: "box-title",
         closeID: "",
         triggerID: "",
@@ -64,12 +64,15 @@ x.ui.dialogs = {
             //构造弹出层
             show: function()
             {
+                // 设置边框宽度
+                var borderWidth = 10;
+
                 var $titleHeight = options.showTitle != true ? 1 : 33,
 				$borderHeight = options.showTitle != true ? 0 : 10;
                 $boxDialogHeight = options.button != "" ? 45 : 0;
                 $boxDialogBorder = $boxDialogHeight == "0" ? "0" : "1";
-                var $width = parseInt(options.width) > 1000 ? 1000 : parseInt(options.width),
-				$height = parseInt(options.height) > 550 ? 550 : parseInt(options.height);
+                var $width = parseInt(options.width) > x.page.getViewWidth() ? x.page.getViewWidth() : parseInt(options.width),
+				$height = parseInt(options.height) > x.page.getViewHeight() ? x.page.getViewHeight() : parseInt(options.height);
                 var $boxDom = "<div id=\"" + options.id + "\" class=\"x-ui-dialogs\">";
                 $boxDom += "<div class=\"boxWrap\">";
                 $boxDom += "<div class=\"box-title\"><h3></h3><span class=\"box-close-btn\">关闭</span></div>";
@@ -83,41 +86,88 @@ x.ui.dialogs = {
                 var $box = $("#" + options.id);
                 $box.css({
                     position: "relative",
-                    width: $width + 12 + "px",
+                    width: $width + "px",
                     height: $height + $titleHeight + $borderHeight + $boxDialogHeight + 1 + "px",
                     zIndex: "891208"
                 });
                 var $iframe = $("iframe", $box);
-                $iframe.css({
-                    width: $width + 12 + "px",
-                    height: $height + $titleHeight + $borderHeight + $boxDialogHeight + 1 + "px"
-                });
+                // 隐藏标题框模式
+                if(options.showTitle != true)
+                {
+                    $iframe.css({
+                        width: $width + "px",
+                        height: $height + $borderHeight + $boxDialogHeight - 14 + 1 + "px"
+                    });
+                }
+                else
+                {
+                    $iframe.css({
+                        width: $width + "px",
+                        height: $height + $titleHeight + $borderHeight + $boxDialogHeight + 1 + "px"
+                    });
+                }
+
                 var $boxWrap = $(".boxWrap", $box);
-                $boxWrap.css({
-                    position: "relative",
-                    top: "5px",
-                    margin: "0 auto",
-                    width: $width + "px",
-                    height: $height + $titleHeight + $boxDialogHeight + 1 + "px",
-                    overflow: "hidden",
-                    zIndex: "20590"
-                });
-                
+
+                // 隐藏标题框模式
+                if(options.showTitle != true)
+                {
+                    $boxWrap.css({
+                        position: "relative",
+                        top: "5px",
+                        margin: "0 auto",
+                        width: $width - borderWidth + "px",
+                        height: $height + $titleHeight + $boxDialogHeight + 1 + "px",
+                        overflow: "hidden",
+                        zIndex: "20590"
+                    });
+                }
+                else
+                {
+                    $boxWrap.css({
+                        position: "relative",
+                        top: "5px",
+                        margin: "0 auto",
+                        width: $width - borderWidth + "px",
+                        height: $height + $titleHeight + $boxDialogHeight + 1 + "px",
+                        overflow: "hidden",
+                        zIndex: "20590"
+                    });
+                }
+
                 var $boxContent = $(".boxContent", $box);
-                $boxContent.css({
-                    position: "relative",
-                    width: $width + "px",
-                    height: $height + "px",
-                    padding: "0",
-                    borderWidth: "1px",
-                    borderStyle: "solid",
-                    borderColor: options.boxWrapBdColor,
-                    overflow: "auto",
-                    backgroundColor: "#fff"
-                });
+                // 隐藏标题框模式
+                if(options.showTitle != true)
+                {
+                    $boxContent.css({
+                        position: "relative",
+                        width: $width - borderWidth + "px",
+                        height: $height - 14 + "px",
+                        padding: "0",
+                        borderWidth: "1px",
+                        borderStyle: "solid",
+                        borderColor: options.boxWrapBdColor,
+                        overflow: "auto",
+                        backgroundColor: "#fff"
+                    });
+                }
+                else
+                {
+                    $boxContent.css({
+                        position: "relative",
+                        width: $width - borderWidth + "px",
+                        height: $height + "px",
+                        padding: "0",
+                        borderWidth: "1px",
+                        borderStyle: "solid",
+                        borderColor: options.boxWrapBdColor,
+                        overflow: "auto",
+                        backgroundColor: "#fff"
+                    });
+                }
                 var $boxDialog = $(".box-dialog", $box);
                 $boxDialog.css({
-                    width: $width + "px",
+                    width: $width - borderWidth + "px",
                     height: $boxDialogHeight + "px",
                     borderWidth: $boxDialogBorder + "px",
                     borderStyle: "solid",
@@ -128,7 +178,7 @@ x.ui.dialogs = {
                 var $boxBg = $(".box-bd", $box);
                 $boxBg.css({
                     position: "absolute",
-                    width: $width + 12 + "px",
+                    width: $width + "px",
                     height: $height + $titleHeight + $borderHeight + $boxDialogHeight + 1 + "px",
                     left: "0",
                     top: "0",
@@ -143,7 +193,7 @@ x.ui.dialogs = {
                     width: $width + "px",
                     borderColor: options.boxWrapBdColor
                 });
-                if (options.titleClass != "")
+                if(options.titleClass != "")
                 {
                     $title.parent().addClass(options.titleClass);
                     $title.parent().find("span").hover(function()
@@ -154,12 +204,12 @@ x.ui.dialogs = {
                         $(this).removeClass("hover");
                     });
                 };
-                if (options.showTitle != true) { $(".box-title", $box).remove(); }
-                if (options.showBoxbg != true)
+                if(options.showTitle != true) { $(".box-title", $box).remove(); }
+                if(options.showBoxbg != true)
                 {
                     $(".box-bd", $box).remove();
                     $box.css({
-                        width: $width + 2 + "px",
+                        width: $width - borderWidth + "px",
                         height: $height + $titleHeight + $boxDialogHeight + 1 + "px"
                     });
                     $boxWrap.css({ left: "0", top: "0" });
@@ -170,9 +220,9 @@ x.ui.dialogs = {
                 var $location = options.offsets;
                 var $wrap = $("<div id=\"" + options.id + "parent\"></div>");
                 var est = x.browser.ie6 ? (options.triggerID != "" ? 0 : document.documentElement.scrollTop) : "";
-                if (options.offsets == "" || options.offsets.constructor == String)
+                if(options.offsets == "" || options.offsets.constructor == String)
                 {
-                    switch ($location)
+                    switch($location)
                     {
                         case ("left-top"):      //左上角
                             $location = { left: "0px", top: "0px" + est };
@@ -213,20 +263,20 @@ x.ui.dialogs = {
                 {
                     var str = $location.top;
                     $location.top = $location.top + est;
-                    if (typeof (str) != 'undefined')
+                    if(typeof (str) != 'undefined')
                     {
                         str = str.replace("px", "");
                         TOP = str;
                     };
                 };
 
-                if (options.triggerID != "")
+                if(options.triggerID != "")
                 {
                     var $offset = $("#" + options.triggerID).offset();
                     var triggerID_W = $("#" + options.triggerID).outerWidth(), triggerID_H = $("#" + options.triggerID).outerHeight();
                     var triggerID_Left = $offset.left, triggerID_Top = $offset.top;
                     var vL = $location.left, vT = $location.top;
-                    if (typeof (vL) != 'undefined' || typeof (vT) != 'undefined')
+                    if(typeof (vL) != 'undefined' || typeof (vT) != 'undefined')
                     {
                         vL = parseInt(vL.replace("px", ""));
                         vT = parseInt(vT.replace("px", ""));
@@ -235,11 +285,11 @@ x.ui.dialogs = {
                     var top = vT >= 0 ? parseInt(vT) + triggerID_Top : parseInt(vT) + triggerID_Top - $getPageSize[3];
                     $location = { left: left + "px", top: top + "px" };
                 };
-                if (x.browser.ie6)
+                if(x.browser.ie6)
                 {
-                    if (options.triggerID == "")
+                    if(options.triggerID == "")
                     {
-                        if (TOP >= 0)
+                        if(TOP >= 0)
                         {
                             this.addStyle(".ui_fixed_" + options.id + "{width:100%;height:100%;position:absolute;left:expression(documentElement.scrollLeft+documentElement.clientWidth-this.offsetWidth);top:expression(documentElement.scrollTop+" + TOP + ")}");
                             $wrap = $("<div class=\"" + options.id + "IE6FIXED\" id=\"" + options.id + "parent\"></div>");
@@ -286,7 +336,7 @@ x.ui.dialogs = {
                         height: $height + $titleHeight + $borderHeight + $boxDialogHeight + 1 + "px",
                         zIndex: "891208"
                     });
-                    if (options.triggerID != "") { $wrap.css({ position: "absolute" }) };
+                    if(options.triggerID != "") { $wrap.css({ position: "absolute" }) };
                     $("body").append($wrap);
                     $box.appendTo($wrap);
                 };
@@ -302,7 +352,7 @@ x.ui.dialogs = {
                 $contentType = options.content.substring(0, options.content.indexOf(":"));
                 $content = options.content.substring(options.content.indexOf(":") + 1, options.content.length);
                 $.ajaxSetup({ global: false });
-                switch ($contentType)
+                switch($contentType)
                 {
                     case "text":
                         $contentID.html($content);
@@ -381,7 +431,8 @@ x.ui.dialogs = {
                             },
                             success: function(html)
                             {
-                                $contentID.html("<iframe src=\"" + $content + "\" width=\"100%\" height=\"" + parseInt(options.height) + "px\" scrolling=\"auto\" frameborder=\"0\" marginheight=\"0\" marginwidth=\"0\"></iframe>");
+                                // $contentID.html("<iframe src=\"" + $content + "\" width=\"100%\" height=\"" + parseInt(options.height) + "px\" scrolling=\"auto\" frameborder=\"0\" marginheight=\"0\" marginwidth=\"0\"></iframe>");
+                                $contentID.html("<iframe src=\"" + $content + "\" width=\"100%\" height=\"" + $contentID.height() + "px\" scrolling=\"auto\" frameborder=\"0\" marginheight=\"0\" marginwidth=\"0\"></iframe>");
                             }
                         });
                 };
@@ -392,13 +443,13 @@ x.ui.dialogs = {
             {
                 var $box = $("#" + options.id);
                 $boxDialog = $(".box-dialog", $box);
-                if (options.button != "")
+                if(options.button != "")
                 {
                     var map = {}, answerStrings = [];
 
-                    if (options.button instanceof Array)
+                    if(options.button instanceof Array)
                     {
-                        for (var i = 0; i < options.button.length; i++)
+                        for(var i = 0;i < options.button.length;i++)
                         {
                             map[options.button[i]] = options.button[i];
                             answerStrings.push(options.button[i]);
@@ -406,7 +457,7 @@ x.ui.dialogs = {
                     }
                     else
                     {
-                        for (var k in options.button)
+                        for(var k in options.button)
                         {
                             map[options.button[k]] = k;
                             answerStrings.push(options.button[k]);
@@ -427,7 +478,7 @@ x.ui.dialogs = {
                     }).click(function()
                     {
                         var $this = this;
-                        if (options.callback != "" && $.isFunction(options.callback))
+                        if(options.callback != "" && $.isFunction(options.callback))
                         {
                             //设置回调函数返回值很简单，就是回调函数名后加括号括住的返回值就可以了。
                             options.callback(map[$this.value]);
@@ -456,7 +507,7 @@ x.ui.dialogs = {
 
                 x.event.add(target, 'click', function()
                 {
-                    for (var i = 0; i < x.ui.dialogs.list.length; i++)
+                    for(var i = 0;i < x.ui.dialogs.list.length;i++)
                     {
                         x.ui.dialogs.list[i].style.zIndex = 870618;
                     };
@@ -469,7 +520,7 @@ x.ui.dialogs = {
             addStyle: function(s)
             {
                 var T = this.style;
-                if (!T)
+                if(!T)
                 {
                     T = this.style = document.createElement('style');
                     T.setAttribute('type', 'text/css');
@@ -487,7 +538,7 @@ x.ui.dialogs = {
                 $Handle = $("." + options.drag, $ID);
                 $Handle.mouseover(function()
                 {
-                    if (options.triggerID != "")
+                    if(options.triggerID != "")
                     {
                         $(this).css("cursor", "default");
                     } else
@@ -498,9 +549,9 @@ x.ui.dialogs = {
                 $Handle.mousedown(function(e)
                 {
                     drag = options.triggerID != "" ? false : true;
-                    if (options.dragBoxOpacity)
+                    if(options.dragBoxOpacity)
                     {
-                        if (options.boxBdOpacity != "1")
+                        if(options.boxBdOpacity != "1")
                         {
                             $ID.children("div").css("opacity", options.dragBoxOpacity);
                             $ID.children("div.box-bd").css("opacity", options.box - bdOpacity);
@@ -515,7 +566,7 @@ x.ui.dialogs = {
                     $moveY = e.clientY - ID.offsetTop;
                     $(document).mousemove(function(e)
                     {
-                        if (drag)
+                        if(drag)
                         {
                             e = window.event ? window.event : e;
                             window.getSelection ? window.getSelection().removeAllRanges() : document.selection.empty();
@@ -530,9 +581,9 @@ x.ui.dialogs = {
                     $(document).mouseup(function()
                     {
                         drag = false;
-                        if (options.dragBoxOpacity)
+                        if(options.dragBoxOpacity)
                         {
-                            if (options.boxBdOpacity != "1")
+                            if(options.boxBdOpacity != "1")
                             {
                                 $ID.children("div").css("opacity", "1");
                                 $ID.children("div.box-bd").css("opacity", options.box - bdOpacity);
@@ -549,12 +600,12 @@ x.ui.dialogs = {
             {
                 var $box = $("#" + this.id);
                 var $boxbg = $("#x-ui-dialogs-window-bg");
-                if ($box != null || $boxbg != null)
+                if($box != null || $boxbg != null)
                 {
                     var $contentID = $(".boxContent", $box);
                     $contentType = this.content.substring(0, this.content.indexOf(":"));
                     $content = this.content.substring(this.content.indexOf(":") + 1, this.content.length);
-                    if ($contentType == "id")
+                    if($contentType == "id")
                     {
                         $contentID.children().appendTo($("#" + $content));
                         $box.parent().removeAttr("style").remove();
@@ -576,7 +627,7 @@ x.ui.dialogs = {
                 document.onkeydown = function(e)
                 {
                     e = e || event;
-                    if (e.keyCode == 27)
+                    if(e.keyCode == 27)
                     {
                         this.remove();
                     };
@@ -594,7 +645,7 @@ x.ui.dialogs = {
                 // 初始化选项信息
                 this.options = options;
 
-                if (this.options.id == '')
+                if(this.options.id == '')
                 {
                     this.id = this.options.id = x.randomText.create(10);
                 }
@@ -607,7 +658,7 @@ x.ui.dialogs = {
 
                 // BOXID = options;
 
-                if (x.query("#" + this.id) != null)
+                if(x.query("#" + this.id) != null)
                 {
                     x.msg("创建弹出层失败！窗口“" + options.id + "”已存在！");
                     return false;
@@ -629,7 +680,7 @@ x.ui.dialogs = {
 
                 x.css.style(this.box, { zIndex: "870618" });
 
-                if (options.closeID != "")
+                if(options.closeID != "")
                 {
                     x.dom.on(x.query("#" + options.closeID, this.box), "click", function()
                     {
@@ -637,28 +688,28 @@ x.ui.dialogs = {
                     });
                 };
 
-                if (options.time != "")
+                if(options.time != "")
                 {
                     setTimeout(function() { me.remove(); }, options.time);
                 };
 
-                if (options.showbg != "" && options.showbg == true)
+                if(options.showbg != "" && options.showbg == true)
                 {
-                    x.dom.append(document.body, '<div id="x-ui-dialogs-window-bg" style="position:absolute;background:' + options.windowBgColor + ';filter:alpha(opacity='+ options.windowBgOpacity +');opacity:'+ options.windowBgOpacity +';width:100%;left:0;top:0;z-index:870618"><iframe src="about:blank" style="width=100%;height:' + $(document).height() + 'px;filter:alpha(opacity=0);opacity:0;scrolling=no;z-index:870610"></iframe></div>');
+                    x.dom.append(document.body, '<div id="x-ui-dialogs-window-bg" style="position:absolute;background:' + options.windowBgColor + ';filter:alpha(opacity=' + options.windowBgOpacity + ');opacity:' + options.windowBgOpacity + ';width:100%;left:0;top:0;z-index:870618"><iframe src="about:blank" style="width=100%;height:' + $(document).height() + 'px;filter:alpha(opacity=0);opacity:0;scrolling=no;z-index:870610"></iframe></div>');
 
                     // var $boxBgDom = "<div id=\"x-ui-dialogs-window-bg\" style=\"position:absolute;background:" + options.windowBgColor + ";filter:alpha(opacity=0);opacity:0;width:100%;left:0;top:0;z-index:870618\"><iframe src=\"about:blank\" style=\"width=100%;height:" + $(document).height() + "px;filter:alpha(opacity=0);opacity:0;scrolling=no;z-index:870610\"></iframe></div>";
                     // $($boxBgDom).appendTo("body").animate({ opacity: options.windowBgOpacity }, 200);
                 };
-                if (options.drag != "")
+                if(options.drag != "")
                 {
                     this.drag();
                 };
-                if (options.fns != "" && $.isFunction(options.fns))
+                if(options.fns != "" && $.isFunction(options.fns))
                 {
                     options.fns.call(this);
                 };
 
-                if (options.button != "")
+                if(options.button != "")
                 {
                     this.ask();
                 };
@@ -667,7 +718,7 @@ x.ui.dialogs = {
 
                 this.setZIndex();
 
-                if (options.showbg != true)
+                if(options.showbg != true)
                 {
                     // $("#" + options.id).addClass("shadow");
                     x.css.add(this.container, 'shadow');

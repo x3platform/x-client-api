@@ -16,49 +16,49 @@ x.net = {
         // 异步请求的数据键值
         xhrDataKey: 'xhr-xml',
         // 获取访问令牌信息
-        getAccessToken: function()
+        getAccessToken: function ()
         {
             return localStorage['session-access-token'] || (x.dom('#session-access-token').size() == 0 ? null : x.dom('#session-access-token').val()) || '';
         },
         // 获取客户端标识信息
-        getClientId: function()
+        getClientId: function ()
         {
             return localStorage['session-client-id'] || (x.dom('#session-client-id').size() == 0 ? null : x.dom('#session-client-id').val()) || '';
         },
         // 获取客户端签名信息
-        getClientSignature: function()
+        getClientSignature: function ()
         {
             return localStorage['session-client-signature'] || (x.dom('#session-client-signature').size() == 0 ? null : x.dom('#session-client-signature').val()) || '';
         },
         // 获取时间信息
-        getTimestamp: function()
+        getTimestamp: function ()
         {
             return localStorage['session-timestamp'] || (x.dom('#session-timestamp').size() == 0 ? null : x.dom('#session-timestamp').val()) || '';
         },
         // 获取随机数信息
-        getNonce: function()
+        getNonce: function ()
         {
             return localStorage['session-nonce'] || (x.dom('#session-nonce').size() == 0 ? null : x.dom('#session-nonce').val()) || '';
         },
         // 获取等待窗口
-        getWaitingWindow: function(options)
+        getWaitingWindow: function (options)
         {
             // 设置默认选项参数
             options = x.ext({
-                type: 'default',                        // 窗口类型
+                type: 'default',                                    // 窗口类型
                 text: i18n.net.waiting.commitTipText    // 提示信息
             }, options || {});
 
-            if(x.isUndefined(options.name))
+            if (x.isUndefined(options.name))
             {
                 options.name = x.getFriendlyName(location.pathname + '$' + options.type + '$waiting$window');
             }
 
             var name = options.name;
 
-            if(x.isUndefined(window[name]))
+            if (x.isUndefined(window[name]))
             {
-                if(options.type == 'mini')
+                if (options.type == 'mini')
                 {
                     window[name] = {
                         // 名称
@@ -71,9 +71,9 @@ x.net = {
                         message: null,
 
                         /*#region 函数:create(text)*/
-                        create: function(text)
+                        create: function (text)
                         {
-                            if(document.getElementById(this.name + '-text') == null)
+                            if (document.getElementById(this.name + '-text') == null)
                             {
                                 $(document.body).append('<div id="' + this.name + '-container" class="x-ui-dialog-waiting-mini-window-container" ><div id="' + this.name + '-text" class="x-ui-dialog-waiting-mini-window-text" >' + text + '</div></div>');
                             }
@@ -82,7 +82,7 @@ x.net = {
                                 x.query('[id="' + this.name + '-text"]').innerHTML = text;
                             }
 
-                            if(this.container === null)
+                            if (this.container === null)
                             {
                                 this.container = document.getElementById(this.name + '-container');
                             }
@@ -93,9 +93,9 @@ x.net = {
                         /*
                         * 显示
                         */
-                        show: function()
+                        show: function ()
                         {
-                            if(!x.isUndefined(arguments[0]))
+                            if (!x.isUndefined(arguments[0]))
                             {
                                 this.options.text = arguments[0];
                             }
@@ -116,9 +116,9 @@ x.net = {
                         /*
                         * 隐藏
                         */
-                        hide: function()
+                        hide: function ()
                         {
-                            if(this.container != null)
+                            if (this.container != null)
                             {
                                 x.css.style(this.container, { display: 'none' });
 
@@ -133,7 +133,7 @@ x.net = {
                         /*#endregion*/
                     };
                 }
-                else if(options.type == 'plus')
+                else if (options.type == 'plus')
                 {
                     // html5plus 默认等待框
                     window[name] = {
@@ -145,7 +145,7 @@ x.net = {
                         container: null,
 
                         /*#region 函数:create(text)*/
-                        create: function(text)
+                        create: function (text)
                         {
                             this.options.text = text;
                         },
@@ -155,9 +155,9 @@ x.net = {
                         /*
                         * 显示
                         */
-                        show: function()
+                        show: function ()
                         {
-                            if(!x.isUndefined(arguments[0]))
+                            if (!x.isUndefined(arguments[0]))
                             {
                                 this.options.text = arguments[0];
                             }
@@ -172,9 +172,9 @@ x.net = {
                         /*
                         * 隐藏
                         */
-                        hide: function()
+                        hide: function ()
                         {
-                            if(this.container != null)
+                            if (this.container != null)
                             {
                                 this.container.close();
                             }
@@ -215,7 +215,7 @@ x.net = {
                         width: options.width ? options.width : 200,
 
                         /*#region 函数:setPosition()*/
-                        setPosition: function()
+                        setPosition: function ()
                         {
                             // 弹出窗口的位置
                             var range = x.page.getRange();
@@ -228,11 +228,11 @@ x.net = {
                         /*#endregion*/
 
                         /*#region 函数:createMaskWrapper()*/
-                        createMaskWrapper: function()
+                        createMaskWrapper: function ()
                         {
                             var wrapper = document.getElementById(this.name + '-maskWrapper');
 
-                            if(wrapper === null)
+                            if (wrapper === null)
                             {
                                 $(document.body).append('<div id="' + this.name + '-maskWrapper" style="display:none;" ></div>');
 
@@ -244,10 +244,10 @@ x.net = {
                             wrapper.style.height = x.page.getRange().height + 'px';
                             wrapper.style.width = x.page.getRange().width + 'px';
 
-                            if(wrapper.style.display === 'none')
+                            if (wrapper.style.display === 'none')
                             {
                                 $('#' + this.name + '-maskWrapper').css({ display: '', opacity: 0.1 });
-                                $('#' + this.name + '-maskWrapper').fadeTo((this.maxDuration * 1000), this.maxOpacity, function()
+                                $('#' + this.name + '-maskWrapper').fadeTo((this.maxDuration * 1000), this.maxOpacity, function ()
                                 {
                                     // var mask = window[this.id];
 
@@ -258,9 +258,9 @@ x.net = {
                         /*#endregion*/
 
                         /*#region 函数:create(text)*/
-                        create: function(text)
+                        create: function (text)
                         {
-                            if(document.getElementById(this.name + '-text') == null)
+                            if (document.getElementById(this.name + '-text') == null)
                             {
                                 $(document.body).append('<div id="' + this.name + '-container" class="x-ui-dialog-waiting-window-container" ><div id="' + this.name + '-text" class="x-ui-dialog-waiting-window-text" >' + text + '</div></div>');
 
@@ -271,7 +271,7 @@ x.net = {
                                 document.getElementById(this.name + '-text').innerHTML = text;
                             }
 
-                            if(this.container === null)
+                            if (this.container === null)
                             {
                                 this.container = document.getElementById(this.name + '-container');
                                 this.maskWrapper = document.getElementById(this.name + '-maskWrapper');
@@ -283,7 +283,7 @@ x.net = {
                         /*
                         * 显示
                         */
-                        show: function(text)
+                        show: function (text)
                         {
                             this.lock++;
 
@@ -291,16 +291,16 @@ x.net = {
 
                             //var timer = x.newTimer(this.lazy, function(timer)
                             //{
-                            if(that.lock > 0)
+                            if (that.lock > 0)
                             {
                                 // x.debug.log('x.net.waitingWindow.lock:【' + that.lock + '】');
 
-                                if(that.maskWrapper === null)
+                                if (that.maskWrapper === null)
                                 {
                                     that.maskWrapper = x.ui.mask.newMaskWrapper(that.name + '-maskWrapper');
                                 }
 
-                                if(typeof (text) !== 'undefined')
+                                if (typeof (text) !== 'undefined')
                                 {
                                     that.options.text = text;
                                 }
@@ -332,20 +332,20 @@ x.net = {
                         /*
                         * 隐藏
                         */
-                        hide: function()
+                        hide: function ()
                         {
                             this.lock--;
 
                             // x.debug.log('x.net.waitingWindow.lock:【' + this.lock + '】');
 
-                            if(this.lock === 0)
+                            if (this.lock === 0)
                             {
-                                if(this.container != null)
+                                if (this.container != null)
                                 {
                                     this.container.style.display = 'none';
                                 }
 
-                                if(this.maskWrapper != null && x.dom('#' + this.name + '-maskWrapper').css('display') !== 'none')
+                                if (this.maskWrapper != null && x.dom('#' + this.name + '-maskWrapper').css('display') !== 'none')
                                 {
                                     var that = this;
 
@@ -373,15 +373,15 @@ x.net = {
         /*#endregion*/
 
         // 捕获异常
-        catchException: function(response, outputType)
+        catchException: function (response, outputType)
         {
             try
             {
                 var result = x.toJSON(response);
 
-                if(!x.isUndefined(result) && !x.isUndefined(result.success) && result.success == 0)
+                if (!x.isUndefined(result) && !x.isUndefined(result.success) && result.success == 0)
                 {
-                    if(outputType == 'console')
+                    if (outputType == 'console')
                     {
                         x.debug.error(result.msg);
                     }
@@ -391,11 +391,17 @@ x.net = {
                     }
                 }
             }
-            catch(ex)
+            catch (ex)
             {
                 x.debug.error(ex);
             }
         }
+    },
+    /*#endregion*/
+
+    getWaitingWindow: function (options)
+    {
+        return x.net.defaults.getWaitingWindow(options);
     },
     /*#endregion*/
 
@@ -417,7 +423,7 @@ x.net = {
     * </tbody>
     * </table>
     */
-    xhr: function()
+    xhr: function ()
     {
         // -------------------------------------------------------
         // 可选择参数
@@ -429,7 +435,7 @@ x.net = {
 
         var url, xhrDataValue, options;
 
-        if(arguments.length == 2 && x.type(arguments[1]) === 'object')
+        if (arguments.length == 2 && x.type(arguments[1]) === 'object')
         {
             // 支持没有Xml数据，只有地址和回调函数的调用。
 
@@ -437,7 +443,7 @@ x.net = {
             options = arguments[1];
             xhrDataValue = '';
         }
-        else if(arguments.length == 2 && x.type(arguments[1]) === 'string')
+        else if (arguments.length == 2 && x.type(arguments[1]) === 'string')
         {
             // 支持没有回调函数，只有地址和Xml数据的调用。
 
@@ -445,7 +451,7 @@ x.net = {
             options = {};
             xhrDataValue = arguments[1];
         }
-        else if(arguments.length == 3 && x.type(arguments[1]) === 'string' && x.isFunction(arguments[2]))
+        else if (arguments.length == 3 && x.type(arguments[1]) === 'string' && x.isFunction(arguments[2]))
         {
             // 支持没有回调函数，只有地址和Xml数据的调用。
 
@@ -467,7 +473,7 @@ x.net = {
                                     && !x.isUndefined(options.waitingMessage)
                                     && options.waitingMessage !== '';
 
-        if(enableWaitingWindow)
+        if (enableWaitingWindow)
         {
             // 开启等待窗口
             options.getWaitingWindow({ text: options.waitingMessage, type: x.isUndefined(options.waitingType, 'default') }).show();
@@ -475,12 +481,14 @@ x.net = {
 
         var type = x.isUndefined(options.type, 'POST');
 
+        var contentType = x.isUndefined(options.contentType, 'text/html');
+
         var async = x.isUndefined(options.async, true);
 
         // 设置 data 值
         var data = x.ext({}, options.data || {});
 
-        if(x.type(xhrDataValue) === 'object')
+        if (x.type(xhrDataValue) === 'object')
         {
             // JSON 格式数据
             data = x.ext(data, xhrDataValue);
@@ -488,20 +496,20 @@ x.net = {
         else
         {
             var xml = x.toXML(xhrDataValue, 1);
-            if(xhrDataValue != '' && xml)
+            if (xhrDataValue != '' && xml)
             {
                 data[options.xhrDataKey] = xhrDataValue;
             }
-            else if(!xml && xhrDataValue.indexOf('=') > 0)
+            else if (!xml && xhrDataValue.indexOf('=') > 0)
             {
                 // 非Xml字符格式, 普通的POST数据
                 var list = xhrDataValue.split('&');
 
-                x.each(list, function(index, node)
+                x.each(list, function (index, node)
                 {
                     var items = node.split('=');
 
-                    if(items.length == 2)
+                    if (items.length == 2)
                     {
                         data[items[0]] = decodeURIComponent(items[1]);
                     }
@@ -509,15 +517,15 @@ x.net = {
             }
         }
 
-        if(x.isFunction(options.getAccessToken) && options.getAccessToken() != '')
+        if (x.isFunction(options.getAccessToken) && options.getAccessToken() != '')
         {
             data.accessToken = options.getAccessToken();
         }
-        else if(x.isFunction(options.getClientId) && options.getClientId() != '')
+        else if (x.isFunction(options.getClientId) && options.getClientId() != '')
         {
             data.clientId = options.getClientId();
 
-            if(x.isFunction(options.getClientId) && options.getClientSignature() != '')
+            if (x.isFunction(options.getClientId) && options.getClientSignature() != '')
             {
                 data.clientSignature = options.getClientSignature();
                 data.timestamp = options.getTimestamp();
@@ -529,24 +537,25 @@ x.net = {
         x.net.ajax({
             type: type,
             url: url,
+            contentType: contentType,
             data: data,
             async: async,
-            success: function(response)
+            success: function (response)
             {
-                if(enableWaitingWindow)
+                if (enableWaitingWindow)
                 {
                     // 关闭等待窗口
                     options.getWaitingWindow({ type: x.isUndefined(options.waitingType, 'default') }).hide();
                 }
 
-                if(options.returnType == 'json')
+                if (options.returnType == 'json')
                 {
                     // 捕获处理异常
                     options.catchException(response, options.outputException);
 
                     var result = x.toJSON(response);
 
-                    if(x.isUndefined(result) || x.isUndefined(result.message))
+                    if (x.isUndefined(result) || x.isUndefined(result.message))
                     {
                         x.call(options.callback, x.toJSON(response));
                     }
@@ -555,7 +564,7 @@ x.net = {
                         var message = result.message;
 
                         // 支持内置 message 对象的处理
-                        switch(Number(message.returnCode))
+                        switch (Number(message.returnCode))
                         {
                             case -1:
                                 // -1:异常信息
@@ -563,7 +572,7 @@ x.net = {
                                 break;
                             case 0:
                                 // 0:正确操作
-                                if(!!options.popCorrectValue)
+                                if (!!options.popCorrectValue)
                                 {
                                     x.msg(message.value);
                                 }
@@ -572,7 +581,7 @@ x.net = {
                                 break;
                             default:
                                 // 其他错误操作
-                                if(!!options.popIncorrectValue)
+                                if (!!options.popIncorrectValue)
                                 {
                                     x.msg(message.value);
                                 }
@@ -587,29 +596,29 @@ x.net = {
                     x.call(options.callback, response);
                 }
             },
-            error: function(XMLHttpRequest, textStatus, errorThrown)
+            error: function (XMLHttpRequest, textStatus, errorThrown)
             {
                 x.debug.log(XMLHttpRequest.responseText);
 
-                if(x.isFunction(options.error))
+                if (x.isFunction(options.error))
                 {
                     options.error(XMLHttpRequest, textStatus, errorThrown);
                 }
                 else
                 {
-                    if(XMLHttpRequest.status == 401)
+                    if (XMLHttpRequest.status == 401)
                     {
                         x.msg(i18n.net.errors['401']);
                     }
-                    else if(XMLHttpRequest.status == 404)
+                    else if (XMLHttpRequest.status == 404)
                     {
                         x.msg(i18n.net.errors['404']);
                     }
-                    else if(XMLHttpRequest.status == 500)
+                    else if (XMLHttpRequest.status == 500)
                     {
                         x.msg(i18n.net.errors['500']);
                     }
-                    else if(XMLHttpRequest.status != 0)
+                    else if (XMLHttpRequest.status != 0)
                     {
                         x.debug.error(i18n.net.errors['unkown'].format(XMLHttpRequest.status + (XMLHttpRequest.statusText != '' ? (' ' + XMLHttpRequest.statusText) : '')));
                     }
@@ -625,7 +634,7 @@ x.net = {
     /**
     * 通过Ajax方式加载样式和脚本
     */
-    require: function(options)
+    require: function (options)
     {
         options = x.ext({
             fileType: 'script',
@@ -635,7 +644,7 @@ x.net = {
             async: true
         }, options || {});
 
-        if(options.id != '' && x.net.requireLoaded[options.id])
+        if (options.id != '' && x.net.requireLoaded[options.id])
         {
             x.debug.log('require file {"id":"{0}", path:"{1}"} exist. [ajax]'.format(options.id, options.path));
 
@@ -651,19 +660,19 @@ x.net = {
             type: options.type,
             url: options.path,
             async: options.async,
-            success: function(responseText)
+            success: function (responseText)
             {
                 x.debug.log('require file {"id":"{0}", path:"{1}"} finished. [ajax]'.format(options.id, options.path));
 
                 var head = document.getElementsByTagName("HEAD").item(0);
 
-                if(options.fileType == 'template')
+                if (options.fileType == 'template')
                 {
                     var node = document.createElement("script");
                     node.type = "text/template";
                     node.src = options.path;
                 }
-                else if(options.fileType == 'css')
+                else if (options.fileType == 'css')
                 {
                     var node = document.createElement("style");
                     node.type = "text/css";
@@ -683,12 +692,12 @@ x.net = {
                     // IE8以及以下不支持这种方式，需要通过text属性来设置
                     node.appendChild(document.createTextNode(responseText));
                 }
-                catch(ex)
+                catch (ex)
                 {
                     node.text = responseText;
                 }
 
-                if(options.id != '')
+                if (options.id != '')
                 {
                     node.id = options.id;
                     x.net.requireLoaded[options.id] = true;
@@ -701,7 +710,7 @@ x.net = {
         });
     },
 
-    ajax: function(options)
+    ajax: function (options)
     {
         var request = x.net.newHttpRequest(options);
 
@@ -709,7 +718,7 @@ x.net = {
     },
     /*#endregion*/
 
-    newHttpRequest: function(options)
+    newHttpRequest: function (options)
     {
         var request = {
             xhr: null,
@@ -721,13 +730,13 @@ x.net = {
             done: false,
 
             // 发送
-            send: function()
+            send: function ()
             {
-                if(this.xhr == null)
+                if (this.xhr == null)
                 {
                     this.xhr = x.net.newXmlHttpRequest();
 
-                    if(!this.xhr)
+                    if (!this.xhr)
                     {
                         x.debug.error('create xhr failed'); return false;
                     }
@@ -737,7 +746,7 @@ x.net = {
 
                 var me = this;
 
-                x.event.add(this.xhr, "readystatechange", function()
+                x.event.add(this.xhr, "readystatechange", function ()
                 {
                     var xhr = me.xhr;
 
@@ -745,10 +754,10 @@ x.net = {
                     // x.debug.log('{0} readyState:{1} status:{2} done:{3}'.format(x.debug.timestamp(), xhr.readyState, xhr.status, me.done));
 
                     // 保持等待，直到数据完全加载，并保证请求未超时
-                    if(xhr.readyState == 4 && !me.done)
+                    if (xhr.readyState == 4 && !me.done)
                     {
                         // 0 为访问的本地，200 到 300 代表访问服务器成功，304 代表没做修改访问的是缓存
-                        if(xhr.status == 0 || (xhr.status >= 200 && xhr.status < 300) || xhr.status == 304)
+                        if (xhr.status == 0 || (xhr.status >= 200 && xhr.status < 300) || xhr.status == 304)
                         {
                             // 成功则调用回调函数，并传入xhr对象
                             x.call(me.success, xhr.responseText);
@@ -765,9 +774,9 @@ x.net = {
                 });
 
                 // 如果请求超过 timeout 设置的时间没有响应, 则取消请求（如果尚未完成的话）
-                setTimeout(function() { me.done = true; }, me.timeout * 1000);
+                setTimeout(function () { me.done = true; }, me.timeout * 1000);
 
-                if(this.type == 'POST')
+                if (this.type == 'POST')
                 {
                     this.xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
                     this.xhr.send(x.serialize(this.data));
@@ -779,7 +788,7 @@ x.net = {
                 }
             },
 
-            create: function(options)
+            create: function (options)
             {
                 options = x.ext({
                     type: 'GET',
@@ -811,24 +820,24 @@ x.net = {
     * 创建 XMLHttpRequest 对象
     * @private
     */
-    newXmlHttpRequest: function()
+    newXmlHttpRequest: function ()
     {
         var xhr = null;
 
-        if(window.ActiveXObject) // IE
+        if (window.ActiveXObject) // IE
         {
             try
             {
                 // IE6 以及以后版本中可以使用
                 xhr = new ActiveXObject("Msxml2.XMLHTTP");
             }
-            catch(ex)
+            catch (ex)
             {
                 //IE5.5 以及以后版本可以使用
                 xhr = new ActiveXObject("Microsoft.XMLHTTP");
             }
         }
-        else if(window.XMLHttpRequest)
+        else if (window.XMLHttpRequest)
         {
             //Firefox，Opera 8.0+，Safari，Chrome
             xhr = new XMLHttpRequest();
@@ -853,14 +862,14 @@ x.net = {
         * @param {string} 参数的键
         * @returns {string} 参数的值
         */
-        find: function(key)
+        find: function (key)
         {
             var resultValue = '';
             var list = location.search.substr(1).split('&');
 
-            for(var i = 0;i < list.length;i++)
+            for (var i = 0; i < list.length; i++)
             {
-                if(list[i].indexOf(key) === 0)
+                if (list[i].indexOf(key) === 0)
                 {
                     resultValue = decodeURIComponent(list[i].replace(key + '=', ''));
                     break;
@@ -879,7 +888,7 @@ x.net = {
         * @memberof x.net.request
         * @returns {object} JSON格式的对象
         */
-        findAll: function()
+        findAll: function ()
         {
             var outString = '';
 
@@ -889,15 +898,15 @@ x.net = {
 
             outString = '{';
 
-            if(list === '') { return; }
+            if (list === '') { return; }
 
-            for(var i = 0;i < list.length;i++)
+            for (var i = 0; i < list.length; i++)
             {
                 temp = list[i].split('=');
 
                 outString += '"' + temp[0] + '":"' + decodeURIComponent(temp[1]) + '"';
 
-                if(i < list.length - 1)
+                if (i < list.length - 1)
                     outString += ',';
             }
 
@@ -911,7 +920,7 @@ x.net = {
         /**
         * 获取附加了查询字符串的 URL 路径
         */
-        getRawUrl: function()
+        getRawUrl: function ()
         {
             return location.href.replace(location.origin, '');
         },
@@ -921,7 +930,7 @@ x.net = {
         /*
         * 判断锚点
         */
-        hash: function(key)
+        hash: function (key)
         {
             return location.hash === ('#' + key) ? true : false;
         }
@@ -934,11 +943,11 @@ x.net = {
 * 网络请求的默认回调函数
 * @private
 */
-x.net.request_callback = function(response)
+x.net.request_callback = function (response)
 {
     var result = x.toJSON(response).message;
 
-    switch(Number(result.returnCode))
+    switch (Number(result.returnCode))
     {
         case 0:
             // 0:正确操作

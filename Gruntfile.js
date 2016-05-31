@@ -31,7 +31,7 @@ module.exports = function(grunt)
         node: false
       },
       // files to lint
-      all: ['src/resources/javascript/core/x.js']
+      all: ['src/resources/scripts/core/x.js']
     },
 
     // 合并文件
@@ -47,51 +47,51 @@ module.exports = function(grunt)
         {
           // 基本功能
           'dist/<%= pkg.version %>/<%= pkg.name %>-core.zh-cn.js': [
-            'src/resources/javascript/native.js',
-            'src/resources/javascript/sizzle.js',
-            'src/resources/javascript/i18n/zh-cn/x-client-core.js', // 多语言支持
-            'src/resources/javascript/core/x.js', // 核心工具包
-            'src/resources/javascript/core/x.debug.js',
-            'src/resources/javascript/core/x.encoding.js',
-            'src/resources/javascript/core/x.cookies.js',
-            'src/resources/javascript/core/x.css.js',
-            'src/resources/javascript/core/x.date.js',
-            'src/resources/javascript/core/x.expressions.js',
-            'src/resources/javascript/core/x.dom.js',
-            'src/resources/javascript/core/x.dom.data.js',
-            'src/resources/javascript/core/x.dom.fn.js',
-            // 'src/resources/javascript/dom/util/x.dom.util.select.js',
-            'src/resources/javascript/core/x.net.js',
-            'src/resources/javascript/core/x.page.js',
-            'src/resources/javascript/core/x.util.js'
+            'src/resources/scripts/native.js',
+            'src/resources/scripts/sizzle.js',
+            // 'src/resources/scripts/i18n/zh-cn/x-client-core.js', // 多语言支持
+            'src/resources/scripts/core/x.js', // 核心工具包
+            'src/resources/scripts/core/x.debug.js',
+            'src/resources/scripts/core/x.encoding.js',
+            'src/resources/scripts/core/x.cookies.js',
+            'src/resources/scripts/core/x.css.js',
+            'src/resources/scripts/core/x.date.js',
+            'src/resources/scripts/core/x.expressions.js',
+            'src/resources/scripts/core/x.dom.js',
+            'src/resources/scripts/core/x.dom.data.js',
+            'src/resources/scripts/core/x.dom.fn.js',
+            // 'src/resources/scripts/dom/util/x.dom.util.select.js',
+            'src/resources/scripts/core/x.net.js',
+            'src/resources/scripts/core/x.page.js',
+            'src/resources/scripts/core/x.util.js'
           ],
           // Template
           'dist/<%= pkg.version %>/<%= pkg.name %>-template.zh-cn.js': [
-            'src/resources/javascript/template/x.template.js',
-            'src/resources/javascript/template/x.template.xml.js',
-            'src/resources/javascript/template/x.template.compile.js',
-            'src/resources/javascript/template/x.template.syntax.js'
+            'src/resources/scripts/template/x.template.js',
+            'src/resources/scripts/template/x.template.xml.js',
+            'src/resources/scripts/template/x.template.compile.js',
+            'src/resources/scripts/template/x.template.syntax.js'
           ],
           // UI
           'dist/<%= pkg.version %>/<%= pkg.name %>-ui-core.zh-cn.js': [
-            'src/resources/javascript/ui/core/x.ui.animation.js',
-            'src/resources/javascript/ui/core/x.ui.drag.js',
-            'src/resources/javascript/ui/core/x.ui.form.js',
-            'src/resources/javascript/ui/core/x.ui.mask.js',
-            'src/resources/javascript/ui/core/x.ui.tooltip.js',
-            'src/resources/javascript/ui/core/x.ui.windows.js',
-            'src/resources/javascript/ui/core/x.ui.wizards.js',
-            'src/resources/javascript/ui/core/x.ui.dialogs.js',
-            'src/resources/javascript/ui/core/x.ui.util.js'
+            'src/resources/scripts/ui/core/x.ui.animation.js',
+            'src/resources/scripts/ui/core/x.ui.drag.js',
+            'src/resources/scripts/ui/core/x.ui.form.js',
+            'src/resources/scripts/ui/core/x.ui.mask.js',
+            'src/resources/scripts/ui/core/x.ui.tooltip.js',
+            'src/resources/scripts/ui/core/x.ui.windows.js',
+            'src/resources/scripts/ui/core/x.ui.wizards.js',
+            'src/resources/scripts/ui/core/x.ui.dialogs.js',
+            'src/resources/scripts/ui/core/x.ui.util.js'
           ],
           // Workflow
           'dist/<%= pkg.version %>/<%= pkg.name %>-workflow.zh-cn.js': [
-            'src/resources/javascript/workflow/x.workflow.js',
-            'src/resources/javascript/workflow/x.workflow.template.js',
-            'src/resources/javascript/workflow/x.workflow.instance.js',
-            'src/resources/javascript/workflow/x.workflow.node.js',
-            'src/resources/javascript/workflow/x.workflow.historyNode.js',
-            'src/resources/javascript/workflow/x.workflow.switcherExit.js'
+            'src/resources/scripts/workflow/x.workflow.js',
+            'src/resources/scripts/workflow/x.workflow.template.js',
+            'src/resources/scripts/workflow/x.workflow.instance.js',
+            'src/resources/scripts/workflow/x.workflow.node.js',
+            'src/resources/scripts/workflow/x.workflow.historyNode.js',
+            'src/resources/scripts/workflow/x.workflow.switcherExit.js'
           ]
         }
       }
@@ -175,19 +175,19 @@ module.exports = function(grunt)
         files: [
         {
           src: 'dist/<%= pkg.version %>/<%= pkg.name %>-core.zh-cn.js',
-          dest: 'src/resources/javascript/<%= pkg.name %>-core.zh-cn.js'
+          dest: 'src/resources/scripts/<%= pkg.name %>-core.zh-cn.js'
         },
         {
           src: 'dist/<%= pkg.version %>/<%= pkg.name %>-template.zh-cn.js',
-          dest: 'src/resources/javascript/<%= pkg.name %>-template.zh-cn.js'
+          dest: 'src/resources/scripts/<%= pkg.name %>-template.zh-cn.js'
         },
         {
           src: 'dist/<%= pkg.version %>/<%= pkg.name %>-ui.zh-cn.js',
-          dest: 'src/resources/javascript/<%= pkg.name %>-ui.zh-cn.js'
+          dest: 'src/resources/scripts/<%= pkg.name %>-ui.zh-cn.js'
         },
         {
           src: 'dist/<%= pkg.version %>/<%= pkg.name %>-workflow.zh-cn.js',
-          dest: 'src/resources/javascript/<%= pkg.name %>-workflow.zh-cn.js'
+          dest: 'src/resources/scripts/<%= pkg.name %>-workflow.zh-cn.js'
         }]
       },
       // 发布版
@@ -196,19 +196,19 @@ module.exports = function(grunt)
         files: [
         {
           src: 'dist/<%= pkg.version %>/<%= pkg.name %>-core.zh-cn.min.js',
-          dest: 'src/resources/javascript/<%= pkg.name %>-core.zh-cn.min.js'
+          dest: 'src/resources/scripts/<%= pkg.name %>-core.zh-cn.min.js'
         },
         {
           src: 'dist/<%= pkg.version %>/<%= pkg.name %>-template.zh-cn.min.js',
-          dest: 'src/resources/javascript/<%= pkg.name %>-template.zh-cn.min.js'
+          dest: 'src/resources/scripts/<%= pkg.name %>-template.zh-cn.min.js'
         },
         {
           src: 'dist/<%= pkg.version %>/<%= pkg.name %>-ui.zh-cn.min.js',
-          dest: 'src/resources/javascript/<%= pkg.name %>-ui.zh-cn.min.js'
+          dest: 'src/resources/scripts/<%= pkg.name %>-ui.zh-cn.min.js'
         },
         {
           src: 'dist/<%= pkg.version %>/<%= pkg.name %>-workflow.zh-cn.min.js',
-          dest: 'src/resources/javascript/<%= pkg.name %>-workflow.zh-cn.min.js'
+          dest: 'src/resources/scripts/<%= pkg.name %>-workflow.zh-cn.min.js'
         }]
       }
     },
@@ -218,12 +218,12 @@ module.exports = function(grunt)
     {
       dist:
       {
-        src: ['README.md', 'src/resources/javascript/core/*.js',
-          'src/resources/javascript/ui/core/*.js',
-          'src/resources/javascript/ui/pkg/x.ui.pkg.tabs.js',
-          'src/resources/javascript/ui/pkg/x.ui.pkg.tree.js',
-          'src/resources/javascript/ui/pkg/x.ui.pkg.slide.js',
-          'src/resources/javascript/workflow/x.workflow.js'
+        src: ['README.md', 'src/resources/scripts/core/*.js',
+          'src/resources/scripts/ui/core/*.js',
+          'src/resources/scripts/ui/pkg/x.ui.pkg.tabs.js',
+          'src/resources/scripts/ui/pkg/x.ui.pkg.tree.js',
+          'src/resources/scripts/ui/pkg/x.ui.pkg.slide.js',
+          'src/resources/scripts/workflow/x.workflow.js'
         ],
         options:
         {

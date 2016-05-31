@@ -1,44 +1,38 @@
 ﻿/**
-* form feature  : textbox(组合框)
+* form feature  : integer(数字输入框)
 *
 * require       : x.js, x.dom.js
 */
-x.dom.features.number = {
+x.dom.features.integer = {
 
     /*
-    * 检测数字规则
+    * 检测整数规则
     */
     bind: function(inputName)
     {
-        var input = x.dom.query(inputName);
+        var input = $(document.getElementById(inputName));
 
         // 绑定相关事件
-        input.bind('keydown', function(event)
+        input.on('keydown', function(event)
         {
             var event = x.event.getEvent(event);
 
-            if (this.value.indexOf('.') > -1 && (event.keyCode == 110 || event.keyCode == 190))
-            {
-                x.event.stopPropagation(event);
-            }
-
-            if (this.value.indexOf('-') > -1 && (event.keyCode == 189 || event.keyCode == 109))
-            {
-                x.event.stopPropagation(event);
-            }
-
             // x.debug.log(event.keyCode);
+
+            //只允许输入一次-号
+            if(this.value.indexOf('-') > -1 && (event.keyCode == 189 || event.keyCode == 109))
+            {
+                x.event.preventDefault(event);
+            }
 
             // 8：退格键、46：delete、37-40： 方向键
             // 48-57：小键盘区的数字、96-105：主键盘区的数字
-            // 110、190：小键盘区和主键盘区的小数
             // 189、109：小键盘区和主键盘区的负号
 
             // 考虑小键盘上的数字键 
             // 只允许按Delete键和Backspace键
-            if (!((event.keyCode >= 48 && event.keyCode <= 57) // 小键盘区的数字
+            if(!((event.keyCode >= 48 && event.keyCode <= 57) // 小键盘区的数字
                 || (event.keyCode >= 96 && event.keyCode <= 105) // 主键盘区的数字
-                || (event.keyCode == 110 || event.keyCode == 190) // 小键盘区和主键盘区的小数
                 || (event.keyCode == 189 || event.keyCode == 109) // 小键盘区和主键盘区的负号
                 || (event.keyCode == 8)  // 退格
                 || (event.keyCode == 46) // Del
@@ -49,21 +43,21 @@ x.dom.features.number = {
                 || (event.keyCode == 9)  // Tab
             ))
             {
-                x.event.stopPropagation(event);
+                x.event.preventDefault(event);
             }
         });
 
-        input.bind('keyup', function()
+        input.on('keyup', function()
         {
             // 去除右边的负号
-            if (this.value.length > 1 && this.value.lastIndexOf('-') == this.value.length - 1)
+            if(this.value.length > 1 && this.value.lastIndexOf('-') == this.value.length - 1)
             {
                 this.value = x.string.rtrim(this.value, '-');
             }
 
-            if (this.value !== '' && this.value.exists(x.expressions.rules['non-number']))
+            if(this.value !== '' && this.value.exists(x.expressions.rules['non-integer']))
             {
-                this.value = x.expressions.formatNumber(this.value);
+                this.value = x.expressions.formatInteger(this.value, 1);
             }
         });
     }

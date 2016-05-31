@@ -28,6 +28,11 @@ x.page = {
     */
     close: function()
     {
+        if(window != top)
+        {
+            x.page.closeIframe();
+        }
+
         try
         {
             window.opener = null;
@@ -49,28 +54,72 @@ x.page = {
     */
     refreshParentWindow: function()
     {
-        if(window.opener == null)
+        if(window != top)
+        {
+            if(window.parent == null)
+            {
+                x.debug.warn('未定义父级窗口。');
+                return
+            }
+
+            if(!x.isFunction(window.parent.window$refresh$callback))
+            {
+                x.debug.warn('父级窗口未定义 window$refresh$callback() 函数。');
+                return
+            }
+
+            window.parent.window$refresh$callback();
+        }
+        // 新打开窗口
+        else
+        {
+            if(window.opener == null)
+            {
+                x.debug.warn('未定义父级窗口。');
+                return
+            }
+
+            if(!x.isFunction(window.parent.window$iframe$close))
+            {
+                x.debug.warn('父级窗口未定义 window$refresh$callback() 函数。');
+                return
+            }
+
+            // 如果有父级窗口，调用父级窗口刷新函数
+            // IE 显示 Window 为 [object Object]
+            // Firefox 显示 Window 为 [object window]
+            // Chrome 显示 Window 为 [object global]
+            // if((x.type(window.opener) == 'object' || x.type(window.opener) == 'window' || x.type(window.opener) == 'global'))
+            // {
+            //    window.opener.window$refresh$callback();
+            // }
+
+            window.opener.window$refresh$callback();
+        }
+    },
+    /*#endregion*/
+
+    /*#region 函数:closeIframe()*/
+    /**
+    * 关闭 iframe 窗口
+    * @method closeIframe
+    * @memberof x.page
+    */
+    closeIframe: function()
+    {
+        if(window.parent == null)
         {
             x.debug.warn('未定义父级窗口。');
             return
         }
 
-        if(!x.isFunction(window.opener.window$refresh$callback))
+        if(!x.isFunction(window.parent.window$iframe$close))
         {
-            x.debug.warn('父级窗口未定义 window$refresh$callback() 函数。');
+            x.debug.warn('父级窗口未定义 window$iframe$close() 函数。');
             return
         }
 
-        // 如果有父级窗口，调用父级窗口刷新函数
-        // IE 显示 Window 为 [object Object]
-        // Firefox 显示 Window 为 [object window]
-        // Chrome 显示 Window 为 [object global]
-        // if((x.type(window.opener) == 'object' || x.type(window.opener) == 'window' || x.type(window.opener) == 'global'))
-        // {
-        //    window.opener.window$refresh$callback();
-        // }
-
-        window.opener.window$refresh$callback();
+        window.parent.window$iframe$close();
     },
     /*#endregion*/
 

@@ -2,7 +2,7 @@
 // Name     : x-client-api 
 // Version  : 1.0.0 
 // Author   : ruanyu@live.com
-// Date     : 2016-02-02
+// Date     : 2016-05-31
 (function(global, factory) 
 {
     if (typeof module === "object" && typeof module.exports === "object") 
@@ -2179,66 +2179,7 @@
     // EXPOSE
     
     })( window );
-    (function(i18n)
-    {
-      var init = function(destination, source) { for(var property in source) { destination[property] = source[property]; } return destination; };
-    
-      i18n = init(i18n, {
-        /* 常用 */
-        msg: {
-          // Are you sure you want to delete these items.
-          are_you_sure_you_want_to_delete: '确定删除?'
-        },
-        /* 常用 */
-        generic: {
-          filter: '查询',
-          query: '查询',
-          add: '新增',
-          edit: '编辑',
-          remove: '删除',
-          refresh: '刷新'
-        },
-    
-        /* 日期 */
-        date: {
-          dateformat: {
-            "fulldaykey": "yyyyMMdd",
-            "fulldayshow": "yyyy年M月d日",
-            "fulldayvalue": "yyyy-M-d",
-            "Md": "M/d (W)",
-            "Md3": "M月d日"
-          }
-        },
-        /* 元素 */
-        dom: {
-          errors: {
-          }
-        },
-        /* 网络 */
-        net: {
-          errors: {
-            401: '访问被拒绝，客户试图未经授权访问受密码保护的页面。',
-            404: '无法找到指定位置的资源。',
-            500: '服务器繁忙，请稍候再试。',
-            unkown: '系统错误，错误信息【{0}】。'
-          },
-    
-          waiting: {
-            loadingTipText: '正在加载数据，请稍后......',
-            loadingWorkflowTemplateTipText: '正在加载工作流模板，请稍后......',
-            queryTipText: '正在查询数据，请稍后......',
-            commitTipText: '正在提交数据，请稍候......',
-            holdTipText: '正在暂存数据，请稍候......',
-            saveTipText: '正在保存数据，请稍候......',
-            deleteTipText: '正在删除数据，请稍候......'
-          }
-        }
-      });
-    
-      window.i18n = i18n;
-    
-      return i18n;
-    })(typeof i18n !== 'undefined' ? i18n : {});// -*- ecoding=utf-8 -*-
+
     
     /**
     * @namespace x
@@ -2419,7 +2360,7 @@
             {
             destination[property] = source[property];
             }
-        
+    
             return destination;
             */
     
@@ -2839,12 +2780,12 @@
         * @memberof x
         * @param {string} name 名称
         * @example
-        * // 将路径中的[$./\]符号替换为[-]符号
+        * // 将路径中的[$./\:?=]符号替换为[-]符号
         * console.log(x.getFriendlyName(location.pathname));
         */
         getFriendlyName: function(name)
         {
-            return x.camelCase(('x-' + name).replace(/[\#\$\.\/\\]/g, '-').replace(/[-]+/g, '-'));
+            return x.camelCase(('x-' + name).replace(/[\#\$\.\/\\\:\?\=]/g, '-').replace(/[-]+/g, '-'));
         },
         /*#endregion*/
     
@@ -3272,6 +3213,7 @@
                 },
                 /*#endregion*/
     
+    
                 /*#region 函数:start()*/
                 /**
                 * 启动计时器
@@ -3357,7 +3299,7 @@
     
             /*#region 函数:preventDefault(event)*/
             /**
-            * 停止事件传播
+            * 取消事件的默认动作
             * @method preventDefault
             * @memberof x.event
             * @param {event} event 事件对象
@@ -6558,31 +6500,31 @@
             // options.inputName ,options multiSelection
             var input = x.dom(options.inputName);
     
-            if('[contacts],[corporation],[project]'.indexOf(options.featureName) > -1)
+            if ('[contacts],[corporation],[project]'.indexOf(options.featureName) > -1)
             {
                 // 根据data标签的数据内容设置隐藏值和文本信息
                 var data = input.attr('x-dom-data');
     
-                if(typeof (data) !== 'undefined' && data.indexOf('#') > -1)
+                if (typeof (data) !== 'undefined' && data.indexOf('#') > -1)
                 {
                     var selectedValue = '';
                     var selectedText = '';
     
-                    var list = x.string.trim(data, ',').split(',');
+                    var list = x.string.trim(data,',').split(',');
     
-                    for(var i = 0;i < list.length;i++)
+                    for (var i = 0; i < list.length; i++)
                     {
                         selectedValue += list[i].split('#')[1] + ',';
                         selectedText += list[i].split('#')[2] + ';';
     
                         // 单选时,只取data第一个值
-                        if(options.multiSelection === 0) { break; }
+                        if (options.multiSelection === 0) { break; }
                     }
     
-                    selectedValue = x.string.rtrim(selectedValue, ',');
-                    selectedText = x.string.rtrim(selectedText, ';');
+                    selectedValue = x.string.rtrim(selectedValue,',');
+                    selectedText = x.string.rtrim(selectedText,';');
     
-                    if(options.multiSelection === 1)
+                    if (options.multiSelection === 1)
                     {
                         // 多选
                         input.val(data);
@@ -6593,7 +6535,7 @@
                         input.val(selectedValue);
                     }
     
-                    input.attr('selectedText', selectedText);
+                    input.attr('selectedText',selectedText);
                 }
             }
         },
@@ -6611,30 +6553,30 @@
                 tooltip: 0,
                 // 提示框
                 alert: 1
-            }, options || {});
+            },options || {});
     
             var warning = '';
     
             var list = x.dom('*');
     
-            x.each(list, function(index, node)
+            x.each(list,function(index,node)
             {
                 try
                 {
-                    if(x.type(node) == 'array' || x.type(node) == 'function') return;
+                    if (x.type(node) == 'array' || x.type(node) == 'function') return;
     
-                    if(x.dom(node).attr('x-dom-data-required') || x.dom(node).attr('x-dom-data-regexp'))
+                    if (x.dom(node).attr('x-dom-data-required') || x.dom(node).attr('x-dom-data-regexp'))
                     {
-                        warning += x.dom.data.checkDataInput(node, options.tooltip);
+                        warning += x.dom.data.checkDataInput(node,options.tooltip);
                     }
                 }
-                catch(ex)
+                catch (ex)
                 {
                     x.debug.error(ex);
                 }
             });
     
-            if(warning === '')
+            if (warning === '')
             {
                 return false;
             }
@@ -6650,32 +6592,32 @@
         /*
         * 验证客户端数据
         */
-        checkDataInput: function(node, warnTooltip)
+        checkDataInput: function(node,warnTooltip)
         {
             // 如果没有id信息，或者为空则不检测
-            if(typeof (node.id) === 'undefined' || node.id === '') { return ''; }
+            if (typeof (node.id) === 'undefined' || node.id === '') { return ''; }
     
             var warning = '';
     
-            if(warnTooltip == 1)
+            if (warnTooltip == 1)
             {
-                x.tooltip.newWarnTooltip({ element: node.id, hide: 1 });
+                x.tooltip.newWarnTooltip({ element: node.id,hide: 1 });
             }
     
-            if($(node).attr('x-dom-data-required'))
+            if ($(node).attr('x-dom-data-required'))
             {
                 // 数据必填项验证
-                if($(node).val().trim() === '')
+                if ($(node).val().trim() === '')
                 {
                     var dataVerifyWarning = $(node).attr('x-dom-data-required-warning');
     
                     // x.debug.log('x:' + x.page.getElementLeft(node) + ' y:' + x.page.getElementTop(node));
     
-                    if(dataVerifyWarning)
+                    if (dataVerifyWarning)
                     {
-                        if(warnTooltip == 1)
+                        if (warnTooltip == 1)
                         {
-                            x.tooltip.newWarnTooltip({ element: node.id, message: dataVerifyWarning, hide: 0 });
+                            x.tooltip.newWarnTooltip({ element: node.id,message: dataVerifyWarning,hide: 0 });
                         }
     
                         warning += dataVerifyWarning + '\n';
@@ -6683,22 +6625,22 @@
                 }
             }
     
-            if($(node).attr('x-dom-data-regexp'))
+            if ($(node).attr('x-dom-data-regexp'))
             {
                 // 数据规则验证
-                if($(node).val().trim() !== '')
+                if ($(node).val().trim() !== '')
                 {
-                    if(!x.expressions.exists({ text: $(node).val(), ignoreCase: $(node).attr('x-dom-data-regexp-ignoreCase'), regexpName: $(node).attr('x-dom-data-regexp-name'), regexp: $(node).attr('x-dom-data-regexp') }))
+                    if (!x.expressions.exists({ text: $(node).val(),ignoreCase: $(node).attr('x-dom-data-regexp-ignoreCase'),regexpName: $(node).attr('x-dom-data-regexp-name'),regexp: $(node).attr('x-dom-data-regexp') }))
                     {
                         var dataRegExpWarning = $(node).attr('x-dom-data-regexp-warning');
     
                         // x.debug.log(x.page.getElementTop(node));
     
-                        if(dataRegExpWarning)
+                        if (dataRegExpWarning)
                         {
-                            if(warnTooltip == 1)
+                            if (warnTooltip == 1)
                             {
-                                x.tooltip.newWarnTooltip({ element: node.id, message: dataRegExpWarning, hide: 0 });
+                                x.tooltip.newWarnTooltip({ element: node.id,message: dataRegExpWarning,hide: 0 });
                             }
     
                             warning += dataRegExpWarning + '\n';
@@ -6717,12 +6659,12 @@
         */
         serialize: function(options)
         {
-            options = x.ext({ scope: '' }, x.dom.data.defaults, options || {});
+            options = x.ext({ scope: '' },x.dom.data.defaults,options || {});
     
             // 统一格式为大写
             options.storageType = options.storageType.toUpperCase();
     
-            if(x.isUndefined(serializeHooks[options.storageType])) { x.debug.error('Not supported serialize[{"storageType":"' + options.storageType + '"}].'); }
+            if (x.isUndefined(serializeHooks[options.storageType])) { x.debug.error('Not supported serialize[{"storageType":"' + options.storageType + '"}].'); }
     
             return serializeHooks[options.storageType](options);
         }
@@ -6730,6 +6672,31 @@
     };
     
     var serializeHooks = [];
+    
+    getDomId = function(node)
+    {
+        // 优先取 x-dom-id 的值，
+        // 如果没有 x-dom-id 取 id 的值。
+        // 如果没有 id 取 name 的值。
+        var name = '';
+    
+        var value = x.dom(node).attr('x-dom-id');
+    
+        if (!value && value !== '')
+        {
+            name = value;
+        }
+        else if (!x.isUndefined(node.id) && node.id !== '')
+        {
+            name = node.id;
+        }
+        else if (!x.isUndefined(node.name) && node.name !== '')
+        {
+            name = node.name;
+        }
+    
+        return name;
+    }
     
     /*#region 函数:serializeHooks['NORMAL'](options)*/
     /**
@@ -6744,37 +6711,42 @@
     
         var list = x.dom(selector);
     
-        x.each(list, function(index, node)
+        x.each(list,function(index,node)
         {
             try
             {
-                if(x.isUndefined(node.id) || node.id === '') { return; }
+                var name = getDomId(node);
+    
+                if (name == '')
+                {
+                    return;
+                }
     
                 var dataType = x.dom(node).attr(options.dataTypeAttributeName);
     
-                if(!x.isUndefined(dataType) && dataType != null)
+                if (!x.isUndefined(dataType) && dataType != null)
                 {
-                    switch(dataType)
+                    switch (dataType)
                     {
                         case 'value':
-                            outString += node.id + '=' + encodeURIComponent(x.dom(node).val().trim()) + '&';
+                            outString += name + '=' + encodeURIComponent(x.dom(node).val().trim()) + '&';
                             break;
                         case 'html':
-                            outString += node.id + '=' + encodeURIComponent(x.dom(node).html().trim()) + '&';
+                            outString += name + '=' + encodeURIComponent(x.dom(node).html().trim()) + '&';
                             break;
                         default:
                             break;
                     }
                 }
             }
-            catch(ex)
+            catch (ex)
             {
                 x.debug.error(ex);
             }
         });
     
         // 移除最后一个 & 符号
-        outString = x.string.rtrim(outString, '&');
+        outString = x.string.rtrim(outString,'&');
     
         return outString;
     };
@@ -6793,36 +6765,27 @@
     
         var list = x.dom(selector);
     
-        if(options.includeRequestNode)
+        if (options.includeRequestNode)
         {
             outString = '{"request":{'
         }
     
-        x.each(list, function(index, node)
+        x.each(list,function(index,node)
         {
             try
             {
-                var name = '';
+                var name = getDomId(node);
     
-                // 优先取 id 的值，如果没有 id 取 name 的值。
-                if(!x.isUndefined(node.id) && node.id !== '')
-                {
-                    name = node.id;
-                }
-                else if(!x.isUndefined(node.name) && node.name !== '')
-                {
-                    name = node.name;
-                }
-                else
+                if (name == '')
                 {
                     return;
                 }
     
                 var dataType = x.dom(node).attr(options.dataTypeAttributeName);
     
-                if(!x.isUndefined(dataType) && dataType != null)
+                if (!x.isUndefined(dataType) && dataType != null)
                 {
-                    switch(dataType)
+                    switch (dataType)
                     {
                         case 'value':
                             outString += '"' + name + '":"' + x.toSafeJSON(x.dom(node).val().trim()) + '",';
@@ -6833,7 +6796,7 @@
                         case 'checkbox':
                             outString += '"' + name + '":[';
     
-                            if(x.dom('input[name="' + name + '"]').size() === 0)
+                            if (x.dom('input[name="' + name + '"]').size() === 0)
                             {
                                 outString += '],';
                                 break;
@@ -6841,17 +6804,17 @@
     
                             var checkboxGroupName = node.id;
     
-                            $(document.getElementsByName(node.id)).each(function(index, node)
+                            $(document.getElementsByName(node.id)).each(function(index,node)
                             {
-                                if(checkboxGroupName === node.name && node.type.toLowerCase() === 'checkbox')
+                                if (checkboxGroupName === node.name && node.type.toLowerCase() === 'checkbox')
                                 {
                                     outString += '{"text":"' + $(node).attr('text') + '", "value":"' + x.toSafeJSON($(node).val()) + '", "checked":' + node.checked + '},';
                                 }
                             });
     
-                            if(outString.substr(outString.length - 1, 1) === ',')
+                            if (outString.substr(outString.length - 1,1) === ',')
                             {
-                                outString = outString.substr(0, outString.length - 1);
+                                outString = outString.substr(0,outString.length - 1);
                             }
     
                             outString += '],';
@@ -6861,19 +6824,19 @@
                         case 'list':
                             outString += '"' + name + '":[';
     
-                            if($(this).find('.list-item').size() === 0)
+                            if ($(this).find('.list-item').size() === 0)
                             {
                                 outString += '],';
                                 break;
                             }
     
-                            $(this).find('.list-item').each(function(index, node)
+                            $(this).find('.list-item').each(function(index,node)
                             {
                                 outString += '[';
     
-                                $(this).find('.list-item-colum').each(function(index, node)
+                                $(this).find('.list-item-colum').each(function(index,node)
                                 {
-                                    if($(node).hasClass('data-type-html'))
+                                    if ($(node).hasClass('data-type-html'))
                                     {
                                         outString += '"' + x.toSafeJSON($(node).html().trim()) + '",';
                                     }
@@ -6883,17 +6846,17 @@
                                     }
                                 });
     
-                                if(outString.substr(outString.length - 1, 1) === ',')
+                                if (outString.substr(outString.length - 1,1) === ',')
                                 {
-                                    outString = outString.substr(0, outString.length - 1);
+                                    outString = outString.substr(0,outString.length - 1);
                                 }
     
                                 outString += '],';
                             });
     
-                            if(outString.substr(outString.length - 1, 1) === ',')
+                            if (outString.substr(outString.length - 1,1) === ',')
                             {
-                                outString = outString.substr(0, outString.length - 1);
+                                outString = outString.substr(0,outString.length - 1);
                             }
     
                             outString += '],';
@@ -6903,18 +6866,18 @@
                         case 'table':
                             outString += '"' + node.id + '":[';
     
-                            $('#' + node.id).find('tr').each(function(index, node)
+                            $('#' + node.id).find('tr').each(function(index,node)
                             {
-                                if($(this).find('.table-td-item').size() === 0)
+                                if ($(this).find('.table-td-item').size() === 0)
                                 {
                                     return;
                                 }
     
                                 outString += '[';
     
-                                $(this).find('.table-td-item').each(function(index, node)
+                                $(this).find('.table-td-item').each(function(index,node)
                                 {
-                                    if($(node).hasClass('data-type-html'))
+                                    if ($(node).hasClass('data-type-html'))
                                     {
                                         outString += '"' + x.toSafeJSON($(node).html().trim()) + '",';
                                     }
@@ -6924,14 +6887,14 @@
                                     }
                                 });
     
-                                if(outString.substr(outString.length - 1, 1) === ',')
-                                    outString = outString.substr(0, outString.length - 1);
+                                if (outString.substr(outString.length - 1,1) === ',')
+                                    outString = outString.substr(0,outString.length - 1);
     
                                 outString += '],';
                             });
     
-                            if(outString.substr(outString.length - 1, 1) === ',')
-                                outString = outString.substr(0, outString.length - 1);
+                            if (outString.substr(outString.length - 1,1) === ',')
+                                outString = outString.substr(0,outString.length - 1);
     
                             outString += '],';
     
@@ -6941,16 +6904,16 @@
                     }
                 }
             }
-            catch(ex)
+            catch (ex)
             {
                 x.debug.error(ex);
             }
         });
     
         // 移除最后一个逗号
-        outString = x.string.rtrim(outString, ',');
+        outString = x.string.rtrim(outString,',');
     
-        if(options.includeRequestNode)
+        if (options.includeRequestNode)
         {
             outString += '}}';
         }
@@ -6968,42 +6931,34 @@
     
         var list = x.dom(selector);
     
-        if(typeof (options) == 'undefined')
+        if (typeof (options) == 'undefined')
         {
             options = { includeRequestNode: false };
         }
     
-        if(options.includeRequestNode)
+        if (options.includeRequestNode)
         {
             outString += '<?xml version="1.0" encoding="utf-8" ?>';
             outString += '<request>';
         }
     
-        x.each(list, function(index, node)
+        x.each(list,function(index,node)
         {
             try
             {
-                var name = '';
     
-                // 优先取 id 的值，如果没有 id 取 name 的值。
-                if(!x.isUndefined(node.id) && node.id !== '')
-                {
-                    name = node.id;
-                }
-                else if(!x.isUndefined(node.name) && node.name !== '')
-                {
-                    name = node.name;
-                }
-                else
+                var name = getDomId(node);
+    
+                if (name == '')
                 {
                     return;
                 }
     
                 var dataType = x.dom(node).attr(options.dataTypeAttributeName);
     
-                if(!x.isUndefined(dataType) && dataType != null)
+                if (!x.isUndefined(dataType) && dataType != null)
                 {
-                    switch(dataType)
+                    switch (dataType)
                     {
                         case 'value':
                             outString += '<' + name + '>' + x.cdata(x.dom(node).val().trim()) + '</' + name + '>';
@@ -7013,7 +6968,7 @@
                             break;
                         case 'select':
     
-                            if($(node).get(0).selectedIndex !== -1)
+                            if ($(node).get(0).selectedIndex !== -1)
                             {
                                 outString += '<' + name + '><![CDATA[' + x.toSafeJSON(x.dom(node).get(0)[$(node).get(0).selectedIndex].value.trim()) + ']]></' + node.id + '>';
                             }
@@ -7026,24 +6981,24 @@
                         case 'checkbox':
                             var checkboxs = document.getElementsByName("check" + node.id);
                             var checkboxsResult = "";
-                            for(var i = 0;i < checkboxs.length;i++)
+                            for (var i = 0; i < checkboxs.length; i++)
                             {
-                                if(checkboxs[i].checked)
+                                if (checkboxs[i].checked)
                                 {
                                     checkboxsResult += checkboxs[i].value + ';';
                                 }
                             }
     
-                            if(checkboxsResult !== '')
+                            if (checkboxsResult !== '')
                             {
-                                checkboxsResult = checkboxsResult.substring(0, checkboxsResult.length - 1);
+                                checkboxsResult = checkboxsResult.substring(0,checkboxsResult.length - 1);
                                 outString += '<' + name + '><![CDATA[' + checkboxsResult + ']]></' + name + '>';
                             }
                             else
                             {
                                 var notSelectedDefaultValue = $(node).attr('notSelectedDefaultValue');
     
-                                if(notSelectedDefaultValue == undefined)
+                                if (notSelectedDefaultValue == undefined)
                                 {
                                     outString += '<' + name + '>' + x.cdata('') + '</' + name + '>';
                                 }
@@ -7059,13 +7014,13 @@
                     }
                 }
             }
-            catch(ex)
+            catch (ex)
             {
                 x.debug.error(ex);
             }
         });
     
-        if(options.includeRequestNode)
+        if (options.includeRequestNode)
         {
             outString += '</request>';
         }
@@ -7080,26 +7035,26 @@
      */
     dom.fn.val = function(value)
     {
-      var element = this[0];
+        var element = this[0];
     
-      if(x.isUndefined(element))
-      {
-        return null;
-      }
-    
-      if(x.isUndefined(value))
-      {
-        return element.nodeType === 1 ? element.value : undefined;
-      }
-      else
-      {
-        x.each(this.results, function(index, node)
+        if(x.isUndefined(element))
         {
-          node.value = value;
-        });
-      }
+            return null;
+        }
     
-      return this;
+        if(x.isUndefined(value))
+        {
+            return element.nodeType === 1 ? element.value : undefined;
+        }
+        else
+        {
+            x.each(this.results, function(index, node)
+            {
+                node.value = value;
+            });
+        }
+    
+        return this;
     };
     
     var valHooks = [];
@@ -7109,26 +7064,26 @@
     /*#region 函数:html()*/
     dom.fn.html = function(value)
     {
-      var element = this[0];
+        var element = this[0];
     
-      if(x.isUndefined(element))
-      {
-        return null;
-      }
-    
-      if(x.isUndefined(value))
-      {
-        return element.nodeType === 1 ? element.innerHTML : undefined;
-      }
-      else
-      {
-        x.each(this.results, function(index, node)
+        if(x.isUndefined(element))
         {
-          node.innerHTML = value;
-        });
-      }
+            return null;
+        }
     
-      return this;
+        if(x.isUndefined(value))
+        {
+            return element.nodeType === 1 ? element.innerHTML : undefined;
+        }
+        else
+        {
+            x.each(this.results, function(index, node)
+            {
+                node.innerHTML = value;
+            });
+        }
+    
+        return this;
     };
     /*#endregion*/
     
@@ -7140,7 +7095,7 @@
      */
     dom.fn.size = function()
     {
-      return this.results.length;
+        return this.results.length;
     };
     /*#endregion*/
     
@@ -7152,33 +7107,33 @@
      */
     dom.fn.css = function()
     {
-      if(arguments.length == 1 && x.type(arguments[0]) == 'string')
-      {
-        var element = this[0];
-    
-        var args = Array.prototype.slice.call(arguments).slice(0);
-    
-        args.unshift(element);
-    
-        return x.css.style.apply(this, args);
-      }
-      else
-      {
-        var me = this;
-    
-        var originalArgs = Array.prototype.slice.call(arguments).slice(0);
-    
-        x.each(this.results, function(index, node)
+        if(arguments.length == 1 && x.type(arguments[0]) == 'string')
         {
-          var args = originalArgs.slice(0);
+            var element = this[0];
     
-          args.unshift(node);
+            var args = Array.prototype.slice.call(arguments).slice(0);
     
-          x.css.style.apply(me, args);
-        });
-      }
+            args.unshift(element);
     
-      return this;
+            return x.css.style.apply(this, args);
+        }
+        else
+        {
+            var me = this;
+    
+            var originalArgs = Array.prototype.slice.call(arguments).slice(0);
+    
+            x.each(this.results, function(index, node)
+            {
+                var args = originalArgs.slice(0);
+    
+                args.unshift(node);
+    
+                x.css.style.apply(me, args);
+            });
+        }
+    
+        return this;
     };
     /*#endregion*/// -*- ecoding=utf-8 -*-
     
@@ -7198,49 +7153,49 @@
             // 异步请求的数据键值
             xhrDataKey: 'xhr-xml',
             // 获取访问令牌信息
-            getAccessToken: function()
+            getAccessToken: function ()
             {
                 return localStorage['session-access-token'] || (x.dom('#session-access-token').size() == 0 ? null : x.dom('#session-access-token').val()) || '';
             },
             // 获取客户端标识信息
-            getClientId: function()
+            getClientId: function ()
             {
                 return localStorage['session-client-id'] || (x.dom('#session-client-id').size() == 0 ? null : x.dom('#session-client-id').val()) || '';
             },
             // 获取客户端签名信息
-            getClientSignature: function()
+            getClientSignature: function ()
             {
                 return localStorage['session-client-signature'] || (x.dom('#session-client-signature').size() == 0 ? null : x.dom('#session-client-signature').val()) || '';
             },
             // 获取时间信息
-            getTimestamp: function()
+            getTimestamp: function ()
             {
                 return localStorage['session-timestamp'] || (x.dom('#session-timestamp').size() == 0 ? null : x.dom('#session-timestamp').val()) || '';
             },
             // 获取随机数信息
-            getNonce: function()
+            getNonce: function ()
             {
                 return localStorage['session-nonce'] || (x.dom('#session-nonce').size() == 0 ? null : x.dom('#session-nonce').val()) || '';
             },
             // 获取等待窗口
-            getWaitingWindow: function(options)
+            getWaitingWindow: function (options)
             {
                 // 设置默认选项参数
                 options = x.ext({
-                    type: 'default',                        // 窗口类型
+                    type: 'default',                                    // 窗口类型
                     text: i18n.net.waiting.commitTipText    // 提示信息
                 }, options || {});
     
-                if(x.isUndefined(options.name))
+                if (x.isUndefined(options.name))
                 {
                     options.name = x.getFriendlyName(location.pathname + '$' + options.type + '$waiting$window');
                 }
     
                 var name = options.name;
     
-                if(x.isUndefined(window[name]))
+                if (x.isUndefined(window[name]))
                 {
-                    if(options.type == 'mini')
+                    if (options.type == 'mini')
                     {
                         window[name] = {
                             // 名称
@@ -7253,9 +7208,9 @@
                             message: null,
     
                             /*#region 函数:create(text)*/
-                            create: function(text)
+                            create: function (text)
                             {
-                                if(document.getElementById(this.name + '-text') == null)
+                                if (document.getElementById(this.name + '-text') == null)
                                 {
                                     $(document.body).append('<div id="' + this.name + '-container" class="x-ui-dialog-waiting-mini-window-container" ><div id="' + this.name + '-text" class="x-ui-dialog-waiting-mini-window-text" >' + text + '</div></div>');
                                 }
@@ -7264,7 +7219,7 @@
                                     x.query('[id="' + this.name + '-text"]').innerHTML = text;
                                 }
     
-                                if(this.container === null)
+                                if (this.container === null)
                                 {
                                     this.container = document.getElementById(this.name + '-container');
                                 }
@@ -7275,9 +7230,9 @@
                             /*
                             * 显示
                             */
-                            show: function()
+                            show: function ()
                             {
-                                if(!x.isUndefined(arguments[0]))
+                                if (!x.isUndefined(arguments[0]))
                                 {
                                     this.options.text = arguments[0];
                                 }
@@ -7298,9 +7253,9 @@
                             /*
                             * 隐藏
                             */
-                            hide: function()
+                            hide: function ()
                             {
-                                if(this.container != null)
+                                if (this.container != null)
                                 {
                                     x.css.style(this.container, { display: 'none' });
     
@@ -7315,7 +7270,7 @@
                             /*#endregion*/
                         };
                     }
-                    else if(options.type == 'plus')
+                    else if (options.type == 'plus')
                     {
                         // html5plus 默认等待框
                         window[name] = {
@@ -7327,7 +7282,7 @@
                             container: null,
     
                             /*#region 函数:create(text)*/
-                            create: function(text)
+                            create: function (text)
                             {
                                 this.options.text = text;
                             },
@@ -7337,16 +7292,16 @@
                             /*
                             * 显示
                             */
-                            show: function()
+                            show: function ()
                             {
-                                if(!x.isUndefined(arguments[0]))
+                                if (!x.isUndefined(arguments[0]))
                                 {
                                     this.options.text = arguments[0];
                                 }
     
                                 this.create(this.options.text);
     
-                                this.container= plus.nativeUI.showWaiting(this.options.text);
+                                this.container = plus.nativeUI.showWaiting(this.options.text);
                             },
                             /*#endregion*/
     
@@ -7354,9 +7309,9 @@
                             /*
                             * 隐藏
                             */
-                            hide: function()
+                            hide: function ()
                             {
-                                if(this.container != null)
+                                if (this.container != null)
                                 {
                                     this.container.close();
                                 }
@@ -7397,7 +7352,7 @@
                             width: options.width ? options.width : 200,
     
                             /*#region 函数:setPosition()*/
-                            setPosition: function()
+                            setPosition: function ()
                             {
                                 // 弹出窗口的位置
                                 var range = x.page.getRange();
@@ -7410,11 +7365,11 @@
                             /*#endregion*/
     
                             /*#region 函数:createMaskWrapper()*/
-                            createMaskWrapper: function()
+                            createMaskWrapper: function ()
                             {
                                 var wrapper = document.getElementById(this.name + '-maskWrapper');
     
-                                if(wrapper === null)
+                                if (wrapper === null)
                                 {
                                     $(document.body).append('<div id="' + this.name + '-maskWrapper" style="display:none;" ></div>');
     
@@ -7426,10 +7381,10 @@
                                 wrapper.style.height = x.page.getRange().height + 'px';
                                 wrapper.style.width = x.page.getRange().width + 'px';
     
-                                if(wrapper.style.display === 'none')
+                                if (wrapper.style.display === 'none')
                                 {
                                     $('#' + this.name + '-maskWrapper').css({ display: '', opacity: 0.1 });
-                                    $('#' + this.name + '-maskWrapper').fadeTo((this.maxDuration * 1000), this.maxOpacity, function()
+                                    $('#' + this.name + '-maskWrapper').fadeTo((this.maxDuration * 1000), this.maxOpacity, function ()
                                     {
                                         // var mask = window[this.id];
     
@@ -7440,9 +7395,9 @@
                             /*#endregion*/
     
                             /*#region 函数:create(text)*/
-                            create: function(text)
+                            create: function (text)
                             {
-                                if(document.getElementById(this.name + '-text') == null)
+                                if (document.getElementById(this.name + '-text') == null)
                                 {
                                     $(document.body).append('<div id="' + this.name + '-container" class="x-ui-dialog-waiting-window-container" ><div id="' + this.name + '-text" class="x-ui-dialog-waiting-window-text" >' + text + '</div></div>');
     
@@ -7453,7 +7408,7 @@
                                     document.getElementById(this.name + '-text').innerHTML = text;
                                 }
     
-                                if(this.container === null)
+                                if (this.container === null)
                                 {
                                     this.container = document.getElementById(this.name + '-container');
                                     this.maskWrapper = document.getElementById(this.name + '-maskWrapper');
@@ -7465,7 +7420,7 @@
                             /*
                             * 显示
                             */
-                            show: function(text)
+                            show: function (text)
                             {
                                 this.lock++;
     
@@ -7473,16 +7428,16 @@
     
                                 //var timer = x.newTimer(this.lazy, function(timer)
                                 //{
-                                if(that.lock > 0)
+                                if (that.lock > 0)
                                 {
                                     // x.debug.log('x.net.waitingWindow.lock:【' + that.lock + '】');
     
-                                    if(that.maskWrapper === null)
+                                    if (that.maskWrapper === null)
                                     {
                                         that.maskWrapper = x.ui.mask.newMaskWrapper(that.name + '-maskWrapper');
                                     }
     
-                                    if(typeof (text) !== 'undefined')
+                                    if (typeof (text) !== 'undefined')
                                     {
                                         that.options.text = text;
                                     }
@@ -7514,20 +7469,20 @@
                             /*
                             * 隐藏
                             */
-                            hide: function()
+                            hide: function ()
                             {
                                 this.lock--;
     
                                 // x.debug.log('x.net.waitingWindow.lock:【' + this.lock + '】');
     
-                                if(this.lock === 0)
+                                if (this.lock === 0)
                                 {
-                                    if(this.container != null)
+                                    if (this.container != null)
                                     {
                                         this.container.style.display = 'none';
                                     }
     
-                                    if(this.maskWrapper != null && x.dom('#' + this.name + '-maskWrapper').css('display') !== 'none')
+                                    if (this.maskWrapper != null && x.dom('#' + this.name + '-maskWrapper').css('display') !== 'none')
                                     {
                                         var that = this;
     
@@ -7555,15 +7510,15 @@
             /*#endregion*/
     
             // 捕获异常
-            catchException: function(response, outputType)
+            catchException: function (response, outputType)
             {
                 try
                 {
                     var result = x.toJSON(response);
     
-                    if(!x.isUndefined(result) && !x.isUndefined(result.success) && result.success == 0)
+                    if (!x.isUndefined(result) && !x.isUndefined(result.success) && result.success == 0)
                     {
-                        if(outputType == 'console')
+                        if (outputType == 'console')
                         {
                             x.debug.error(result.msg);
                         }
@@ -7573,11 +7528,17 @@
                         }
                     }
                 }
-                catch(ex)
+                catch (ex)
                 {
                     x.debug.error(ex);
                 }
             }
+        },
+        /*#endregion*/
+    
+        getWaitingWindow: function (options)
+        {
+            return x.net.defaults.getWaitingWindow(options);
         },
         /*#endregion*/
     
@@ -7599,18 +7560,19 @@
         * </tbody>
         * </table>
         */
-        xhr: function()
+        xhr: function ()
         {
             // -------------------------------------------------------
             // 可选择参数
             // waitingMessage   等待窗口显示的文本信息。
-            // popResultValue   弹出回调结果。
+            // popCorrectValue  弹出正确回调结果。
+            // popIncorrectValue  弹出错误回调结果。
             // callback         回调函数。
             // -------------------------------------------------------
     
             var url, xhrDataValue, options;
     
-            if(arguments.length == 2 && x.type(arguments[1]) === 'object')
+            if (arguments.length == 2 && x.type(arguments[1]) === 'object')
             {
                 // 支持没有Xml数据，只有地址和回调函数的调用。
     
@@ -7618,7 +7580,7 @@
                 options = arguments[1];
                 xhrDataValue = '';
             }
-            else if(arguments.length == 2 && x.type(arguments[1]) === 'string')
+            else if (arguments.length == 2 && x.type(arguments[1]) === 'string')
             {
                 // 支持没有回调函数，只有地址和Xml数据的调用。
     
@@ -7626,7 +7588,7 @@
                 options = {};
                 xhrDataValue = arguments[1];
             }
-            else if(arguments.length == 3 && x.type(arguments[1]) === 'string' && x.isFunction(arguments[2]))
+            else if (arguments.length == 3 && x.type(arguments[1]) === 'string' && x.isFunction(arguments[2]))
             {
                 // 支持没有回调函数，只有地址和Xml数据的调用。
     
@@ -7648,7 +7610,7 @@
                                         && !x.isUndefined(options.waitingMessage)
                                         && options.waitingMessage !== '';
     
-            if(enableWaitingWindow)
+            if (enableWaitingWindow)
             {
                 // 开启等待窗口
                 options.getWaitingWindow({ text: options.waitingMessage, type: x.isUndefined(options.waitingType, 'default') }).show();
@@ -7656,42 +7618,51 @@
     
             var type = x.isUndefined(options.type, 'POST');
     
+            var contentType = x.isUndefined(options.contentType, 'text/html');
+    
             var async = x.isUndefined(options.async, true);
     
             // 设置 data 值
             var data = x.ext({}, options.data || {});
     
-            var xml = x.toXML(xhrDataValue, 1);
-    
-            if(xhrDataValue != '' && xml)
+            if (x.type(xhrDataValue) === 'object')
             {
-                data[options.xhrDataKey] = xhrDataValue;
+                // JSON 格式数据
+                data = x.ext(data, xhrDataValue);
             }
-            else if(!xml && xhrDataValue.indexOf('=') > 0)
+            else
             {
-                // 非Xml字符格式, 普通的POST数据
-                var list = xhrDataValue.split('&');
-    
-                x.each(list, function(index, node)
+                var xml = x.toXML(xhrDataValue, 1);
+                if (xhrDataValue != '' && xml)
                 {
-                    var items = node.split('=');
+                    data[options.xhrDataKey] = xhrDataValue;
+                }
+                else if (!xml && xhrDataValue.indexOf('=') > 0)
+                {
+                    // 非Xml字符格式, 普通的POST数据
+                    var list = xhrDataValue.split('&');
     
-                    if(items.length == 2)
+                    x.each(list, function (index, node)
                     {
-                        data[items[0]] = decodeURIComponent(items[1]);
-                    }
-                });
+                        var items = node.split('=');
+    
+                        if (items.length == 2)
+                        {
+                            data[items[0]] = decodeURIComponent(items[1]);
+                        }
+                    });
+                }
             }
     
-            if(x.isFunction(options.getAccessToken) && options.getAccessToken() != '')
+            if (x.isFunction(options.getAccessToken) && options.getAccessToken() != '')
             {
                 data.accessToken = options.getAccessToken();
             }
-            else if(x.isFunction(options.getClientId) && options.getClientId() != '')
+            else if (x.isFunction(options.getClientId) && options.getClientId() != '')
             {
                 data.clientId = options.getClientId();
     
-                if(x.isFunction(options.getClientId) && options.getClientSignature() != '')
+                if (x.isFunction(options.getClientId) && options.getClientSignature() != '')
                 {
                     data.clientSignature = options.getClientSignature();
                     data.timestamp = options.getTimestamp();
@@ -7703,49 +7674,58 @@
             x.net.ajax({
                 type: type,
                 url: url,
+                contentType: contentType,
                 data: data,
                 async: async,
-                success: function(response)
+                success: function (response)
                 {
-                    if(enableWaitingWindow)
+                    if (enableWaitingWindow)
                     {
                         // 关闭等待窗口
                         options.getWaitingWindow({ type: x.isUndefined(options.waitingType, 'default') }).hide();
                     }
     
-                    if(options.returnType == 'json')
+                    if (options.returnType == 'json')
                     {
                         // 捕获处理异常
                         options.catchException(response, options.outputException);
     
                         var result = x.toJSON(response);
     
-                        var message = result.message;
-    
-                        switch(Number(message.returnCode))
+                        if (x.isUndefined(result) || x.isUndefined(result.message))
                         {
-                            case -1:
-                                // -1:异常信息
-                                x.msg(message.value);
-                                break;
-                            case 0:
-                                // 0:正确操作
-                                if(!!options.popResultValue)
-                                {
-                                    x.msg(message.value);
-                                }
+                            x.call(options.callback, x.toJSON(response));
+                        }
+                        else
+                        {
+                            var message = result.message;
     
-                                x.call(options.callback, x.toJSON(response));
-                                break;
-                            default:
-                                // 其他错误操作
-                                if(!!options.popIncorrectValue)
-                                {
+                            // 支持内置 message 对象的处理
+                            switch (Number(message.returnCode))
+                            {
+                                case -1:
+                                    // -1:异常信息
                                     x.msg(message.value);
-                                }
+                                    break;
+                                case 0:
+                                    // 0:正确操作
+                                    if (!!options.popCorrectValue)
+                                    {
+                                        x.msg(message.value);
+                                    }
     
-                                x.call(options.callback, x.toJSON(response));
-                                break;
+                                    x.call(options.callback, x.toJSON(response));
+                                    break;
+                                default:
+                                    // 其他错误操作
+                                    if (!!options.popIncorrectValue)
+                                    {
+                                        x.msg(message.value);
+                                    }
+    
+                                    x.call(options.callback, x.toJSON(response));
+                                    break;
+                            }
                         }
                     }
                     else
@@ -7753,29 +7733,29 @@
                         x.call(options.callback, response);
                     }
                 },
-                error: function(XMLHttpRequest, textStatus, errorThrown)
+                error: function (XMLHttpRequest, textStatus, errorThrown)
                 {
                     x.debug.log(XMLHttpRequest.responseText);
     
-                    if(x.isFunction(options.error))
+                    if (x.isFunction(options.error))
                     {
                         options.error(XMLHttpRequest, textStatus, errorThrown);
                     }
                     else
                     {
-                        if(XMLHttpRequest.status == 401)
+                        if (XMLHttpRequest.status == 401)
                         {
                             x.msg(i18n.net.errors['401']);
                         }
-                        else if(XMLHttpRequest.status == 404)
+                        else if (XMLHttpRequest.status == 404)
                         {
                             x.msg(i18n.net.errors['404']);
                         }
-                        else if(XMLHttpRequest.status == 500)
+                        else if (XMLHttpRequest.status == 500)
                         {
                             x.msg(i18n.net.errors['500']);
                         }
-                        else if(XMLHttpRequest.status != 0)
+                        else if (XMLHttpRequest.status != 0)
                         {
                             x.debug.error(i18n.net.errors['unkown'].format(XMLHttpRequest.status + (XMLHttpRequest.statusText != '' ? (' ' + XMLHttpRequest.statusText) : '')));
                         }
@@ -7791,7 +7771,7 @@
         /**
         * 通过Ajax方式加载样式和脚本
         */
-        require: function(options)
+        require: function (options)
         {
             options = x.ext({
                 fileType: 'script',
@@ -7801,7 +7781,7 @@
                 async: true
             }, options || {});
     
-            if(options.id != '' && x.net.requireLoaded[options.id])
+            if (options.id != '' && x.net.requireLoaded[options.id])
             {
                 x.debug.log('require file {"id":"{0}", path:"{1}"} exist. [ajax]'.format(options.id, options.path));
     
@@ -7817,19 +7797,19 @@
                 type: options.type,
                 url: options.path,
                 async: options.async,
-                success: function(responseText)
+                success: function (responseText)
                 {
                     x.debug.log('require file {"id":"{0}", path:"{1}"} finished. [ajax]'.format(options.id, options.path));
     
                     var head = document.getElementsByTagName("HEAD").item(0);
     
-                    if(options.fileType == 'template')
+                    if (options.fileType == 'template')
                     {
                         var node = document.createElement("script");
                         node.type = "text/template";
                         node.src = options.path;
                     }
-                    else if(options.fileType == 'css')
+                    else if (options.fileType == 'css')
                     {
                         var node = document.createElement("style");
                         node.type = "text/css";
@@ -7849,12 +7829,12 @@
                         // IE8以及以下不支持这种方式，需要通过text属性来设置
                         node.appendChild(document.createTextNode(responseText));
                     }
-                    catch(ex)
+                    catch (ex)
                     {
                         node.text = responseText;
                     }
     
-                    if(options.id != '')
+                    if (options.id != '')
                     {
                         node.id = options.id;
                         x.net.requireLoaded[options.id] = true;
@@ -7867,7 +7847,7 @@
             });
         },
     
-        ajax: function(options)
+        ajax: function (options)
         {
             var request = x.net.newHttpRequest(options);
     
@@ -7875,7 +7855,7 @@
         },
         /*#endregion*/
     
-        newHttpRequest: function(options)
+        newHttpRequest: function (options)
         {
             var request = {
                 xhr: null,
@@ -7887,13 +7867,13 @@
                 done: false,
     
                 // 发送
-                send: function()
+                send: function ()
                 {
-                    if(this.xhr == null)
+                    if (this.xhr == null)
                     {
                         this.xhr = x.net.newXmlHttpRequest();
     
-                        if(!this.xhr)
+                        if (!this.xhr)
                         {
                             x.debug.error('create xhr failed'); return false;
                         }
@@ -7903,7 +7883,7 @@
     
                     var me = this;
     
-                    x.event.add(this.xhr, "readystatechange", function()
+                    x.event.add(this.xhr, "readystatechange", function ()
                     {
                         var xhr = me.xhr;
     
@@ -7911,10 +7891,10 @@
                         // x.debug.log('{0} readyState:{1} status:{2} done:{3}'.format(x.debug.timestamp(), xhr.readyState, xhr.status, me.done));
     
                         // 保持等待，直到数据完全加载，并保证请求未超时
-                        if(xhr.readyState == 4 && !me.done)
+                        if (xhr.readyState == 4 && !me.done)
                         {
                             // 0 为访问的本地，200 到 300 代表访问服务器成功，304 代表没做修改访问的是缓存
-                            if(xhr.status == 0 || (xhr.status >= 200 && xhr.status < 300) || xhr.status == 304)
+                            if (xhr.status == 0 || (xhr.status >= 200 && xhr.status < 300) || xhr.status == 304)
                             {
                                 // 成功则调用回调函数，并传入xhr对象
                                 x.call(me.success, xhr.responseText);
@@ -7931,9 +7911,9 @@
                     });
     
                     // 如果请求超过 timeout 设置的时间没有响应, 则取消请求（如果尚未完成的话）
-                    setTimeout(function() { me.done = true; }, me.timeout * 1000);
+                    setTimeout(function () { me.done = true; }, me.timeout * 1000);
     
-                    if(this.type == 'POST')
+                    if (this.type == 'POST')
                     {
                         this.xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
                         this.xhr.send(x.serialize(this.data));
@@ -7945,7 +7925,7 @@
                     }
                 },
     
-                create: function(options)
+                create: function (options)
                 {
                     options = x.ext({
                         type: 'GET',
@@ -7977,24 +7957,24 @@
         * 创建 XMLHttpRequest 对象
         * @private
         */
-        newXmlHttpRequest: function()
+        newXmlHttpRequest: function ()
         {
             var xhr = null;
     
-            if(window.ActiveXObject) // IE
+            if (window.ActiveXObject) // IE
             {
                 try
                 {
                     // IE6 以及以后版本中可以使用
                     xhr = new ActiveXObject("Msxml2.XMLHTTP");
                 }
-                catch(ex)
+                catch (ex)
                 {
                     //IE5.5 以及以后版本可以使用
                     xhr = new ActiveXObject("Microsoft.XMLHTTP");
                 }
             }
-            else if(window.XMLHttpRequest)
+            else if (window.XMLHttpRequest)
             {
                 //Firefox，Opera 8.0+，Safari，Chrome
                 xhr = new XMLHttpRequest();
@@ -8019,14 +7999,14 @@
             * @param {string} 参数的键
             * @returns {string} 参数的值
             */
-            find: function(key)
+            find: function (key)
             {
                 var resultValue = '';
                 var list = location.search.substr(1).split('&');
     
-                for(var i = 0;i < list.length;i++)
+                for (var i = 0; i < list.length; i++)
                 {
-                    if(list[i].indexOf(key) === 0)
+                    if (list[i].indexOf(key) === 0)
                     {
                         resultValue = decodeURIComponent(list[i].replace(key + '=', ''));
                         break;
@@ -8045,7 +8025,7 @@
             * @memberof x.net.request
             * @returns {object} JSON格式的对象
             */
-            findAll: function()
+            findAll: function ()
             {
                 var outString = '';
     
@@ -8055,15 +8035,15 @@
     
                 outString = '{';
     
-                if(list === '') { return; }
+                if (list === '') { return; }
     
-                for(var i = 0;i < list.length;i++)
+                for (var i = 0; i < list.length; i++)
                 {
                     temp = list[i].split('=');
     
                     outString += '"' + temp[0] + '":"' + decodeURIComponent(temp[1]) + '"';
     
-                    if(i < list.length - 1)
+                    if (i < list.length - 1)
                         outString += ',';
                 }
     
@@ -8077,7 +8057,7 @@
             /**
             * 获取附加了查询字符串的 URL 路径
             */
-            getRawUrl: function()
+            getRawUrl: function ()
             {
                 return location.href.replace(location.origin, '');
             },
@@ -8087,7 +8067,7 @@
             /*
             * 判断锚点
             */
-            hash: function(key)
+            hash: function (key)
             {
                 return location.hash === ('#' + key) ? true : false;
             }
@@ -8100,11 +8080,11 @@
     * 网络请求的默认回调函数
     * @private
     */
-    x.net.request_callback = function(response)
+    x.net.request_callback = function (response)
     {
         var result = x.toJSON(response).message;
     
-        switch(Number(result.returnCode))
+        switch (Number(result.returnCode))
         {
             case 0:
                 // 0:正确操作
@@ -8152,6 +8132,11 @@
         */
         close: function()
         {
+            if(window != top)
+            {
+                x.page.closeIframe();
+            }
+    
             try
             {
                 window.opener = null;
@@ -8173,28 +8158,72 @@
         */
         refreshParentWindow: function()
         {
-            if(window.opener == null)
+            if(window != top)
+            {
+                if(window.parent == null)
+                {
+                    x.debug.warn('未定义父级窗口。');
+                    return
+                }
+    
+                if(!x.isFunction(window.parent.window$refresh$callback))
+                {
+                    x.debug.warn('父级窗口未定义 window$refresh$callback() 函数。');
+                    return
+                }
+    
+                window.parent.window$refresh$callback();
+            }
+            // 新打开窗口
+            else
+            {
+                if(window.opener == null)
+                {
+                    x.debug.warn('未定义父级窗口。');
+                    return
+                }
+    
+                if(!x.isFunction(window.parent.window$iframe$close))
+                {
+                    x.debug.warn('父级窗口未定义 window$refresh$callback() 函数。');
+                    return
+                }
+    
+                // 如果有父级窗口，调用父级窗口刷新函数
+                // IE 显示 Window 为 [object Object]
+                // Firefox 显示 Window 为 [object window]
+                // Chrome 显示 Window 为 [object global]
+                // if((x.type(window.opener) == 'object' || x.type(window.opener) == 'window' || x.type(window.opener) == 'global'))
+                // {
+                //    window.opener.window$refresh$callback();
+                // }
+    
+                window.opener.window$refresh$callback();
+            }
+        },
+        /*#endregion*/
+    
+        /*#region 函数:closeIframe()*/
+        /**
+        * 关闭 iframe 窗口
+        * @method closeIframe
+        * @memberof x.page
+        */
+        closeIframe: function()
+        {
+            if(window.parent == null)
             {
                 x.debug.warn('未定义父级窗口。');
                 return
             }
     
-            if(!x.isFunction(window.opener.window$refresh$callback))
+            if(!x.isFunction(window.parent.window$iframe$close))
             {
-                x.debug.warn('父级窗口未定义 window$refresh$callback() 函数。');
+                x.debug.warn('父级窗口未定义 window$iframe$close() 函数。');
                 return
             }
     
-            // 如果有父级窗口，调用父级窗口刷新函数
-            // IE 显示 Window 为 [object Object]
-            // Firefox 显示 Window 为 [object window]
-            // Chrome 显示 Window 为 [object global]
-            // if((x.type(window.opener) == 'object' || x.type(window.opener) == 'window' || x.type(window.opener) == 'global'))
-            // {
-            //    window.opener.window$refresh$callback();
-            // }
-    
-            window.opener.window$refresh$callback();
+            window.parent.window$iframe$close();
         },
         /*#endregion*/
     
